@@ -11,11 +11,19 @@ class Loop
   
   void Load()//Add Objects here
   {
-    OBJECT testObject = new OBJECT(200,200, 30, 30);
+    OBJECT testbackGround = new OBJECT(0, 0, screenWidth, screenHeight, new Vec3(255,0,0));
+    
+    scene.AddTolayer(Layers.BACKGROUND, testbackGround);
+    
+    
+    
+    OBJECT testObject = new OBJECT(200,200, 30, 30, new Vec3(0,255,0));
+    
+    testObject.SetMass(20);
     testObject.SetAccleration(200);
     manager.AddListener(testObject);
     
-
+    
     scene.AddTolayer(Layers.ENTITY, testObject);
     
   }

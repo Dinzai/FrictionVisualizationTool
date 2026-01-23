@@ -1,12 +1,12 @@
 
-int windowWidth = 800;
-int windowHeight = 600;
+int screenWidth = 800;
+int screenHeight = 600;
 
 Loop simulation;
 
 void settings()
 {
-  size(windowWidth, windowHeight);
+  size(screenWidth, screenHeight);
 }
 
 void setup()

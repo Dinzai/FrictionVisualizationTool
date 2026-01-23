@@ -3,11 +3,12 @@
 class OBJECT extends BasicObject implements Drawable, Listener 
 {
   
-  OBJECT(float x, float y, float w, float h)//initalize position, and size
+  OBJECT(float x, float y, float w, float h, Vec3 colour)//initalize position, and size
   {
     super();
     InitPosition(x, y);
     InitSize(w, h);
+    SetColour(colour.r, colour.g, colour.b);
   }
   
   void SetMass(float mass)
@@ -56,17 +57,19 @@ class OBJECT extends BasicObject implements Drawable, Listener
   
   void Move()
   {
-     the.velocity.x = the.accleration.x * deltaTime;
-     the.velocity.y = the.accleration.y * deltaTime;
+    
+    
+     the.velocity.x = the.mass * the.accleration.x * deltaTime;
+     the.velocity.y = the.mass * the.accleration.y * deltaTime;
      
-     the.position.x += the.velocity.x * direction.x;
-     the.position.y += the.velocity.y * direction.y;
+     the.position.x += the.velocity.x * direction.x * deltaTime;
+     the.position.y += the.velocity.y * direction.y * deltaTime;
      
   }
   
   void DrawToScreen()  
   {
-    fill(255,0,0);
+    fill(the.material.colour.r, the.material.colour.g, the.material.colour.b);
     rect(the.position.x, the.position.y, the.size.x, the.size.y);
   }
   

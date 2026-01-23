@@ -9,6 +9,20 @@ enum MaterialTypes//material types
   GLASS,
 }
 
+class Vec3//placeholder for colour until I have textures
+{
+  Vec3(float r, float g, float b)
+  {
+    this.r = r;
+    this.g = g;
+    this.b = b;
+  }
+  float r;
+  float g;
+  float b;
+  
+}
+
 
 //making a table for the types
 
@@ -67,17 +81,22 @@ class Material
     
   }
   
+  void SetColour(float r, float g, float b)
+  {
+    colour = new Vec3(r, g, b);
+  }
+  
   void DebugType()
   {
     print(type);
   }
   
-
+  Vec3 colour;
   MaterialTypes type;
 }
 
 
-class Attributes//this class only contains variables used for the basic objects, this will be an instance of objects
+class Attributes//this class only contains variables used for the basic objects, this will be an instance of basic object
 { 
   Material material = new Material();
   float mass = 0;  

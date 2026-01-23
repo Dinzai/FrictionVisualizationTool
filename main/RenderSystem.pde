@@ -34,9 +34,9 @@ class Scene
 
   void DrawOrder()
   {
-    for(Map.Entry<Layers, ArrayList<Drawable>> entry : renderLayers.entrySet())
+    for(Layers layer : Layers.values())
     {
-      ArrayList<Drawable> objects = entry.getValue();
+      ArrayList<Drawable> objects = renderLayers.get(layer);
       for(Drawable obj : objects)
       {
         obj.DrawToScreen();

@@ -8,6 +8,11 @@ class BasicObject//this does not know how to be drawn, it is just a container of
     the = new Attributes();
   }
   
+  void SetColour(float r, float g, float b)
+  {
+    the.material.SetColour(r, g, b);
+  }
+  
   void InitPosition(float x, float y)
   {
     the.position.x = x;
