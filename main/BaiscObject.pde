@@ -42,5 +42,10 @@ class BasicObject//this does not know how to be drawn, it is just a container of
     the.material.SetType(name);
   }
   
+  void DebugMaterial()
+  {
+    the.material.DebugType();
+  }
+  
   Attributes the;
 }

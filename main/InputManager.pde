@@ -15,10 +15,15 @@ class InputManager
     listener = new ArrayList<Listener>();
     keys = new HashSet<Character>();
   }
-  
+  //Listeners allow me to let the user to chose which objects have the ability to move
   void AddListener(Listener listen)
   {
     listener.add(listen);
+  }
+  
+  void RemoveListener(Listener listen)
+  {
+    listener.remove(listen);
   }
   
   void KeyDown(Character theKey)
@@ -46,7 +51,7 @@ class InputManager
   
 }
 
-InputManager manager = new InputManager();
+InputManager manager = new InputManager();//used as a singlton
 
 
 

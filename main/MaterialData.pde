@@ -27,22 +27,22 @@ class Vec3//placeholder for colour until I have textures
 //making a table for the types
 
 float[][] StaticFriction = {
-  //ICE Wood Metal Rock Glass
-  {0.0, 0.0, 0.0, 0.0, 0.0},//ICE
-  {0.0, 0.0, 0.0, 0.0, 0.0},//Wood
-  {0.0, 0.0, 0.0, 0.0, 0.0},//Metal
-  {0.0, 0.0, 0.0, 0.0, 0.0},//Rock
-  {0.0, 0.0, 0.0, 0.0, 0.0},//Glass
+  //ICE  Wood  Metal Rock  Glass
+  {0.02, 0.05, 0.04, 0.06, 0.03},//ICE
+  {0.15, 0.40, 0.35, 0.50, 0.30},//Wood
+  {0.10, 0.30, 0.45, 0.60, 0.25},//Metal
+  {0.20, 0.55, 0.65, 0.80, 0.40},//Rock
+  {0.08, 0.25, 0.20, 0.35, 0.50},//Glass
 };
 
 float[][] KineticFriction = {
-  //ICE Wood Metal Rock Glass
-  {0.0, 0.0, 0.0, 0.0, 0.0},//ICE
-  {0.0, 0.0, 0.0, 0.0, 0.0},//Wood
-  {0.0, 0.0, 0.0, 0.0, 0.0},//Metal
-  {0.0, 0.0, 0.0, 0.0, 0.0},//Rock
-  {0.0, 0.0, 0.0, 0.0, 0.0},//Glass
-};
+  //ICE  Wood  Metal  Rock  Glass
+  {0.01, 0.03, 0.025, 0.04, 0.02},//ICE
+  {0.10, 0.30, 0.25, 0.40, 0.20},//Wood
+  {0.08, 0.20, 0.30, 0.45, 0.18},//Metal
+  {0.15, 0.40, 0.50, 0.65, 0.30},//Rock
+  {0.05, 0.18, 0.15, 0.25, 0.40},//Glass
+};//I asked chat gpt to generate common friction coefficents for these substances
 //this way I can simply compare different objects types to calculate what friction cooeficient to use
 
 //use case ->    
@@ -88,7 +88,7 @@ class Material
   
   void DebugType()
   {
-    print(type);
+    print(type + " ");
   }
   
   Vec3 colour;

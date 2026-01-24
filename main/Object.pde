@@ -11,6 +11,11 @@ class OBJECT extends BasicObject implements Drawable, Listener
     SetColour(colour.r, colour.g, colour.b);
   }
   
+  void SetMaterial(String name)
+  {
+    InitMaterial(name);
+  }
+  
   void SetMass(float mass)
   {
     InitMass(mass);
