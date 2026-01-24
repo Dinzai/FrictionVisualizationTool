@@ -6,6 +6,7 @@ class BasicObject//this does not know how to be drawn, it is just a container of
   BasicObject()
   {
     the = new Attributes();
+    util = new PhysicsUtil();
   }
   
   void SetColour(float r, float g, float b)
@@ -42,10 +43,16 @@ class BasicObject//this does not know how to be drawn, it is just a container of
     the.material.SetType(name);
   }
   
+  int GetMaterial()
+  {
+    return the.material.GetMaterial();
+  }
+  
   void DebugMaterial()
   {
     the.material.DebugType();
   }
   
   Attributes the;
+  PhysicsUtil util;
 }
