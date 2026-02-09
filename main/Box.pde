@@ -3,10 +3,11 @@ class Box
 {
   Box()
   {
+    baseShape = new ArrayList<Point>();
     shape = new ArrayList<Point>();
     c = new Colour();
   }
-
+  
   void SetColour(float r, float g, float b)
   {
     c = new Colour(r, g, b);
@@ -21,33 +22,94 @@ class Box
     Point TR = new Point(w, 0);
     Point BL = new Point(0, h);
     Point BR = new Point(w, h);
+    
+    baseShape.add(TL);
+    baseShape.add(TR);
+    baseShape.add(BR);
+    baseShape.add(BL);
 
-    shape.add(TL);
-    shape.add(TR);
-    shape.add(BR);
-    shape.add(BL);
+    for(Point p : baseShape)
+    {
+      shape.add(new Point(p.x, p.y));
+    }
   }
+  
+  void Identity()
+  {
 
+    for(int i = 0; i < shape.size(); i++)
+    {
+      
+      Point copyShape = baseShape.get(i);
+      Point originalShape = shape.get(i);
+    
+      originalShape.x = copyShape.x * scaleX + posX; 
+      originalShape.y = copyShape.y * scaleY + posY; 
+      
+    }
+  }
+  
 
+  void SetPosition(float x, float y)
+  {
+    Point p = shape.get(0);
+    float dx = x - p.x;
+    float dy = y - p.y;
+    dx -= theWidth / 2;
+    dy -= theHeight / 2;
+    
+    Translate(dx, dy);
+
+  }
 
   void Translate(float x, float y)
   {
-    for (int i = 0; i < shape.size(); i++)
+    posX += x;
+    posY += y;
+    
+  }
+  
+  void UpdateBounds()
+  {
+    float minX = shape.get(0).x;
+    float maxX = shape.get(1).x;
+    float minY = shape.get(2).y;
+    float maxY = shape.get(3).y;
+    
+    for(Point p : shape)
     {
-      Point p = shape.get(i % shape.size());
-      p.x += x;
-      p.y += y;
+      if(p.x < minX)
+      {
+        minX = p.x;
+      }
+      
+      if(p.x > maxX)
+      {
+        maxX = p.x;
+      }
+      
+      if(p.y < minY)
+      {
+        minY = p.y;
+      }
+      
+      if(p.y > maxY)
+      {
+        maxY = p.y;
+      }
+      
+      theWidth = maxX - minX;
+      theHeight = maxY - minY;
+      
     }
+    
   }
 
   void Scale(float sx, float sy)
   {
-    for (int i = 0; i < shape.size(); i++)
-    {
-      Point p = shape.get(i % shape.size());
-      p.x *= sx;
-      p.y *= sy;
-    }
+    scaleX *= sx;
+    scaleY *= sy;
+    UpdateBounds();
   }
 
   void FillBox()
@@ -102,6 +164,7 @@ class Box
 
   void Draw()
   {
+    Identity();
     FillBox();
     pushMatrix();
     stroke(0);
@@ -118,6 +181,18 @@ class Box
 
   float theWidth;
   float theHeight;
+  
+  float posX;
+  float posY;
+  
+  float scaleX = 1;
+  float scaleY = 1;
+  
+  boolean isSelected = false;
+  boolean canClick = false;
+
+
   ArrayList<Point> shape;
+  ArrayList<Point> baseShape;
   Colour c;
 }

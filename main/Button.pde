@@ -10,14 +10,12 @@ class Button
   //constructor for text based button
   Button(String phrase)
   {
-    textPos = new Point();
-    words = phrase;
+    textSystem = new TextSystem();
+    textSystem.textPos = new Point();
+    textSystem.words = phrase;
     isText = true;
   }
-  //image based button
-  Button(TEXTURE_TYPE type)
-  {
-  }
+
 
   void SetSize(float w, float h)//Must call first
   {
@@ -25,14 +23,13 @@ class Button
     {
       b.MakeBox(w, h);
     }
-    
   }
-  
+
   void SetSize(float amount)
   {
-    if(isText)
+    if (isText)
     {
-      charSize = amount;
+      textSystem.charSize = amount;
     }
   }
 
@@ -42,10 +39,10 @@ class Button
     {
       b.Translate(x, y);
     }
-    if(isText)
+    if (isText)
     {
-      textPos.x = x;
-      textPos.y = y;
+      textSystem.textPos.x = x;
+      textSystem.textPos.y = y;
     }
   }
 
@@ -55,31 +52,62 @@ class Button
     {
       b.SetColour(red, green, blue);
     }
+
+    if (isText)
+    {
+      textSystem.c = new Colour(red, green, blue);
+    }
   }
 
   void SetOriginalColour(float red, float green, float blue)//call on creation
   {
     original = new Colour(red, green, blue);
+    if (isText)
+    {
+      textSystem.c = original;
+    }
     if (isBox)
     {
       b.SetColour(red, green, blue);
     }
-    
   }
 
   void CheckMousePos()
   {
-    if (isBox) 
+    if (isBox)
     {
       if (mouseX > b.shape.get(0).x && mouseX < b.shape.get(0).x + b.theWidth &&
         mouseY > b.shape.get(0).y && mouseY < b.shape.get(0).y + b.theHeight)
       {
         SetColour(100, 200, 100);
-        canClick = true;
+        b.canClick = true;
       } else
       {
         SetColour(original.r, original.g, original.b);
-        canClick = false;
+        b.canClick = false;
+      }
+    }
+
+
+    if (isText)
+    {
+      if (!textSystem.isActive)
+      {
+        if (mouseX > textSystem.textPos.x && mouseX < textSystem.textPos.x + 30
+          && mouseY > textSystem.textPos.y - 10 && mouseY < textSystem.textPos.y + 6)
+        {
+          SetColour(100, 200, 100);
+          textSystem.canClick = true;
+        } else
+        {
+
+          SetColour(original.r, original.g, original.b);
+          textSystem.canClick = false;
+        }
+      } else if (textSystem.isActive)
+      {
+        SetColour(100, 200, 100);
+        textSystem.canClick = false;
       }
     }
   }
@@ -92,28 +120,25 @@ class Button
     {
       b.Draw();
     }
-    
-    if(isText)
+
+    if (isText)
     {
-      
-      textSize(charSize);
-      fill(original.r, original.g, original.b);
-      text(words, textPos.x, textPos.y);
+
+      textSize(textSystem.charSize);
+      fill(textSystem.c.r, textSystem.c.g, textSystem.c.b);
+      text(textSystem.words, textSystem.textPos.x, textSystem.textPos.y);
     }
-    
   }
 
   Box b;
 
-  String words;
-  float charSize;
-  Point textPos;
+
 
   Colour original;
 
-  boolean canClick = false;
+  TextSystem textSystem;
 
   boolean isBox = false;
   boolean isText = false;
-  boolean isImage = false;
+
 };

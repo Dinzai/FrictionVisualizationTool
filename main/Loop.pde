@@ -13,7 +13,9 @@ class Loop
   void Add()
   {
     scene.AddTolayer(Layers.UI, menu);
+    scene.AddTolayer(Layers.ENTITY, spawner);
     input.Grab(menu);
+    input.Grab(spawner);
   }
   
   void Draw()
