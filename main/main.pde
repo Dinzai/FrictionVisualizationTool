@@ -1,23 +1,16 @@
-
-int screenWidth = 800;
-int screenHeight = 600;
-
-Loop simulation;
-
-void settings()
-{
-  size(screenWidth, screenHeight);
-}
+Loop sim;
 
 void setup()
 {
-  simulation = new Loop();
-  simulation.Load();
-}
+  size(800, 600);
+  sim = new Loop();
+  sim.Add();
 
+
+}
 void draw()
 {
   background(55);
-  simulation.Update();
-  simulation.Draw();
+  sim.Draw();
+
 }
