@@ -13,6 +13,7 @@ class TextSystem
   Colour c;
   String words;
   float charSize;
+  float offsetCheck;
   Point textPos;
   boolean canClick = false;
   boolean isActive = false;//active text button

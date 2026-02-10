@@ -6,8 +6,16 @@ class Spawnable implements Drawable, Interactable
   Spawnable()
   {
     allObjects = new ArrayList<Box>();
+
+    PlaceFloor();
   }
 
+  void PlaceFloor()
+  {
+    floor = new Box();
+    floor.MakeBox(800, 50);
+    floor.Translate(0, 550);
+  }
 
   void Spawn()
   {
@@ -25,7 +33,12 @@ class Spawnable implements Drawable, Interactable
       this.mode = mode;
     }
 
-    if (mode == "scale")
+    if (mode == "massUp")
+    {
+      this.mode = mode;
+    }
+
+    if (mode == "massDown")
     {
       this.mode = mode;
     }
@@ -69,39 +82,28 @@ class Spawnable implements Drawable, Interactable
       b.SetPosition(mouseX, mouseY);
     }
   }
-  
+
   void Scale(Box b)
   {
-    
-    float left = b.shape.get(0).x;
-    float right = left + b.theWidth;
-    float center = right - b.theWidth / 2;
-    if (b.isSelected && mode == "scale")
+
+    if (b.isSelected && mode == "massUp")
     {
-      b.SetColour(200, 100, 100);
-      b.canClick = false;
-      b.Translate(-400, -300);
-      
-      if(mouseX > center && mouseX < right)
+      if (b.scaleX < 2 && b.scaleY < 2)
       {
-        b.Scale(1.02, 1.0);
-      } 
-      
-      if(mouseX < center && mouseX > left)
-      {
-        b.Scale(0.8, 1.0);
-      }      
-      /*
-      if(mouseY < b.shape.get(0).y)
-      {
-        b.Scale(1.0, 0.8);
+        b.SetColour(200, 100, 100);
+        b.canClick = false;
+        b.Scale(1.02, 1.02);
       }
-      if(mouseY > b.shape.get(2).y)
+    }
+
+    if (b.isSelected && mode == "massDown")
+    {
+      if (b.scaleX > 0.5 && b.scaleY > 0.5)
       {
-        b.Scale(1.0, 1.02);
+        b.SetColour(200, 100, 100);
+        b.canClick = false;
+        b.Scale(0.8, 0.8);
       }
-      */
-      b.Translate(400, 300);
     }
   }
 
@@ -121,23 +123,62 @@ class Spawnable implements Drawable, Interactable
           b.SetColour(255, 255, 255);
           b.canClick = false;
         }
-      } 
+      }
       Move(b);
       Scale(b);
     }
   }
 
+  void SwitchGravityOn()
+  {
+    for (Box b : allObjects)
+    {
+      b.isPaused = !b.isPaused;
+    }
+  }
+
+  void CheckCollision()
+  {
+    for (int i = 0; i < allObjects.size(); i++)
+    {
+      Box temp = allObjects.get(i);
+      if(temp.Collision(floor))
+      {
+        temp.isPaused = true;
+      }
+      for(int j = i + 1; j <  allObjects.size(); j++)
+      {
+        Box other = allObjects.get(j);
+        if(temp != other)
+        {
+          if(temp.Collision(other))
+          {
+            temp.isPaused = true;
+            other.isPaused = true;
+          }
+        }
+      }
+      
+    }
+  }
+
+  void Update()
+  {
+    CheckCollision();
+    Grab();
+  }
+
   void DrawToScreen()
   {
-    Grab();
+
     for (Box b : allObjects)
     {
       b.Draw();
     }
+    floor.Draw();
   }
 
-
-
+  Box floor;
   ArrayList<Box> allObjects;
   String mode;
 }

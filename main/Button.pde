@@ -7,6 +7,16 @@ class Button
     b = new Box();
     isBox = true;
   }
+
+  Button(boolean makeTri)
+  {
+    if (makeTri)
+    {
+      t = new Box();
+      isTri = true;
+    }
+  }
+
   //constructor for text based button
   Button(String phrase)
   {
@@ -23,6 +33,10 @@ class Button
     {
       b.MakeBox(w, h);
     }
+    if (isTri)
+    {
+      t.MakeTri(w, h);
+    }
   }
 
   void SetSize(float amount)
@@ -32,12 +46,33 @@ class Button
       textSystem.charSize = amount;
     }
   }
+  
+  void SetTextOffsetCheck(float amount)
+  {
+    textSystem.offsetCheck = amount;
+  }
+
+  void Rotate(float angle)
+  {
+    if (isBox)
+    {
+      b.Rotate(angle);
+    }
+    if (isTri)
+    {
+      t.Rotate(angle);
+    }
+  }
 
   void SetPosition(float x, float y)
   {
     if (isBox)
     {
       b.Translate(x, y);
+    }
+    if (isTri)
+    {
+      t.Translate(x, y);
     }
     if (isText)
     {
@@ -51,6 +86,11 @@ class Button
     if (isBox)
     {
       b.SetColour(red, green, blue);
+    }
+
+    if (isTri)
+    {
+      t.SetColour(red, green, blue);
     }
 
     if (isText)
@@ -70,7 +110,24 @@ class Button
     {
       b.SetColour(red, green, blue);
     }
+    if (isTri)
+    {
+      t.SetColour(red, green, blue);
+    }
   }
+
+  boolean PointInTriangle(Point p, Point a, Point b, Point c)
+  {
+    float area = 0.5f * (-b.y * c.x + a.y * (-b.x + c.x) + a.x * (b.y - c.y) + b.x * c.y);
+    
+    float edgeAB = 1/(2 * area) * (a.y * c.x - a.x * c.y + (c.y - a.y) * p.x + (a.x - c.x) * p.y);
+    
+    float edgeAC = 1/(2 * area) * (a.x * b.y - a.y * b.x + (a.y - b.y) * p.x + (b.x - a.x) * p.y);
+    
+    return edgeAB >= 0 && edgeAC >= 0 && (edgeAB + edgeAC) <= 1;
+    
+  }
+
 
   void CheckMousePos()
   {
@@ -88,13 +145,26 @@ class Button
       }
     }
 
+    if (isTri)
+    {
+      Point m = new Point(mouseX, mouseY);
+      if (PointInTriangle(m, t.shape.get(0), t.shape.get(1), t.shape.get(2)))
+      {
+        SetColour(100, 200, 100);
+        t.canClick = true;
+      } else
+      {
+        SetColour(original.r, original.g, original.b);
+        t.canClick = false;
+      }
+    }
 
     if (isText)
     {
       if (!textSystem.isActive)
       {
-        if (mouseX > textSystem.textPos.x && mouseX < textSystem.textPos.x + 30
-          && mouseY > textSystem.textPos.y - 10 && mouseY < textSystem.textPos.y + 6)
+        if (mouseX > textSystem.textPos.x && mouseX < textSystem.textPos.x + textSystem.offsetCheck
+          && mouseY > textSystem.textPos.y - 10 && mouseY < textSystem.textPos.y + 10)
         {
           SetColour(100, 200, 100);
           textSystem.canClick = true;
@@ -121,6 +191,11 @@ class Button
       b.Draw();
     }
 
+    if (isTri)
+    {
+      t.Draw();
+    }
+
     if (isText)
     {
 
@@ -131,14 +206,13 @@ class Button
   }
 
   Box b;
-
-
+  Box t;
 
   Colour original;
 
   TextSystem textSystem;
 
   boolean isBox = false;
+  boolean isTri = false;
   boolean isText = false;
-
 };
