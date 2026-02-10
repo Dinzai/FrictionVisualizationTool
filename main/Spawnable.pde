@@ -144,7 +144,8 @@ class Spawnable implements Drawable, Interactable
       Box temp = allObjects.get(i);
       if(temp.Collision(floor))
       {
-        temp.isPaused = true;
+        temp.Resolution(floor);
+        //temp.isPaused = true;
       }
       for(int j = i + 1; j <  allObjects.size(); j++)
       {
@@ -153,8 +154,8 @@ class Spawnable implements Drawable, Interactable
         {
           if(temp.Collision(other))
           {
-            temp.isPaused = true;
-            other.isPaused = true;
+            //temp.isPaused = true;
+            //other.isPaused = true;
           }
         }
       }

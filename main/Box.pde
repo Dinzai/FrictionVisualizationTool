@@ -219,6 +219,7 @@ class Box
 
   void CalculateNormals()
   {
+    normals.clear();
     for (int i = 0; i < shape.size(); i++)
     {
       Point p = shape.get(i);
@@ -255,20 +256,26 @@ class Box
   boolean Collision(Box otherShape)
   {
     ArrayList<Point> axies = new ArrayList<Point>();
-    for(Point normal : normals)
+
+
+    for (Point normal : normals)
     {
       axies.add(normal);
     }
 
-    for(Point normal : otherShape.normals)
+    for (Point normal : otherShape.normals)
     {
       axies.add(normal);
     }
 
-    for(Point axis : axies)
+    float smallestOverlap = Float.MAX_VALUE;
+    Point bestAxis = null;
+
+    for (Point axis : axies)
     {
       Container one = DotPointsToAxis(axis);
       Container two = otherShape.DotPointsToAxis(axis);
+
 
       if (one.GetMax() < two.GetMin())
       {
@@ -281,9 +288,25 @@ class Box
 
         return false;
       }
+
+      float overlap = min(one.GetMax(), two.GetMax()) - max(one.GetMin(), two.GetMin());
+      if (overlap < smallestOverlap)
+      {
+            
+        smallestOverlap = overlap;
+        bestAxis = axis;        
+      }
     }
+    
+    changeVector = new Point(bestAxis.x * smallestOverlap, bestAxis.y * smallestOverlap);
 
     return true;
+  }
+
+  void Resolution(Box otherShape)
+  {
+    this.Translate(changeVector.x, -changeVector.y);
+    //otherShape.Translate(changeVector.x, changeVector.y);
   }
 
 
@@ -295,7 +318,7 @@ class Box
 
   void Draw()
   {
-    
+
     Update();
     Identity();
     UpdateBounds();
@@ -349,6 +372,7 @@ class Box
   ArrayList<Point> baseShape;
 
   ArrayList<Point> normals;
+  Point changeVector = new Point();
 
   Colour c;
 }
@@ -378,17 +402,17 @@ class Container
       }
     }
   }
-  
+
   float GetMax()
   {
     return max;
   }
-  
+
   float GetMin()
   {
     return min;
   }
-  
+
   ArrayList<Float> values = new ArrayList<Float>();
 
   float min = Float.MAX_VALUE;//Float.MAX_VALUE hold the largest float, i set min to large, max to low
