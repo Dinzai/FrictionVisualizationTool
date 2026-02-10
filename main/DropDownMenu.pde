@@ -33,6 +33,12 @@ class DropDownMenu implements Drawable, Interactable
     objectTextButton.SetTextOffsetCheck(30);
     objectTextButton.SetPosition(100, 70);
     objectTextButton.SetOriginalColour(0, 0, 0);
+    
+    inclinedTextButton = new Button("Incline");
+    inclinedTextButton.SetSize(12);
+    inclinedTextButton.SetTextOffsetCheck(30);
+    inclinedTextButton.SetPosition(100, 140);
+    inclinedTextButton.SetOriginalColour(0, 0, 0);
 
     selectTextButton = new Button("Select");
     selectTextButton.SetSize(12);
@@ -74,10 +80,16 @@ class DropDownMenu implements Drawable, Interactable
     {
       spawner.Spawn();
     }
+    
+    if (!canExpand && inclinedTextButton.textSystem.canClick)
+    {
+      spawner.SpawnTri();
+    }
 
     //play mode
     if (!canExpand && playButton.t.canClick)
     {
+      playButton.isActive = !playButton.isActive;
       spawner.SwitchGravityOn();
       
     } 
@@ -111,6 +123,8 @@ class DropDownMenu implements Drawable, Interactable
     
     if (backTextButton.textSystem.canClick)
     {
+      spawner.allObjects.clear();
+      playButton.isActive = false;
       sim.tScreen.isTitle = true;
       sim.tScreen.isSim = false;
     } 
@@ -122,6 +136,7 @@ class DropDownMenu implements Drawable, Interactable
   {
     if (backTextButton.textSystem.canClick)
     {
+      
       backTextButton.textSystem.canClick = false;
     }
   }
@@ -138,6 +153,7 @@ class DropDownMenu implements Drawable, Interactable
       scaleUpTextButton.Draw();
       scaleDownTextButton.Draw();
       objectTextButton.Draw();
+      inclinedTextButton.Draw();
     }
   }
 
@@ -153,4 +169,5 @@ class DropDownMenu implements Drawable, Interactable
 
   //Button materialTextButton;
   Button objectTextButton;
+  Button inclinedTextButton;
 }

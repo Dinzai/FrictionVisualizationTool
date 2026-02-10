@@ -54,6 +54,15 @@ class Box
     }
   }
 
+  float GetMaxY() {
+    float maxY = shape.get(0).y;
+    for (Point p : shape) {
+      if (p.y > maxY) maxY = p.y;
+    }
+    return maxY;
+  }
+
+
   float AngleToRad(float angle)
   {
     angle *= PI/180;
@@ -113,6 +122,21 @@ class Box
     posX += x;
     posY += y;
   }
+
+  Point GetCenter()
+  {
+    float x = 0;
+    float y = 0;
+
+    for (Point p : shape)
+    {
+      x += p.x;
+      y += p.y;
+    }
+
+    return new Point(x / shape.size(), y / shape.size());
+  }
+
 
   void UpdateBounds()
   {
@@ -208,7 +232,7 @@ class Box
 
   Point Normalize(Point vec)
   {
-    float magnitude = vec.x * vec.x + vec.y * vec.y;
+    float magnitude = sqrt(vec.x * vec.x + vec.y * vec.y);
     Point v = vec;
     if (magnitude != 0)
     {
@@ -269,10 +293,12 @@ class Box
     }
 
     float smallestOverlap = Float.MAX_VALUE;
-    Point bestAxis = null;
+    Point bestAxis = new Point();
 
     for (Point axis : axies)
     {
+      axis = Normalize(axis);
+
       Container one = DotPointsToAxis(axis);
       Container two = otherShape.DotPointsToAxis(axis);
 
@@ -292,37 +318,95 @@ class Box
       float overlap = min(one.GetMax(), two.GetMax()) - max(one.GetMin(), two.GetMin());
       if (overlap < smallestOverlap)
       {
-            
+
         smallestOverlap = overlap;
-        bestAxis = axis;        
+        bestAxis = axis;
       }
     }
-    
+
+    Point d = new Point(GetCenter().x - otherShape.GetCenter().x, GetCenter().y - otherShape.GetCenter().y);
+
+    float dot = d.x * bestAxis.x + d.y * bestAxis.y;
+
+    if (dot < 0)
+    {
+      bestAxis.x *= -1;
+      bestAxis.y *= -1;
+    }
+
     changeVector = new Point(bestAxis.x * smallestOverlap, bestAxis.y * smallestOverlap);
+    if (changeVector.y < 0)
+    {
+      velocityY = 0;
+      Translate(0, changeVector.y);
+    }
 
     return true;
   }
 
+  void Resolution()//floor
+  {
+
+    Translate(changeVector.x, changeVector.y);
+  }
+
   void Resolution(Box otherShape)
   {
-    this.Translate(changeVector.x, -changeVector.y);
-    //otherShape.Translate(changeVector.x, changeVector.y);
+
+    Translate(changeVector.x * 0.5, changeVector.y * 0.5);
+    otherShape.Translate(-changeVector.x * 0.5, -changeVector.y * 0.5);
   }
+
+  void AlignFlatSide(Box otherShape)
+  {
+    if (shape.size() != 3) return;
+
+    // Find the edge with largest horizontal span
+    int bestEdgeIndex = 0;
+    float maxHorizontal = 0;
+    for (int i = 0; i < shape.size(); i++) 
+    {
+      Point p1 = shape.get(i);
+      Point p2 = shape.get((i + 1) % shape.size());
+      float dx = Math.abs(p2.x - p1.x);
+      if (dx > maxHorizontal) 
+      {
+        maxHorizontal = dx;
+        bestEdgeIndex = i;
+      }
+    }
+
+    Point p1 = shape.get(bestEdgeIndex);
+    Point p2 = shape.get((bestEdgeIndex + 1) % shape.size());
+    float angle = (float)Math.atan2(p2.y - p1.y, p2.x - p1.x);
+    //print(angle);
+    Identity();
+    UpdateBounds();
+    CalculateNormals();
+    Rotate(30 * 180 / PI); // rotate to flat
+
+  }
+
 
 
   void Update()
   {
     if (!isPaused)
-      Translate(0, gravity * deltaTime);
+    {
+      velocityY += gravity * deltaTime;
+      Translate(0, velocityY * deltaTime);
+    }
+
+
+    UpdateBounds();
+    CalculateNormals();
   }
+
+
 
   void Draw()
   {
-
-    Update();
     Identity();
-    UpdateBounds();
-    CalculateNormals();
     pushMatrix();
     beginShape();
     fill(c.r, c.g, c.b);
@@ -354,6 +438,9 @@ class Box
 
   float posX;
   float posY;
+
+  float velocityX = 0;
+  float velocityY = 0;
 
   float scaleX = 1;
   float scaleY = 1;

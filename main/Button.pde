@@ -46,7 +46,7 @@ class Button
       textSystem.charSize = amount;
     }
   }
-  
+
   void SetTextOffsetCheck(float amount)
   {
     textSystem.offsetCheck = amount;
@@ -119,13 +119,12 @@ class Button
   boolean PointInTriangle(Point p, Point a, Point b, Point c)
   {
     float area = 0.5f * (-b.y * c.x + a.y * (-b.x + c.x) + a.x * (b.y - c.y) + b.x * c.y);
-    
+
     float edgeAB = 1/(2 * area) * (a.y * c.x - a.x * c.y + (c.y - a.y) * p.x + (a.x - c.x) * p.y);
-    
+
     float edgeAC = 1/(2 * area) * (a.x * b.y - a.y * b.x + (a.y - b.y) * p.x + (b.x - a.x) * p.y);
-    
+
     return edgeAB >= 0 && edgeAC >= 0 && (edgeAB + edgeAC) <= 1;
-    
   }
 
 
@@ -147,17 +146,26 @@ class Button
 
     if (isTri)
     {
-      Point m = new Point(mouseX, mouseY);
-      if (PointInTriangle(m, t.shape.get(0), t.shape.get(1), t.shape.get(2)))
+      if (!isActive)
+      {
+        Point m = new Point(mouseX, mouseY);
+        if (PointInTriangle(m, t.shape.get(0), t.shape.get(1), t.shape.get(2)))
+        {
+          SetColour(100, 200, 100);
+          t.canClick = true;
+        } else
+        {
+          SetColour(original.r, original.g, original.b);
+          t.canClick = false;
+        }
+      } else if (isActive)
       {
         SetColour(100, 200, 100);
         t.canClick = true;
-      } else
-      {
-        SetColour(original.r, original.g, original.b);
-        t.canClick = false;
+        
       }
     }
+
 
     if (isText)
     {
@@ -212,6 +220,7 @@ class Button
 
   TextSystem textSystem;
 
+  boolean isActive = false;
   boolean isBox = false;
   boolean isTri = false;
   boolean isText = false;

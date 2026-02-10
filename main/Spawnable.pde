@@ -15,12 +15,24 @@ class Spawnable implements Drawable, Interactable
     floor = new Box();
     floor.MakeBox(800, 50);
     floor.Translate(0, 550);
+    
+    
+    
   }
 
   void Spawn()
   {
     Box temp = new Box();
     temp.MakeBox(50, 50); //default box size
+    temp.Translate(400, 300);
+    allObjects.add(temp);
+  }
+  
+  void SpawnTri()
+  {
+    Box temp = new Box();
+    temp.MakeTri(200, 200); //default tri size
+    //temp.Rotate(90);
     temp.Translate(400, 300);
     allObjects.add(temp);
   }
@@ -131,8 +143,10 @@ class Spawnable implements Drawable, Interactable
 
   void SwitchGravityOn()
   {
+    mode = "select";
     for (Box b : allObjects)
     {
+      
       b.isPaused = !b.isPaused;
     }
   }
@@ -144,8 +158,8 @@ class Spawnable implements Drawable, Interactable
       Box temp = allObjects.get(i);
       if(temp.Collision(floor))
       {
-        temp.Resolution(floor);
-        //temp.isPaused = true;
+        temp.Resolution();
+        temp.AlignFlatSide(floor);
       }
       for(int j = i + 1; j <  allObjects.size(); j++)
       {
@@ -154,19 +168,31 @@ class Spawnable implements Drawable, Interactable
         {
           if(temp.Collision(other))
           {
-            //temp.isPaused = true;
-            //other.isPaused = true;
+            temp.Resolution(other);
           }
         }
       }
       
     }
   }
+  
+  void EachUpdate()
+  {
+    floor.Identity();
+    floor.UpdateBounds();
+    floor.CalculateNormals();
+    for(Box b : allObjects)
+    {
+      b.Update();
+    }
+  }
 
   void Update()
   {
+    EachUpdate();
     CheckCollision();
     Grab();
+    
   }
 
   void DrawToScreen()
