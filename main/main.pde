@@ -11,6 +11,7 @@ void setup()
 void draw()
 {
   background(55);
+  sim.Update();
   sim.Draw();
 
 }

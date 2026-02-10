@@ -2,6 +2,8 @@
 interface Interactable
 {
   void Click();
+  
+  void Reset();
 }
 
 class InputManager
@@ -17,11 +19,19 @@ class InputManager
     interactables.add(ie);
   }
   
-  void FixedUpdate()
+  void Clicked()
   {
     for(Interactable ie : interactables)
     {
       ie.Click();
+    }
+  }
+  
+  void Released()
+  {
+    for(Interactable ie : interactables)
+    {
+      ie.Reset();
     }
   }
   
@@ -34,10 +44,10 @@ InputManager input = new InputManager();
 
 void mousePressed()
 {
-  input.FixedUpdate();
+  input.Clicked();
 }
 
 void mouseReleased()
 {
-  
+  input.Released();
 }

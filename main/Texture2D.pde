@@ -3,6 +3,5 @@
 
 enum TEXTURE_TYPE
 {
-  BUTTON,
-  
+
 }
