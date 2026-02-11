@@ -31,6 +31,11 @@ class Scene
   {
     renderLayers.get(layer).add(obj);
   }
+  
+  void RemoveFromLayer(Layers layer, Drawable obj)
+  {
+    renderLayers.get(layer).remove(obj);
+  }
 
   void DrawOrder()
   {

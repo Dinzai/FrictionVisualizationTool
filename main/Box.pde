@@ -458,6 +458,10 @@ class Box
   Point changeVector = new Point();
 
   Colour c;
+  
+  Material m;
+  
+  
 }
 
 

@@ -19,6 +19,11 @@ class InputManager
     interactables.add(ie);
   }
   
+  void Eject(Interactable ie)
+  {
+    interactables.remove(ie);
+  }
+  
   void Clicked()
   {
     for(Interactable ie : interactables)

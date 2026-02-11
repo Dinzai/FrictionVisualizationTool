@@ -162,30 +162,6 @@ class Tutorial implements Drawable, Interactable
     demenstrationBox.Translate(dx, dy);
   }
 
-  void drawArrow(float x1, float y1, float x2, float y2)
-  {
-    // Draw main line
-    line(x1, y1, x2, y2);
-
-    // Arrow head size
-    float arrowSize = 10;
-
-    // Direction angle
-    float angle = atan2(y2 - y1, x2 - x1);
-
-    // Arrow head points
-    float x3 = x2 - arrowSize * cos(angle - PI/6);
-    float y3 = y2 - arrowSize * sin(angle - PI/6);
-
-    float x4 = x2 - arrowSize * cos(angle + PI/6);
-    float y4 = y2 - arrowSize * sin(angle + PI/6);
-
-    // Draw arrow head
-    line(x2, y2, x3, y3);
-    line(x2, y2, x4, y4);
-  }
-
-
   void Click()
   {
 
@@ -216,12 +192,13 @@ class Tutorial implements Drawable, Interactable
 
     if (backTextButton.textSystem.canClick)
     {
-      sim.tScreen.isTitle = true;
+
       sim.tScreen.isTut = false;
+      sim.tScreen.isTitle = true;
     }
   }
 
-  void Reset()
+  void Reset()//Leave empty here, messes with State reset
   {
     if (backTextButton.textSystem.canClick)
     {
@@ -388,6 +365,13 @@ class Tutorial implements Drawable, Interactable
 
     windowBox.Draw();
 
+    if (stateStepCounter >=5)
+    {
+
+      sim.tScreen.isTut = false;
+      sim.tScreen.isTitle = true;
+    }
+
     if (stateStepCounter == 4)
     {
       if (!canSeeWindMill)
@@ -443,7 +427,12 @@ class Tutorial implements Drawable, Interactable
         windBladeDown.Draw();
         windBladeLeft.Draw();
         popMatrix();
+
+        pushMatrix();
+        stroke(0);
+        strokeWeight(5);
         windButton.Draw();
+        popMatrix();
 
         drawArrow(windMillTower.posX + 50, windMillTower.posY + 15, windMillTower.posX + 30, windMillTower.posY + 15);
         drawArrow(windMillTower.posX - 30, windMillTower.posY + 15, windMillTower.posX, windMillTower.posY + 15);

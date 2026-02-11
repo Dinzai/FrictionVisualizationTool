@@ -4,59 +4,73 @@ class Loop
 {
   Loop()
   {
-    
+
     title = new Scene();
+    tScreen = new TitleScreen();
+
     tutorial = new Scene();
     sim = new Scene();
     wind = new Scene();
-    
-    tScreen = new TitleScreen();
+
     tScreen.isTitle = true;
     tutScreen = new Tutorial();
     windScreen = new Windmill();
-    
+
     menu = new DropDownMenu();
-    
   }
 
   void Add()
   {
-//title    
+    //title
     title.AddTolayer(Layers.UI, tScreen);
     input.Grab(tScreen);
-    
-//tut    
+
+    //tut
     tutorial.AddTolayer(Layers.UI, tutScreen);
     input.Grab(tutScreen);
- 
- //sim   
+
+    //sim
     sim.AddTolayer(Layers.UI, menu);
     sim.AddTolayer(Layers.ENTITY, spawner);
     input.Grab(menu);
     input.Grab(spawner);
-    
-//wind    
+
+    //wind
     wind.AddTolayer(Layers.UI, windScreen);
     input.Grab(windScreen);
-    
-    
   }
+  
+  void Reset()
+  {
+    tutorial.RemoveFromLayer(Layers.UI, tutScreen);
+    input.Eject(tutScreen);
+    tutScreen = new Tutorial();
+    tutorial.AddTolayer(Layers.UI, tutScreen);
+    input.Grab(tutScreen);
+  }
+
 
   void Update()
   {
-    
-    if(tScreen.isTut)
+
+    if (tScreen.isTut)
     {
       CalculateDeltaTime();
       tutScreen.Update();
-      
     }
 
-    if(tScreen.isSim)
+    if (tScreen.isSim)
     {
       spawner.Update();
       CalculateDeltaTime();
     }
+    
+    if (tScreen.isWind)
+    {
+      CalculateDeltaTime();
+      windScreen.Update();
+    }
+    
   }
 
   void Draw()
@@ -71,7 +85,7 @@ class Loop
     }
     if (tScreen.isSim)
     {
-       sim.DrawOrder();
+      sim.DrawOrder();
     }
     if (tScreen.isWind)
     {
@@ -82,15 +96,14 @@ class Loop
   Scene title;
   TitleScreen tScreen;
 
-  
+
   Scene tutorial;
   Tutorial tutScreen;
-  
+
   Scene wind;
   Windmill windScreen;
 
 
   Scene sim;
   DropDownMenu menu;
-
 }
