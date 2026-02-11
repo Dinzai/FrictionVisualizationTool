@@ -16,8 +16,6 @@ class Spawnable implements Drawable, Interactable
     floor.MakeBox(800, 50);
     floor.Translate(0, 550);
     
-    
-    
   }
 
   void Spawn()

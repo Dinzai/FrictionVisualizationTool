@@ -95,6 +95,40 @@ class Tutorial implements Drawable, Interactable
     forceButton.SetSize(60, 20);
     forceButton.SetPosition(200, 350);
     forceButton.SetOriginalColour(110, 110, 110);
+
+    //wind mill part
+
+    windBladeUp = new Box();
+    windBladeUp.MakeRotBox(20, 150);
+    windBladeUp.SetColour(180, 180, 220);
+    windBladeUp.Translate(windmillPositionX, windmillPositionY);
+
+    windBladeRight = new Box();
+    windBladeRight.MakeRotBox(150, 20);
+    windBladeRight.SetColour(180, 180, 220);
+    windBladeRight.Translate(windmillPositionX, windmillPositionY);
+
+    windBladeDown = new Box();
+    windBladeDown.MakeRotBox(20, 150);
+    windBladeDown.SetColour(180, 180, 220);
+    windBladeDown.Rotate(40);
+    windBladeDown.Translate(windmillPositionX, windmillPositionY);
+
+    windBladeLeft = new Box();
+    windBladeLeft.MakeRotBox(150, 20);
+    windBladeLeft.SetColour(180, 180, 220);
+    windBladeLeft.Rotate(45);
+    windBladeLeft.Translate(windmillPositionX, windmillPositionY);
+
+    windMillTower = new Box();
+    windMillTower.MakeBox(40, 100);
+    windMillTower.SetColour(190, 150, 130);
+    windMillTower.Translate(windmillPositionX - 20, windmillPositionY);
+
+    windButton = new Button();
+    windButton.SetSize(60, 20);
+    windButton.SetPosition(200, 350);
+    windButton.SetOriginalColour(110, 110, 110);
   }
 
   void SaveState()
@@ -155,6 +189,10 @@ class Tutorial implements Drawable, Interactable
   void Click()
   {
 
+    if (windButton.b.canClick)
+    {
+      windForce += 200 * deltaTime;
+    }
 
     if (forceButton.b.canClick)
     {
@@ -194,11 +232,51 @@ class Tutorial implements Drawable, Interactable
   void Update()
   {
     //wind
-    if(stateStepCounter == 4)
+    if (stateStepCounter == 4)
     {
-      
+      windTimer += deltaTime;
+      windTimerCountDown -= deltaTime;
+      if (windTimerCountDown <= 0)
+      {
+        windTimerCountDown = 4;
+      }
+      if (windTimer >= 4)
+      {
+        showSecond = true;
+      }
+      if (windTimer >= 8)
+      {
+        showSecond = false;
+        showThird = true;
+      }
+      if (windTimer >= 12)
+      {
+        canSeeWindMill = true;
+        showThird = false;
+      }
+
+      windMillSpeed = windForce;
+
+      if (windMillSpeed >= 5)
+      {
+        canMoveWindmill = true;
+      }
+
+      if (canMoveWindmill)
+      {
+        if (windForce > 0)
+        {
+          windForce -= 10 * deltaTime;
+          canMoveWindmill = false;
+        }
+
+        windBladeUp.Rotate(windMillSpeed * deltaTime);
+        windBladeRight.Rotate(windMillSpeed * deltaTime);
+        windBladeDown.Rotate(windMillSpeed * deltaTime);
+        windBladeLeft.Rotate(windMillSpeed * deltaTime);
+      }
     }
-//user friction
+    //user friction
     if (stateStepCounter == 3)
     {
       if (!boxFiveCanMove)
@@ -217,18 +295,16 @@ class Tutorial implements Drawable, Interactable
           {
             boxFiveSpeed -= 5 * deltaTime;
             demenstrationBoxFive.Translate(boxFiveSpeed * deltaTime, 0);
-          }
-          else 
+          } else
           {
             boxFiveForce = 0;
             boxFiveSpeed = 0;
           }
-        } 
-        
+        }
       }
     }
 
-//static kinetic explanation
+    //static kinetic explanation
     if (stateStepCounter == 2)
     {
       timer += deltaTime;
@@ -263,7 +339,6 @@ class Tutorial implements Drawable, Interactable
         }
       }
     }
-
 
     demenstrationBox.UpdateBounds();
     demenstrationBox.CalculateNormals();
@@ -312,6 +387,69 @@ class Tutorial implements Drawable, Interactable
   {
 
     windowBox.Draw();
+
+    if (stateStepCounter == 4)
+    {
+      if (!canSeeWindMill)
+      {
+        pushMatrix();
+        fill(0, 0, 0);
+        textSize(windTextSize);
+        text("Word Timer: " + (int)windTimerCountDown, 100, 100);
+        if (!showSecond && !showThird)
+        {
+          text(windMillText, 300, 200);
+        }
+        if (showSecond)
+        {
+          text(windMillTextTwo, 300, 200);
+        }
+        if (showThird)
+        {
+          text(windMillTextThree, 200, 200);
+        }
+        popMatrix();
+      }
+
+      if (canSeeWindMill)
+      {
+        pushMatrix();
+        fill(0, 0, 0);
+        textSize(windTextSize);
+        text("Wind Force: " + (int)windForce, 100, 100);
+        popMatrix();
+
+        pushMatrix();
+        fill(0, 0, 0);
+        textSize(windTextSize);
+        text("Now its your turn! ", 100, 200);
+        popMatrix();
+
+        pushMatrix();
+        fill(0, 0, 0);
+        textSize(windTextSize);
+        text("Tap the button to add wind! ", 100, 300);
+        popMatrix();
+
+        pushMatrix();
+        stroke(0);
+        strokeWeight(5);
+        windMillTower.Draw();
+        popMatrix();
+        pushMatrix();
+        noStroke();
+        windBladeUp.Draw();
+        windBladeRight.Draw();
+        windBladeDown.Draw();
+        windBladeLeft.Draw();
+        popMatrix();
+        windButton.Draw();
+
+        drawArrow(windMillTower.posX + 50, windMillTower.posY + 15, windMillTower.posX + 30, windMillTower.posY + 15);
+        drawArrow(windMillTower.posX - 30, windMillTower.posY + 15, windMillTower.posX, windMillTower.posY + 15);
+      }
+    }
+
 
     if (stateStepCounter == 3)
     {
@@ -415,7 +553,7 @@ class Tutorial implements Drawable, Interactable
     reverseTextButton.Draw();
     backTextButton.Draw();
   }
-
+  //part one
   Box windowBox;
 
   Box demenstrationBox;
@@ -486,4 +624,34 @@ class Tutorial implements Drawable, Interactable
   float force = 0;
 
   ArrayDeque<TutorialState> history = new ArrayDeque<>();
+  //part two Drag
+
+  int windTextSize = 21;
+  String windMillText = "Friction also works in the air!";
+  String windMillTextTwo = "This is called Drag!";
+  String windMillTextThree = "Think about fans slowing down when they turn off!";
+
+  boolean canSeeWindMill = false;
+  boolean canMoveWindmill = false;
+
+  boolean showSecond = false;
+  boolean showThird = false;
+
+  float windTimer = 0;
+  float windTimerCountDown = 4;
+  float windTimerMax = 4;
+
+  float windForce = 0;
+  float windMillSpeed = 0;
+
+  Button windButton;
+
+  float windmillPositionX = 420;
+  float windmillPositionY = 250;
+
+  Box windBladeUp;
+  Box windBladeRight;
+  Box windBladeDown;
+  Box windBladeLeft;
+  Box windMillTower;
 }

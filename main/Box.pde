@@ -35,6 +35,33 @@ class Box
     }
   }
 
+  void MakeRotBox(float w, float h)
+  {
+    theWidth = w;
+    theHeight = h;
+
+    float halfWidth = theWidth * 0.5;
+    float halfHeight = theHeight * 0.5;
+
+    baseShape.clear();
+    shape.clear();
+
+    Point TL = new Point(-halfWidth, -halfHeight);
+    Point TR = new Point(halfWidth, -halfHeight);
+    Point BR = new Point(halfWidth, halfHeight);
+    Point BL = new Point(-halfWidth, halfHeight);
+
+    baseShape.add(TL);
+    baseShape.add(TR);
+    baseShape.add(BR);
+    baseShape.add(BL);
+
+    for (Point p : baseShape)
+    {
+      shape.add(new Point(p.x, p.y));
+    }
+  }
+
   void MakeTri(float w, float h)
   {
     theWidth = w;
@@ -72,17 +99,18 @@ class Box
   void Rotate(float angle)
   {
 
-    this.angle = AngleToRad(angle);
-
+    this.angle += AngleToRad(angle);
+    /*
     for (int i = 0; i < baseShape.size(); i++)
-    {
-      Point p = baseShape.get(i);
-      Point o = shape.get(i);
-
-      p.x = o.x * cos(this.angle ) - o.y * sin(this.angle );
-      p.y = o.x * sin(this.angle ) + o.y * cos(this.angle );
-    }
-    UpdateBounds();
+     {
+     Point p = baseShape.get(i);
+     Point o = shape.get(i);
+     
+     p.x = o.x * cos(this.angle ) - o.y * sin(this.angle );
+     p.y = o.x * sin(this.angle ) + o.y * cos(this.angle );
+     }
+     UpdateBounds();
+     */
   }
 
   void Identity()
