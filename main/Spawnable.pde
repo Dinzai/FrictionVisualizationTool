@@ -32,7 +32,7 @@ class Spawnable implements Drawable, Interactable
   {
     Box temp = new Box();
     temp.MakeTri(200, 200); //default tri size
-    //temp.Rotate(90);
+    temp.Rotate(90);
     temp.Translate(400, 300);
     allObjects.add(temp);
   }
@@ -159,7 +159,7 @@ class Spawnable implements Drawable, Interactable
       if(temp.Collision(floor))
       {
         temp.Resolution();
-        temp.AlignFlatSide(floor);
+        //temp.AlignFlatSide(floor);
       }
       for(int j = i + 1; j <  allObjects.size(); j++)
       {

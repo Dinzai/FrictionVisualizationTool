@@ -44,6 +44,13 @@ class Loop
 
   void Update()
   {
+    
+    if(tScreen.isTut)
+    {
+      CalculateDeltaTime();
+      tutScreen.Update();
+      
+    }
 
     if(tScreen.isSim)
     {

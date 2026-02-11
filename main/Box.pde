@@ -87,7 +87,6 @@ class Box
 
   void Identity()
   {
-
     for (int i = 0; i < shape.size(); i++)
     {
 
@@ -356,37 +355,6 @@ class Box
     Translate(changeVector.x * 0.5, changeVector.y * 0.5);
     otherShape.Translate(-changeVector.x * 0.5, -changeVector.y * 0.5);
   }
-
-  void AlignFlatSide(Box otherShape)
-  {
-    if (shape.size() != 3) return;
-
-    // Find the edge with largest horizontal span
-    int bestEdgeIndex = 0;
-    float maxHorizontal = 0;
-    for (int i = 0; i < shape.size(); i++) 
-    {
-      Point p1 = shape.get(i);
-      Point p2 = shape.get((i + 1) % shape.size());
-      float dx = Math.abs(p2.x - p1.x);
-      if (dx > maxHorizontal) 
-      {
-        maxHorizontal = dx;
-        bestEdgeIndex = i;
-      }
-    }
-
-    Point p1 = shape.get(bestEdgeIndex);
-    Point p2 = shape.get((bestEdgeIndex + 1) % shape.size());
-    float angle = (float)Math.atan2(p2.y - p1.y, p2.x - p1.x);
-    //print(angle);
-    Identity();
-    UpdateBounds();
-    CalculateNormals();
-    Rotate(30 * 180 / PI); // rotate to flat
-
-  }
-
 
 
   void Update()
