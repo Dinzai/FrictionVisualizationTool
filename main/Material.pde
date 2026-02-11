@@ -1,7 +1,7 @@
 
 enum M_TYPE
 {
-    NONE,
+  NONE,
     WOOD,
     METAL,
     ROCK,
@@ -14,12 +14,13 @@ class Material
   Material(M_TYPE mt)
   {
     materialType = mt;
+    c = new Colour();
     if (materialType == M_TYPE.NONE)
-    {      
+    {
       staticFrictionValue = 0;
       kineticFrictionValue = 0;
     }
-    
+
     if (materialType == M_TYPE.WOOD)
     {
       staticFrictionValue = 45;
@@ -45,12 +46,46 @@ class Material
     }
   }
 
+  void SetType(M_TYPE mType)
+  {
+    materialType = mType;
+    SetColour();
+  }
+
+  void SetColour()
+  {
+    if (materialType == M_TYPE.NONE)
+    {
+      c = new Colour(255, 255, 255);
+    }
+
+    if (materialType == M_TYPE.WOOD)
+    {
+      c = new Colour(125, 80, 35);
+    }
+
+    if (materialType == M_TYPE.METAL)
+    {
+      c = new Colour(95, 80, 110);
+    }
+
+    if (materialType == M_TYPE.ROCK)
+    {
+      c = new Colour(55, 55, 55);
+    }
+
+    if (materialType == M_TYPE.ICE)
+    {
+      c = new Colour(110, 110, 255);
+    }
+  }
+
   float DetermineStaticInteraction(Material other)
   {
 
     return (staticFrictionValue + other.staticFrictionValue) * 0.5;
   }
-  
+
   float DeterminekineticInteraction(Material other)
   {
 
@@ -60,106 +95,128 @@ class Material
   float staticFrictionValue;
   float kineticFrictionValue;
   M_TYPE materialType;
+  Colour c;
 }
 
 class MaterialIconObject implements Drawable, Interactable
 {
-  
+
   MaterialIconObject(M_TYPE materialType, float x, float y, float r)
   {
     xPos = x;
     yPos = y;
     radius = r;
-    
+
     originalXPos = x;
     originalYPos = y;
-    c = new Colour();
     m = new Material(materialType);
-    
-
   }
-  
+
   void Click()
   {
-    if(mouseX > xPos - radius && mouseX < xPos + radius && mouseY > yPos - radius && mouseY < yPos + radius)
+    if (mouseX > xPos - radius && mouseX < xPos + radius && mouseY > yPos - radius && mouseY < yPos + radius)
     {
-      isClicked = true;     
+      isClicked = true;
     }
   }
-  
+
   void Update()
   {
-    if(isClicked == true)
+    if (isClicked == true)
     {
       xPos = mouseX;
       yPos = mouseY;
     }
   }
-  
+
+  boolean Collision(Box b)
+  {
+
+    if (xPos + radius < b.posX)
+    {
+      return false;
+    }
+
+    if (xPos + radius * 2 > b.posX + b.theWidth)
+    {
+      return false;
+    }
+
+    if (yPos + radius < b.posY)
+    {
+      return false;
+    }
+
+
+    if (yPos + radius * 2 > b.posY + b.theHeight)
+    {
+      return false;
+    }
+
+
+    return true;
+  }
+
+  void Check()
+  {
+
+    if (isClicked)
+    {
+      if (Collision(spawner.floor))
+      {
+        //print("hit");
+        spawner.floor.SetType(m.materialType);
+      }
+
+      for (int i = 0; i < spawner.allObjects.size(); i++)
+      {
+        Box temp = spawner.allObjects.get(i);
+        if (Collision(temp))
+        {
+          temp.SetType(m.materialType);
+        }
+      }
+    }
+  }
+
   void Reset()
   {
     isClicked = false;
     xPos = originalXPos;
     yPos = originalYPos;
   }
-  
-  
+
   void SetColour()
   {
-    if(m.materialType == M_TYPE.NONE)
-    {
-      c = new Colour(255, 255, 255); 
-    }
-    
-    if(m.materialType == M_TYPE.WOOD)
-    {
-      c = new Colour(125, 80, 35); 
-    }
-    
-    if(m.materialType == M_TYPE.METAL)
-    {
-      c = new Colour(95, 80, 110); 
-    }
-    
-    if(m.materialType == M_TYPE.ROCK)
-    {
-      c = new Colour(55, 55, 55); 
-    }
-    
-    if(m.materialType == M_TYPE.ICE)
-    {
-      c = new Colour(110, 110, 255); 
-    }
+    m.SetColour();
   }
-  
+
   void DrawToScreen()
   {
+    Check();
     pushMatrix();
-    fill(c.r, c.g, c.b);
+    fill(m.c.r, m.c.g, m.c.b);
     circle(xPos, yPos, radius * 2);
     popMatrix();
   }
-  
+
   float xPos;
   float yPos;
-  
+
   float originalXPos;
   float originalYPos;
-  
+
   boolean isClicked = false;
-  
+
   float radius;
-  
-  Colour c;
-  
+
   Material m;
-  
 }
 
 
 class MaterialPannel
 {
-  
+
   MaterialPannel()
   {
     pannel = new Box();
@@ -168,51 +225,48 @@ class MaterialPannel
     pannel.Translate(170, 100);
     materials = new ArrayList<MaterialIconObject>();
     AddMaterialTypes();
-       
   }
-  
+
   void AddMaterialTypes()
   {
     MaterialIconObject none = new MaterialIconObject(M_TYPE.NONE, pannel.posX + 15, pannel.posY + 20, 10);
     none.SetColour();
-    
+
     MaterialIconObject wood = new MaterialIconObject(M_TYPE.WOOD, pannel.posX + 15, pannel.posY + 50, 10);
     wood.SetColour();
-    
+
     MaterialIconObject metal = new MaterialIconObject(M_TYPE.METAL, pannel.posX + 15, pannel.posY + 80, 10);
     metal.SetColour();
-    
+
     MaterialIconObject rock = new MaterialIconObject(M_TYPE.ROCK, pannel.posX + 40, pannel.posY + 20, 10);
     rock.SetColour();
-    
+
     MaterialIconObject ice = new MaterialIconObject(M_TYPE.ICE, pannel.posX + 40, pannel.posY + 50, 10);
     ice.SetColour();
-    
+
     materials.add(none);
     materials.add(wood);
     materials.add(metal);
     materials.add(rock);
     materials.add(ice);
-    
-    for(MaterialIconObject m : materials)
+
+    for (MaterialIconObject m : materials)
     {
       input.Grab(m);
     }
-    
   }
 
   void Draw()
   {
     pannel.Draw();
-    for(MaterialIconObject m : materials)
+    for (MaterialIconObject m : materials)
     {
       m.Update();
       m.DrawToScreen();
     }
   }
-  
- 
+
+
   Box pannel;
   ArrayList<MaterialIconObject> materials;
-  
 }

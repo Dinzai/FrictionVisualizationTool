@@ -15,6 +15,7 @@ class Spawnable implements Drawable, Interactable
     floor = new Box();
     floor.MakeBox(800, 50);
     floor.Translate(0, 550);
+    floor.SetType(M_TYPE.NONE);
     
   }
 
@@ -130,7 +131,8 @@ class Spawnable implements Drawable, Interactable
           b.canClick = true;
         } else
         {
-          b.SetColour(255, 255, 255);
+          b.c = b.originalC;
+          b.SetColour(b.c.r, b.c.g, b.c.b);
           b.canClick = false;
         }
       }

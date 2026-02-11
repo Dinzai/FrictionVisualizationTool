@@ -7,11 +7,20 @@ class Box
     shape = new ArrayList<Point>();
     normals = new ArrayList<Point>();
     c = new Colour();
+    originalC = new Colour();
+    m = new Material(M_TYPE.NONE);
   }
 
   void SetColour(float r, float g, float b)
   {
     c = new Colour(r, g, b);
+  }
+  
+  void SetType(M_TYPE mType)
+  {
+    m.SetType(mType);
+    c = m.c;
+    originalC = m.c;
   }
 
   void MakeBox(float w, float h)
@@ -450,7 +459,6 @@ class Box
 
   float angle = 0;
 
-
   ArrayList<Point> shape;
   ArrayList<Point> baseShape;
 
@@ -458,12 +466,11 @@ class Box
   Point changeVector = new Point();
 
   Colour c;
+  Colour originalC;
   
   Material m;
-  
-  
+    
 }
-
 
 
 class Container
