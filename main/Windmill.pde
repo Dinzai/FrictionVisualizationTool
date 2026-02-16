@@ -46,15 +46,41 @@ class Windmill implements Drawable, Interactable
 
     windButton = new Button();
     windButton.SetSize(60, 20);
-    windButton.SetPosition(200, 350);
+    windButton.SetPosition(200, 310);
     windButton.SetOriginalColour(110, 110, 110);
+
+    sliderRail = new Box();
+    sliderRail.MakeBox(80, 10);
+    sliderRail.SetColour(80, 80, 80);
+    sliderRail.Translate(200, 210);
+
+    sliderButton = new Button();
+    sliderButton.SetSize(10, 10);
+    sliderButton.SetOriginalColour(90, 90, 90);
+    sliderButton.SetPosition(200, 210);
+    
+    dragSliderRail = new Box();
+    dragSliderRail.MakeBox(80, 10);
+    dragSliderRail.SetColour(80, 80, 80);
+    dragSliderRail.Translate(560, 285);
+
+    dragSliderButton = new Button();
+    dragSliderButton.SetSize(10, 10);
+    dragSliderButton.SetOriginalColour(90, 90, 90);
+    dragSliderButton.SetPosition(560, 285);
+    
+    windowBox = new Box();
+    windowBox.MakeBox(650, 480);
+    windowBox.SetColour(135, 135, 135);
+    windowBox.Translate(80, 40);
+    
   }
 
   void Click()
   {
     if (windButton.b.canClick)
     {
-      windForce += 200 * deltaTime;
+      windForce += startingForce;
     }
 
     if (backTextButton.textSystem.canClick)
@@ -62,10 +88,31 @@ class Windmill implements Drawable, Interactable
       sim.tScreen.isWind = false;
       sim.tScreen.isTitle = true;
     }
+    if (sliderButton.b.canClick)
+    {
+      sliderIsPressed = true;
+    }
+    
+    if (dragSliderButton.b.canClick)
+    {
+      dragSliderIsPressed = true;
+    }
+    
   }
 
   void Reset()
   {
+
+    if (sliderIsPressed)
+    {
+      sliderIsPressed = false;
+    }
+    
+    if (dragSliderIsPressed)
+    {
+      dragSliderIsPressed = false;
+    }
+
     if (backTextButton.textSystem.canClick)
     {
       backTextButton.textSystem.canClick = false;
@@ -75,6 +122,57 @@ class Windmill implements Drawable, Interactable
   void Update()
   {
     windMillSpeed = windForce;
+    if (sliderIsPressed)
+    {
+      float minSlide = sliderRail.posX;
+      float maxSlide = sliderRail.posX + sliderRail.theWidth - sliderButton.b.theWidth;
+      float newPositionX = mouseX - sliderButton.b.theWidth / 2;
+      if (newPositionX < minSlide)
+      {
+        
+        newPositionX = minSlide;
+      }
+      if (newPositionX > maxSlide)
+      {
+        
+        newPositionX = maxSlide;
+      }
+      if (mouseY > sliderButton.b.shape.get(0).y && mouseY < sliderButton.b.shape.get(0).y + sliderButton.b.theHeight)
+      {
+        
+        //lock the magnitude based on the size
+         float value = (newPositionX - minSlide) / (maxSlide - minSlide);
+        startingForce = value * maxWindForce;
+        sliderButton.b.posX = newPositionX;
+      }
+    }
+    
+    //drag
+    
+    if (dragSliderIsPressed)
+    {
+      float minSlide = dragSliderRail.posX;
+      float maxSlide = dragSliderRail.posX + dragSliderRail.theWidth - dragSliderButton.b.theWidth;
+      float newPositionX = mouseX - dragSliderButton.b.theWidth / 2;
+      if (newPositionX < minSlide)
+      {
+        
+        newPositionX = minSlide;
+      }
+      if (newPositionX > maxSlide)
+      {
+        
+        newPositionX = maxSlide;
+      }
+      if (mouseY > dragSliderButton.b.shape.get(0).y && mouseY < dragSliderButton.b.shape.get(0).y + dragSliderButton.b.theHeight)
+      {
+        
+        //lock the magnitude based on the size
+         float value = (newPositionX - minSlide) / (maxSlide - minSlide);
+        dragResistence = value * maxDragResistence;
+        dragSliderButton.b.posX = newPositionX;
+      }
+    }
 
     if (windMillSpeed >= 5)
     {
@@ -85,7 +183,12 @@ class Windmill implements Drawable, Interactable
     {
       if (windForce > 0)
       {
-        windForce -= 10 * deltaTime;
+        windForce -= dragResistence * deltaTime;
+        //canMoveWindmill = false;
+      }
+      else if(windForce <= 0)
+      {
+        windForce = 0;
         canMoveWindmill = false;
       }
 
@@ -98,7 +201,14 @@ class Windmill implements Drawable, Interactable
 
   void DrawToScreen()
   {
-
+    pushMatrix();
+    
+    windowBox.Draw();
+    fill(0, 0, 0);
+    textSize(windTextSize);
+    text("Move the sliders!", 330, 120);
+    text("Push the Button!", 120, 350);
+    popMatrix();
     pushMatrix();
     stroke(0);
     strokeWeight(5);
@@ -121,17 +231,29 @@ class Windmill implements Drawable, Interactable
     pushMatrix();
     fill(0, 0, 0);
     textSize(windTextSize);
-    text("Wind Force: " + (int)windForce, windMillTower.posX - 210, windMillTower.posY + 5);
+    text("Current Wind Force: " + (int)windForce, windMillTower.posX - 280, windMillTower.posY + 15);
     popMatrix();
-    
+
     pushMatrix();
     fill(0, 0, 0);
     textSize(windTextSize);
-    text("Drag: " + (int)dragResistence, windMillTower.posX + 160, windMillTower.posY + 5);
+    text("Drag: " + (int)dragResistence, windMillTower.posX + 160, windMillTower.posY + 15);
     popMatrix();
 
-    drawArrow(windMillTower.posX + 230, windMillTower.posY + 15, windMillTower.posX + 150, windMillTower.posY + 15);
-    drawArrow(windMillTower.posX - 200, windMillTower.posY + 15, windMillTower.posX - 100, windMillTower.posY + 15);
+    drawArrow(windMillTower.posX + 230, windMillTower.posY + 25, windMillTower.posX + 150, windMillTower.posY + 25);
+    drawArrow(windMillTower.posX - 200, windMillTower.posY + 25, windMillTower.posX - 100, windMillTower.posY + 25);
+
+    pushMatrix();
+    fill(0, 0, 0);
+    textSize(windTextSize);
+    text("Starting Wind force: " + (int)startingForce, 110, 200);
+    popMatrix();
+    
+    sliderRail.Draw();
+    sliderButton.Draw();
+        
+    dragSliderRail.Draw();
+    dragSliderButton.Draw();
 
     backTextButton.Draw();
   }
@@ -142,11 +264,15 @@ class Windmill implements Drawable, Interactable
   boolean canSeeWindMill = false;
   boolean canMoveWindmill = false;
 
+  boolean sliderIsPressed = false;
+  boolean dragSliderIsPressed = false;
+
   float windTimer = 0;
   float windTimerCountDown = 4;
   float windTimerMax = 4;
-  
-  float dragResistence = 20;
+
+  float dragResistence = 0;
+  float maxDragResistence = 5000;
 
   float windForce = 0;
   float windMillSpeed = 0;
@@ -155,10 +281,22 @@ class Windmill implements Drawable, Interactable
 
   float windmillPositionX = 420;
   float windmillPositionY = 250;
+  
+  float startingForce = 0;
+  float maxWindForce = 10000;
+
 
   Box windBladeUp;
   Box windBladeRight;
   Box windBladeDown;
   Box windBladeLeft;
   Box windMillTower;
+
+  Box sliderRail;
+  Button sliderButton;
+  
+  Box dragSliderRail;
+  Button dragSliderButton;
+  Box windowBox;
+  
 }
