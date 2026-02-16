@@ -15,7 +15,7 @@ class Box
   {
     c = new Colour(r, g, b);
   }
-  
+
   void SetType(M_TYPE mType)
   {
     m.SetType(mType);
@@ -109,17 +109,6 @@ class Box
   {
 
     this.angle += AngleToRad(angle);
-    /*
-    for (int i = 0; i < baseShape.size(); i++)
-     {
-     Point p = baseShape.get(i);
-     Point o = shape.get(i);
-     
-     p.x = o.x * cos(this.angle ) - o.y * sin(this.angle );
-     p.y = o.x * sin(this.angle ) + o.y * cos(this.angle );
-     }
-     UpdateBounds();
-     */
   }
 
   void Identity()
@@ -213,58 +202,6 @@ class Box
     scaleX *= sx;
     scaleY *= sy;
   }
-  /*
-  void FillBox()
-   {
-   pushMatrix();
-   stroke(c.r, c.g, c.b);
-   strokeWeight(1);
-   float minY = shape.get(0).y;
-   float maxY = shape.get(0).y;
-   
-   for (Point p : shape)
-   {
-   minY = min(minY, p.y);
-   maxY = max(maxY, p.y);
-   }
-   
-   for (int y = (int)minY; y <= (int)maxY; y++)
-   {
-   ArrayList<Float> raster = new ArrayList<Float>();
-   
-   for (int i = 0; i < shape.size(); i++)
-   {
-   Point p = shape.get(i);
-   Point nextP = shape.get((i + 1) % shape.size());
-   
-   //swap
-   
-   Point p1 = p;
-   Point p2 = nextP;
-   
-   if (p1.y > p2.y)
-   {
-   Point temp = p1;
-   p1 = nextP;
-   p2 = temp;
-   }
-   
-   if (y > p1.y && y < p2.y)
-   {
-   float x = p1.x + (y - p1.y) * (p2.x - p1.x) / (p2.y - p1.y);
-   
-   raster.add(x);
-   }
-   }
-   
-   for (int i = 0; i < raster.size() - 1; i+=2)
-   {
-   line(raster.get(i), y, raster.get(i+1), y);
-   }
-   }
-   popMatrix();
-   }
-   */  //Adding triangles made managing my own render system no good
 
   Point Normalize(Point vec)
   {
@@ -312,6 +249,34 @@ class Box
 
     return contain;
   }
+  //this effect is to enhance uswer feedback to have a squishy, bounce like effect when howvered over, instead of change in colour
+  void Bounce()
+  {
+    if (canGetCurrentScale)
+    {
+      baseX = scaleX;
+      baseY = scaleY;
+      canGetCurrentScale = false;
+    }
+
+    if (!canBounce)
+      return;
+
+    bounceTime += deltaTime * bounceSpeed;
+
+    float waveX = cos(bounceTime);
+    float waveY = sin(bounceTime);
+
+    float stretchX = baseX * (1.0f + waveX * bounceAmount);
+    float stretchY = baseY * (1.0f - waveY * bounceAmount);
+    if (bounceTime > 2)
+    {
+      directionSquish *= -1;
+      bounceTime = 0;
+    }
+    Scale(stretchX * directionSquish, stretchY * directionSquish);
+  }
+
 
   boolean Collision(Box otherShape)
   {
@@ -401,8 +366,9 @@ class Box
       velocityY += gravity * deltaTime;
       Translate(0, velocityY * deltaTime);
     }
-
-
+    accleration = force / mass;
+    posX += accleration * deltaTime;
+    Bounce();
     UpdateBounds();
     CalculateNormals();
   }
@@ -422,24 +388,12 @@ class Box
     }
     endShape(CLOSE);
     popMatrix();
-    /*
-    FillBox();
-     pushMatrix();
-     stroke(0);
-     strokeWeight(3);
-     for (int i = 0; i < shape.size(); i++)
-     {
-     Point p = shape.get(i);
-     Point nextP = shape.get((i + 1) % shape.size());
-     
-     line(p.x, p.y, nextP.x, nextP.y);
-     }
-     popMatrix();
-     */
   }
 
   float theWidth;
   float theHeight;
+  
+  float force = 0;
 
   float posX;
   float posY;
@@ -458,6 +412,9 @@ class Box
   float gravity = 200;
 
   float angle = 0;
+  
+  float accleration = 0;
+  float mass = 10;
 
   ArrayList<Point> shape;
   ArrayList<Point> baseShape;
@@ -467,9 +424,19 @@ class Box
 
   Colour c;
   Colour originalC;
-  
+
   Material m;
-    
+
+  //For the bounce effect
+  float baseX = 0;
+  float baseY = 0;
+
+  float bounceAmount = 0.25;
+  float bounceSpeed = 6;
+  float bounceTime = 0;
+  int directionSquish = 1;
+  boolean canBounce = false;
+  boolean canGetCurrentScale = true;
 }
 
 

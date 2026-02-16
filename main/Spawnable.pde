@@ -13,10 +13,9 @@ class Spawnable implements Drawable, Interactable
   void PlaceFloor()
   {
     floor = new Box();
-    floor.MakeBox(800, 50);
-    floor.Translate(0, 550);
+    floor.MakeBox(768, 50);
+    floor.Translate(15, 550);
     floor.SetType(M_TYPE.NONE);
-    
   }
 
   void Spawn()
@@ -26,7 +25,7 @@ class Spawnable implements Drawable, Interactable
     temp.Translate(400, 300);
     allObjects.add(temp);
   }
-  
+
   void SpawnTri()
   {
     Box temp = new Box();
@@ -88,9 +87,36 @@ class Spawnable implements Drawable, Interactable
   {
     if (b.isSelected && mode == "select")
     {
+      float minX = 17;
+      float maxX = 730;
+      float minY = 72;
+      float maxY = 497;
+
+      float newPositionX =   mouseX - b.theWidth / 2;
+      float newPositionY =   mouseY - b.theHeight / 2;
+      if (newPositionX < minX)
+      {
+        newPositionX = minX;
+      }
+      if (newPositionX > maxX)
+      {
+        newPositionX = maxX;
+      }
+
+      if (newPositionY < minY)
+      {
+        newPositionY = minY;
+      }
+      if (newPositionY > maxY)
+      {
+        newPositionY = maxY;
+      }
+
       b.SetColour(200, 100, 100);
       b.canClick = false;
-      b.SetPosition(mouseX, mouseY);
+      b.posX = newPositionX;
+      b.posY = newPositionY;
+      //b.SetPosition(mouseX, mouseY);
     }
   }
 
@@ -118,24 +144,45 @@ class Spawnable implements Drawable, Interactable
     }
   }
 
+  void AddForce(float amount)
+  {
+    if (index != -1)
+    {
+      Box b = allObjects.get(index);
+      if (b.isPaused)
+      {
+        b.isPaused = !b.isPaused;
+        b.force = amount;
+      }
+    }
+  }
   void Grab()
   {
-    for (Box b : allObjects)
+    for (int i = 0; i < allObjects.size(); i++)
     {
+      Box b = allObjects.get(i);
       if (!b.isSelected)
       {
         if (mouseX > b.shape.get(0).x && mouseX < b.shape.get(0).x + b.theWidth &&
           mouseY > b.shape.get(0).y && mouseY < b.shape.get(0).y + b.theHeight)
         {
           b.SetColour(100, 200, 100);
+          //b.canBounce = true;
           b.canClick = true;
         } else
         {
           b.c = b.originalC;
           b.SetColour(b.c.r, b.c.g, b.c.b);
+          //b.canBounce = false;
           b.canClick = false;
         }
       }
+
+      if (b.isSelected)
+      {
+        index = i;
+      }
+
       Move(b);
       Scale(b);
     }
@@ -146,7 +193,7 @@ class Spawnable implements Drawable, Interactable
     mode = "select";
     for (Box b : allObjects)
     {
-      
+
       b.isPaused = !b.isPaused;
     }
   }
@@ -156,32 +203,34 @@ class Spawnable implements Drawable, Interactable
     for (int i = 0; i < allObjects.size(); i++)
     {
       Box temp = allObjects.get(i);
-      if(temp.Collision(floor))
+      if (temp.Collision(floor))
       {
         temp.Resolution();
-        //temp.AlignFlatSide(floor);
+        temp.isPaused = true;
       }
-      for(int j = i + 1; j <  allObjects.size(); j++)
+      for (int j = i + 1; j <  allObjects.size(); j++)
       {
         Box other = allObjects.get(j);
-        if(temp != other)
+        if (temp != other)
         {
-          if(temp.Collision(other))
+          if (temp.Collision(other))
           {
             temp.Resolution(other);
+            other.Resolution(temp);
+            temp.isPaused = true;
+            other.isPaused = true;
           }
         }
       }
-      
     }
   }
-  
+
   void EachUpdate()
   {
     floor.Identity();
     floor.UpdateBounds();
     floor.CalculateNormals();
-    for(Box b : allObjects)
+    for (Box b : allObjects)
     {
       b.Update();
     }
@@ -192,7 +241,6 @@ class Spawnable implements Drawable, Interactable
     EachUpdate();
     CheckCollision();
     Grab();
-    
   }
 
   void DrawToScreen()
@@ -205,6 +253,7 @@ class Spawnable implements Drawable, Interactable
     floor.Draw();
   }
 
+  int index = -1;
   Box floor;
   ArrayList<Box> allObjects;
   String mode;

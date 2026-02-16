@@ -17,6 +17,8 @@ class Loop
     windScreen = new Windmill();
 
     menu = new DropDownMenu();
+    
+    back = new BackGround();
   }
 
   void Add()
@@ -31,6 +33,7 @@ class Loop
 
     //sim
     sim.AddTolayer(Layers.UI, menu);
+    sim.AddTolayer(Layers.BACKGROUND, back);
     sim.AddTolayer(Layers.ENTITY, spawner);
     input.Grab(menu);
     input.Grab(spawner);
@@ -106,4 +109,5 @@ class Loop
 
   Scene sim;
   DropDownMenu menu;
+  BackGround back;
 }

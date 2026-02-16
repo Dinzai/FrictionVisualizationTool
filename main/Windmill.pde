@@ -141,9 +141,10 @@ class Windmill implements Drawable, Interactable
       {
         
         //lock the magnitude based on the size
-         float value = (newPositionX - minSlide) / (maxSlide - minSlide);
+        float value = (newPositionX - minSlide) / (maxSlide - minSlide);
         startingForce = value * maxWindForce;
         sliderButton.b.posX = newPositionX;
+        
       }
     }
     
