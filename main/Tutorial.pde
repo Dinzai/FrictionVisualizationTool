@@ -1,10 +1,10 @@
 import java.util.ArrayDeque; //used for tracking states for reversal
 
 
-class TutorialState //only things that are neccesary for keeping trakc of the state of the tutorial
+class TutorialState
 {
-
-  TutorialState(Box b, float v, float t, boolean m, boolean s)
+  TutorialState(Box b, float v, float t, boolean m, boolean s,
+    float b3, float b4, float f, boolean b4m, int d)
   {
     boxX = b.shape.get(0).x;
     boxY = b.shape.get(0).y;
@@ -14,16 +14,28 @@ class TutorialState //only things that are neccesary for keeping trakc of the st
 
     canMove = m;
     canShowSecondText = s;
+
+    boxThreeSpeed = b3;
+    boxFourSpeed = b4;
+    force = f;
+    boxFourCanMove = b4m;
+    direction = d;
   }
 
-  float boxX;
-  float boxY;
-  float velocity;
-  float timer;
+  float boxX, boxY;
+  float velocity, timer;
 
   boolean canMove;
   boolean canShowSecondText;
+
+  // Step 2 data
+  float boxThreeSpeed;
+  float boxFourSpeed;
+  float force;
+  boolean boxFourCanMove;
+  int direction;
 }
+
 
 
 
@@ -130,7 +142,7 @@ class Tutorial implements Drawable, Interactable
     windButton.SetPosition(200, 350);
     windButton.SetOriginalColour(110, 110, 110);
   }
-
+  //chatgpt helped with the save state logic, I knew a queue could handle the logic i needed, but needed direction on how to store that data
   void SaveState()
   {
 
@@ -139,7 +151,20 @@ class Tutorial implements Drawable, Interactable
       history.removeFirst();
     }
 
-    history.addLast(new TutorialState(demenstrationBox, realVelocity, resetTimer, true, false));
+    history.addLast(new TutorialState(
+      demenstrationBox,
+      velocity,
+      timer,
+      canMove,
+      canShowSecondText,
+
+      // Step 2
+      boxThreeSpeed,
+      boxFourSpeed,
+      force,
+      boxFourCanMove,
+      direction
+      ));
   }
 
   void ReverseStep()
@@ -148,10 +173,18 @@ class Tutorial implements Drawable, Interactable
 
     TutorialState s = history.removeLast();
 
+    // Restore basic
     canMove = s.canMove;
     canShowSecondText = s.canShowSecondText;
     velocity = s.velocity;
     timer = s.timer;
+
+    // Restore step 2
+    boxThreeSpeed = s.boxThreeSpeed;
+    boxFourSpeed = s.boxFourSpeed;
+    force = s.force;
+    boxFourCanMove = s.boxFourCanMove;
+    direction = s.direction;
 
     float curX = demenstrationBox.shape.get(0).x;
     float curY = demenstrationBox.shape.get(0).y;
@@ -161,6 +194,7 @@ class Tutorial implements Drawable, Interactable
 
     demenstrationBox.Translate(dx, dy);
   }
+
 
   void Click()
   {
@@ -178,12 +212,14 @@ class Tutorial implements Drawable, Interactable
     if (nextTextButton.textSystem.canClick)
     {
       stateStepCounter++;
+
       canMove = true;
     }
 
     if (reverseTextButton.textSystem.canClick)
     {
       stateStepCounter--;
+
       canReverse = true;
     } else
     {
@@ -209,7 +245,7 @@ class Tutorial implements Drawable, Interactable
   void Update()
   {
     //wind
-    if (stateStepCounter == 4)
+    if (stateStepCounter == 5)
     {
       windTimer += deltaTime;
       windTimerCountDown -= deltaTime;
@@ -254,7 +290,7 @@ class Tutorial implements Drawable, Interactable
       }
     }
     //user friction
-    if (stateStepCounter == 3)
+    if (stateStepCounter == 4)
     {
       if (!boxFiveCanMove)
       {
@@ -280,10 +316,11 @@ class Tutorial implements Drawable, Interactable
         }
       }
     }
-
+    print(stateStepCounter);
     //static kinetic explanation
-    if (stateStepCounter == 2)
+    if (stateStepCounter <=3 && stateStepCounter > 1)
     {
+
       timer += deltaTime;
       if (timer >= 5)
       {
@@ -302,6 +339,7 @@ class Tutorial implements Drawable, Interactable
         boxFourSpeed = force;
         if (force >= 30)
         {
+          stateStepCounter++;
           boxFourCanMove = true;
         }
       } else if (boxFourCanMove)
@@ -330,11 +368,13 @@ class Tutorial implements Drawable, Interactable
       phraseLocationX = 300;
       phrase = "What is Friction?";
       ReverseStep();
+      stateStepCounter = 0;
       return;
     }
 
     if (timer >= 3)
     {
+
       amount = 21;
       phraseLocationX = 200;
       phrase = "Friction slows Down objects that touch! ";
@@ -342,7 +382,7 @@ class Tutorial implements Drawable, Interactable
       canMove = false;
     }
 
-    if (canMove)
+    if (canMove || stateStepCounter == 2)
     {
       SaveState();
 
@@ -365,14 +405,14 @@ class Tutorial implements Drawable, Interactable
 
     windowBox.Draw();
 
-    if (stateStepCounter >=5)
+    if (stateStepCounter >=6)
     {
 
       sim.tScreen.isTut = false;
       sim.tScreen.isTitle = true;
     }
 
-    if (stateStepCounter == 4)
+    if (stateStepCounter == 5)
     {
       if (!canSeeWindMill)
       {
@@ -440,7 +480,7 @@ class Tutorial implements Drawable, Interactable
     }
 
 
-    if (stateStepCounter == 3)
+    if (stateStepCounter == 4)
     {
 
       demenstrationBoxFive.Draw();
@@ -471,7 +511,7 @@ class Tutorial implements Drawable, Interactable
       popMatrix();
     }
 
-    if (stateStepCounter == 2)
+    if (stateStepCounter <= 3 && stateStepCounter > 1)
     {
       demenstrationBoxThree.Draw();
       demenstrationBoxFour.Draw();
@@ -496,6 +536,7 @@ class Tutorial implements Drawable, Interactable
         text("sf = 30", demenstrationBoxFour.posX + 45, demenstrationBoxFour.posY + 10);
       } else
       {
+
         text("kf = 20", demenstrationBoxFour.posX + 45, demenstrationBoxFour.posY + 10);
         text("After overcomming Static Friction", 300, 320);
         text("Kinetic Friction takes over! ", 300, 420);
