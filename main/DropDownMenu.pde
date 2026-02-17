@@ -77,12 +77,12 @@ class DropDownMenu implements Drawable, Interactable
     directionSliderRail = new Box();
     directionSliderRail.MakeBox(80, 10);
     directionSliderRail.SetColour(80, 80, 80);
-    directionSliderRail.Translate(150, 50);
+    directionSliderRail.Translate(180, 50);
 
     directionSliderButton = new Button();
     directionSliderButton.SetSize(10, 10);
     directionSliderButton.SetOriginalColour(90, 90, 90);
-    directionSliderButton.SetPosition(150, 50);
+    directionSliderButton.SetPosition(180, 50);
 
     pannel = new MaterialPannel();
   }
@@ -140,7 +140,7 @@ class DropDownMenu implements Drawable, Interactable
     {
       sliderIsPressed = false;
       directionSliderIsPressed = false;
-      canShowMaterials = true;
+      canShowMaterials = !canShowMaterials;
     }
 
     //play mode
@@ -210,7 +210,7 @@ class DropDownMenu implements Drawable, Interactable
   {
     if (canAddForce)
     {
-      canAddForce = false; 
+      canAddForce = false;
     }
     if (sliderIsPressed == true)
     {
@@ -282,10 +282,10 @@ class DropDownMenu implements Drawable, Interactable
       }
     }
   }
-  
+
   void ForceUpdate()
   {
-    if(canAddForce)
+    if (canAddForce)
     {
       spawner.AddForce(startingForce * startingDirection);
     }
@@ -302,11 +302,22 @@ class DropDownMenu implements Drawable, Interactable
 
     text("Add Force to Selected!", 340, 15);
 
-    text("Current Force: " + (int)startingForce, 500, 35);
+    text("Current Force: " + (int)startingForce, 490, 35);
+    if (startingDirection > -1 && startingDirection < 1)
+    {
+      text("Force Direction: None", 172, 35);
+    }
+    if (startingDirection == -1)
+    {
+      text("Force Direction: Left", 172, 35);
+    }
+    if (startingDirection == 1)
+    {
+      text("Force Direction: Right", 172, 35);
+    }
 
-    text("Current Direction: " + (int)startingDirection, 120, 35);
-
-    text("Play!", 640, 40);
+    text("Add", 625, 29);
+    text("Gravity!", 625, 40);
 
     sliderRail.Draw();
     sliderButton.Draw();
@@ -317,16 +328,36 @@ class DropDownMenu implements Drawable, Interactable
     popMatrix();
 
     pushMatrix();
+    fill(0, 0, 0);
+    textSize(14);
+    text("Click!", 60, 60);
+    popMatrix();
+
+    pushMatrix();
     box.Draw();
     fill(0, 0, 0);
     textSize(16);
     text("Menu", 35, 30);
+    if (canExpand)
+    {
+      drawArrow(100, 60, 100, 45);
+    }
+
+
     button.Draw();
     playButton.Draw();
     backTextButton.Draw();
     forceButton.Draw();
     if (!canExpand)
     {
+      pushMatrix();
+      fill(0, 0, 0);
+      textSize(12);
+      text("Click on Menu", 80, 200);
+      text("Options", 80, 212);
+      text("Click!", 90, 245);
+      popMatrix();
+      drawArrow(120, 240, 140, 240);
       selectTextButton.Draw();
       scaleUpTextButton.Draw();
       scaleDownTextButton.Draw();
@@ -334,6 +365,7 @@ class DropDownMenu implements Drawable, Interactable
       materialTextButton.Draw();
       if (canShowMaterials)
       {
+
         pannel.Draw();
       }
     }
@@ -344,7 +376,7 @@ class DropDownMenu implements Drawable, Interactable
   boolean canExpand = true;
 
   boolean canShowMaterials = false;
-  
+
   boolean canAddForce = false;
 
   boolean sliderIsPressed = false;

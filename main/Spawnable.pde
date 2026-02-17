@@ -203,6 +203,21 @@ class Spawnable implements Drawable, Interactable
       b.isPaused = !b.isPaused;
     }
   }
+  
+  void GarbageCollection()
+  {
+    for(int i = 0; i < allObjects.size(); i++)
+    {
+      Box temp = allObjects.get(i);
+      if(!temp.setForDeletion)
+      {
+        return;
+      }
+      index--;
+      allObjects.remove(temp);
+      //delete temp;
+    }
+  }
 
   void CheckCollision()
   {
@@ -211,6 +226,14 @@ class Spawnable implements Drawable, Interactable
       Box temp = allObjects.get(i);
       if (temp.Collision(floor))
       {
+        if(!temp.isPaused)
+        {
+          temp.m.foundStaticValues = false;
+          temp.m.foundKineticValues = false;
+        }
+        temp.m.staticFrictionValue = temp.m.DetermineStaticInteraction(floor.m);
+        temp.m.kineticFrictionValue = temp.m.DeterminekineticInteraction(floor.m);
+        
         temp.Resolution();
         temp.isPaused = true;
       }
@@ -231,7 +254,7 @@ class Spawnable implements Drawable, Interactable
               //I did not copy paste, but, asked many questions, and wrote down its suggestion with the collision code here
               boolean tempMoving = Math.abs(temp.velocityX) > 0.01 || Math.abs(temp.velocityY) > 0.01;
               boolean otherMoving = Math.abs(other.velocityX) > 0.01 || Math.abs(other.velocityY) > 0.01;
-
+//this bellow i logically deducted from the case above
               if (tempMoving && !otherMoving)
               {
                 other.force = other.mass * temp.velocityX;
@@ -275,6 +298,7 @@ class Spawnable implements Drawable, Interactable
 
   void Update()
   {
+    GarbageCollection();
     EachUpdate();
     CheckCollision();
     Grab();

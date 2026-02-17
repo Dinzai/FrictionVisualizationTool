@@ -17,7 +17,7 @@ class Material
     c = new Colour();
     UpdateType();
   }
-  
+
   void UpdateType()
   {
     if (materialType == M_TYPE.NONE)
@@ -28,26 +28,26 @@ class Material
 
     if (materialType == M_TYPE.WOOD)
     {
-      staticFrictionValue = 45;
-      kineticFrictionValue = 30;
+      staticFrictionValue = 450;
+      kineticFrictionValue = 300;
     }
 
     if (materialType == M_TYPE.METAL)
     {
-      staticFrictionValue = 20;
-      kineticFrictionValue = 15;
+      staticFrictionValue = 200;
+      kineticFrictionValue = 150;
     }
 
     if (materialType == M_TYPE.ROCK)
     {
-      staticFrictionValue = 70;
-      kineticFrictionValue = 50;
+      staticFrictionValue = 700;
+      kineticFrictionValue = 500;
     }
 
     if (materialType == M_TYPE.ICE)
     {
-      staticFrictionValue = 2;
-      kineticFrictionValue = 1;
+      staticFrictionValue = 20;
+      kineticFrictionValue = 10;
     }
   }
 
@@ -88,18 +88,46 @@ class Material
 
   float DetermineStaticInteraction(Material other)
   {
-
-    return (staticFrictionValue + other.staticFrictionValue) * 0.5;
+    if (!foundStaticValues)
+    {
+      if (staticFrictionValue == 0 || other.staticFrictionValue == 0)
+      {
+        combinedStatic = staticFrictionValue + other.staticFrictionValue;
+        foundStaticValues = true;
+      } else
+      {
+        combinedStatic = (staticFrictionValue + other.staticFrictionValue) * 0.5;
+        foundStaticValues = true;
+      }
+    }
+    return combinedStatic;
   }
 
   float DeterminekineticInteraction(Material other)
   {
-
-    return (kineticFrictionValue + other.kineticFrictionValue) * 0.5;
+    if (!foundKineticValues)
+    {
+      if (kineticFrictionValue == 0 || other.kineticFrictionValue == 0)
+      {
+        combinedKientic = kineticFrictionValue + other.kineticFrictionValue;
+        foundKineticValues = true;
+      } else
+      {
+        combinedKientic = (kineticFrictionValue + other.kineticFrictionValue) * 0.5;
+        foundKineticValues = true;
+      }
+    }
+    return combinedKientic;
   }
 
   float staticFrictionValue;
   float kineticFrictionValue;
+
+  float combinedStatic = 0;
+  float combinedKientic = 0;
+
+  boolean foundStaticValues = false;
+  boolean foundKineticValues = false;
   M_TYPE materialType;
   Colour c;
 }
@@ -226,7 +254,7 @@ class MaterialPannel
   MaterialPannel()
   {
     pannel = new Box();
-    pannel.MakeBox(100, 100);
+    pannel.MakeBox(130, 135);
     pannel.SetColour(110, 110, 110);
     pannel.Translate(170, 100);
     materials = new ArrayList<MaterialIconObject>();
@@ -235,19 +263,19 @@ class MaterialPannel
 
   void AddMaterialTypes()
   {
-    MaterialIconObject none = new MaterialIconObject(M_TYPE.NONE, pannel.posX + 15, pannel.posY + 20, 10);
+    MaterialIconObject none = new MaterialIconObject(M_TYPE.NONE, pannel.posX + 24, pannel.posY + 35, 10);
     none.SetColour();
 
-    MaterialIconObject wood = new MaterialIconObject(M_TYPE.WOOD, pannel.posX + 15, pannel.posY + 50, 10);
+    MaterialIconObject wood = new MaterialIconObject(M_TYPE.WOOD, pannel.posX + 24, pannel.posY + 70, 10);
     wood.SetColour();
 
-    MaterialIconObject metal = new MaterialIconObject(M_TYPE.METAL, pannel.posX + 15, pannel.posY + 80, 10);
+    MaterialIconObject metal = new MaterialIconObject(M_TYPE.METAL, pannel.posX + 24, pannel.posY + 105, 10);
     metal.SetColour();
 
-    MaterialIconObject rock = new MaterialIconObject(M_TYPE.ROCK, pannel.posX + 40, pannel.posY + 20, 10);
+    MaterialIconObject rock = new MaterialIconObject(M_TYPE.ROCK, pannel.posX + 69, pannel.posY + 35, 10);
     rock.SetColour();
 
-    MaterialIconObject ice = new MaterialIconObject(M_TYPE.ICE, pannel.posX + 40, pannel.posY + 50, 10);
+    MaterialIconObject ice = new MaterialIconObject(M_TYPE.ICE, pannel.posX + 69, pannel.posY + 70, 10);
     ice.SetColour();
 
     materials.add(none);
@@ -265,6 +293,18 @@ class MaterialPannel
   void Draw()
   {
     pannel.Draw();
+    pushMatrix();
+    fill(0, 0, 0);
+    textSize(10);
+    text("None", pannel.posX + 15, pannel.posY + 20);
+    text("Wood", pannel.posX + 15, pannel.posY + 55);
+    text("Metal", pannel.posX + 15, pannel.posY + 90);
+    text("Rock", pannel.posX + 60, pannel.posY + 20);
+    text("Ice", pannel.posX + 60, pannel.posY + 55);
+    text("Click and Drag", pannel.posX + 45, pannel.posY + 95);
+    text("Materials to Objects", pannel.posX + 45, pannel.posY + 105);
+    popMatrix();
+
     for (MaterialIconObject m : materials)
     {
       m.Update();

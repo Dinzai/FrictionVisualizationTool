@@ -355,13 +355,11 @@ class Box
     }
     if (posX < minX)
     {
-      posX = minX - theWidth;
-      velocityX = 0;
+      setForDeletion = true;
     }
     if (posX > maxX)
     {
-      posX = maxX + theWidth;
-      velocityX = 0;
+      setForDeletion = true;
     }
     posX += velocityX * deltaTime;
 
@@ -456,6 +454,8 @@ class Box
   int directionSquish = 1;
   boolean canBounce = false;
   boolean canGetCurrentScale = true;
+  
+  boolean setForDeletion = false;
 
   float minX = 17;
   float maxX = 730;
