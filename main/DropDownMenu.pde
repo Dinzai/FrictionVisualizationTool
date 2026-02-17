@@ -100,7 +100,6 @@ class DropDownMenu implements Drawable, Interactable
       directionSliderIsPressed = true;
     }
 
-
     if (button.b.canClick && canExpand)
     {
       box.Translate(-10, -10);
@@ -133,7 +132,7 @@ class DropDownMenu implements Drawable, Interactable
     {
       sliderIsPressed = false;
       directionSliderIsPressed = false;
-      spawner.AddForce(startingForce * startingDirection);
+      canAddForce = true;
     }
 
     //Material Mode
@@ -209,6 +208,10 @@ class DropDownMenu implements Drawable, Interactable
 
   void Reset()
   {
+    if (canAddForce)
+    {
+      canAddForce = false; 
+    }
     if (sliderIsPressed == true)
     {
       sliderIsPressed = false;
@@ -279,9 +282,18 @@ class DropDownMenu implements Drawable, Interactable
       }
     }
   }
+  
+  void ForceUpdate()
+  {
+    if(canAddForce)
+    {
+      spawner.AddForce(startingForce * startingDirection);
+    }
+  }
 
   void DrawToScreen()
   {
+    ForceUpdate();
     SliderUpdate();
     DirectionSliderUpdate();
     pushMatrix();
@@ -332,6 +344,8 @@ class DropDownMenu implements Drawable, Interactable
   boolean canExpand = true;
 
   boolean canShowMaterials = false;
+  
+  boolean canAddForce = false;
 
   boolean sliderIsPressed = false;
   boolean directionSliderIsPressed = false;

@@ -166,9 +166,9 @@ class Box
   void UpdateBounds()
   {
     float minX = shape.get(0).x;
-    float maxX = shape.get(0).x;
-    float minY = shape.get(0).y;
-    float maxY = shape.get(0).y;
+    float maxX = shape.get(1).x;
+    float minY = shape.get(2).y;
+    float maxY = shape.get(3).y;
 
     for (Point p : shape)
     {
@@ -194,6 +194,7 @@ class Box
 
       theWidth = maxX - minX;
       theHeight = maxY - minY;
+      
     }
   }
 
@@ -280,82 +281,99 @@ class Box
 
   boolean Collision(Box otherShape)
   {
-    ArrayList<Point> axies = new ArrayList<Point>();
-
-
-    for (Point normal : normals)
-    {
-      axies.add(normal);
-    }
-
-    for (Point normal : otherShape.normals)
-    {
-      axies.add(normal);
-    }
+    ArrayList<Point> axes = new ArrayList<Point>();
+    axes.addAll(normals);
+    axes.addAll(otherShape.normals);
 
     float smallestOverlap = Float.MAX_VALUE;
     Point bestAxis = new Point();
 
-    for (Point axis : axies)
+    for (Point axis : axes)
     {
       axis = Normalize(axis);
 
       Container one = DotPointsToAxis(axis);
       Container two = otherShape.DotPointsToAxis(axis);
 
-
-      if (one.GetMax() < two.GetMin())
+      if (one.GetMax() < two.GetMin() || two.GetMax() < one.GetMin())
       {
-
-        return false;
-      }
-
-      if (two.GetMax() < one.GetMin())
-      {
-
         return false;
       }
 
       float overlap = min(one.GetMax(), two.GetMax()) - max(one.GetMin(), two.GetMin());
       if (overlap < smallestOverlap)
       {
-
         smallestOverlap = overlap;
         bestAxis = axis;
       }
     }
 
     Point d = new Point(GetCenter().x - otherShape.GetCenter().x, GetCenter().y - otherShape.GetCenter().y);
-
     float dot = d.x * bestAxis.x + d.y * bestAxis.y;
-
     if (dot < 0)
     {
       bestAxis.x *= -1;
       bestAxis.y *= -1;
     }
 
-    changeVector = new Point(bestAxis.x * smallestOverlap, bestAxis.y * smallestOverlap);
-    if (changeVector.y < 0)
+    if (Math.abs(bestAxis.y) > Math.abs(bestAxis.x))
     {
+      changeVector = new Point(0, bestAxis.y * smallestOverlap);
       velocityY = 0;
-      Translate(0, changeVector.y);
+    } else
+    {
+
+      changeVector = new Point(bestAxis.x * smallestOverlap, 0);
+      velocityX = 0;
+      //otherShape.accleration = otherShape.velocityX / deltaTime;
+      otherShape.force = otherShape.mass * accleration;
+      otherShape.gotImpulse = true;
     }
 
     return true;
   }
 
+  void Resolution(Box otherShape)
+  {
+    Translate(changeVector.x * 0.5f, changeVector.y * 0.5f);
+    otherShape.Translate(-changeVector.x * 0.5f, -changeVector.y * 0.5f);
+  }
+
   void Resolution()//floor
   {
-
     Translate(changeVector.x, changeVector.y);
   }
 
-  void Resolution(Box otherShape)
+  void PhysicsUpdate()
   {
+    if (gotImpulse)
+    {
+      accleration = force / mass;
+      velocityX = accleration;
+      force = 0;
+      gotImpulse = false;
+    }
+    if (posX < minX)
+    {
+      posX = minX - theWidth;
+      velocityX = 0;
+    }
+    if (posX > maxX)
+    {
+      posX = maxX + theWidth;
+      velocityX = 0;
+    }
+    posX += velocityX * deltaTime;
 
-    Translate(changeVector.x * 0.5, changeVector.y * 0.5);
-    otherShape.Translate(-changeVector.x * 0.5, -changeVector.y * 0.5);
+    if (velocityX > 0)
+    {
+      velocityX -= m.kineticFrictionValue * deltaTime;
+      if (velocityX < 0) velocityX = 0;
+    } else if (velocityX < 0)
+    {
+      velocityX += m.kineticFrictionValue * deltaTime;
+      if (velocityX > 0) velocityX = 0;
+    }
   }
 
 
@@ -366,9 +384,8 @@ class Box
       velocityY += gravity * deltaTime;
       Translate(0, velocityY * deltaTime);
     }
-    accleration = force / mass;
-    posX += accleration * deltaTime;
-    Bounce();
+
+    PhysicsUpdate();
     UpdateBounds();
     CalculateNormals();
   }
@@ -392,7 +409,7 @@ class Box
 
   float theWidth;
   float theHeight;
-  
+
   float force = 0;
 
   float posX;
@@ -412,7 +429,7 @@ class Box
   float gravity = 200;
 
   float angle = 0;
-  
+
   float accleration = 0;
   float mass = 10;
 
@@ -431,12 +448,17 @@ class Box
   float baseX = 0;
   float baseY = 0;
 
+  boolean gotImpulse = false;
+
   float bounceAmount = 0.25;
   float bounceSpeed = 6;
   float bounceTime = 0;
   int directionSquish = 1;
   boolean canBounce = false;
   boolean canGetCurrentScale = true;
+
+  float minX = 17;
+  float maxX = 730;
 }
 
 

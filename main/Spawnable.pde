@@ -92,8 +92,11 @@ class Spawnable implements Drawable, Interactable
       float minY = 72;
       float maxY = 497;
 
-      float newPositionX =   mouseX - b.theWidth / 2;
-      float newPositionY =   mouseY - b.theHeight / 2;
+      float halfWidth = b.theWidth * 0.5;
+      float halfHeight = b.theHeight * 0.5;
+      
+      float newPositionX = mouseX - halfWidth;
+      float newPositionY = mouseY - halfHeight;
       if (newPositionX < minX)
       {
         newPositionX = minX;
@@ -122,13 +125,14 @@ class Spawnable implements Drawable, Interactable
 
   void Scale(Box b)
   {
-
+    //print("The Width: " + b.theWidth + " ");
     if (b.isSelected && mode == "massUp")
     {
       if (b.scaleX < 2 && b.scaleY < 2)
       {
         b.SetColour(200, 100, 100);
         b.canClick = false;
+        b.mass *= 1.02;
         b.Scale(1.02, 1.02);
       }
     }
@@ -139,6 +143,7 @@ class Spawnable implements Drawable, Interactable
       {
         b.SetColour(200, 100, 100);
         b.canClick = false;
+        b.mass *= 0.8;
         b.Scale(0.8, 0.8);
       }
     }
@@ -152,6 +157,7 @@ class Spawnable implements Drawable, Interactable
       if (b.isPaused)
       {
         b.isPaused = !b.isPaused;
+        b.gotImpulse = true;
         b.force = amount;
       }
     }
@@ -213,12 +219,43 @@ class Spawnable implements Drawable, Interactable
         Box other = allObjects.get(j);
         if (temp != other)
         {
+
           if (temp.Collision(other))
           {
-            temp.Resolution(other);
-            other.Resolution(temp);
-            temp.isPaused = true;
-            other.isPaused = true;
+            if (temp.Collision(other))
+            {
+              temp.Resolution(other);
+              other.Resolution(temp);
+
+              // ChatGPT helped with this code, I was struggling with what the interaction shoud resolve as
+              //I did not copy paste, but, asked many questions, and wrote down its suggestion with the collision code here
+              boolean tempMoving = Math.abs(temp.velocityX) > 0.01 || Math.abs(temp.velocityY) > 0.01;
+              boolean otherMoving = Math.abs(other.velocityX) > 0.01 || Math.abs(other.velocityY) > 0.01;
+
+              if (tempMoving && !otherMoving)
+              {
+                other.force = other.mass * temp.velocityX;
+                other.gotImpulse = true;
+                temp.velocityX = 0;
+                temp.velocityY = 0;
+              } else if (!tempMoving && otherMoving)
+              {
+                temp.force = temp.mass * other.velocityX;
+                temp.gotImpulse = true;
+                other.velocityX = 0;
+                other.velocityY = 0;
+              } else
+              {
+                temp.velocityX *= 0.5;
+                other.velocityX *= 0.5;
+              }
+
+              if (temp.posY < other.posY)
+              {
+                temp.isPaused = true;
+                other.isPaused = true;
+              }
+            }
           }
         }
       }

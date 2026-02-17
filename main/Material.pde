@@ -15,6 +15,11 @@ class Material
   {
     materialType = mt;
     c = new Colour();
+    UpdateType();
+  }
+  
+  void UpdateType()
+  {
     if (materialType == M_TYPE.NONE)
     {
       staticFrictionValue = 0;
@@ -48,6 +53,7 @@ class Material
 
   void SetType(M_TYPE mType)
   {
+    UpdateType();
     materialType = mType;
     SetColour();
   }
