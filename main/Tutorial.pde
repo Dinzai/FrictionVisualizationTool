@@ -258,13 +258,20 @@ class Tutorial implements Drawable, Interactable
         ResetBoxLocation();
       }
 
-      if (stateStepCounter == 3)
+      if (stateStepCounter == 5 || stateStepCounter == 3 || stateStepCounter == 2)
       {
         ResetFive();
       }
 
-      stateStepCounter++;
+      if (stateStepCounter == 5 || stateStepCounter == 6 || stateStepCounter == 7)
+      {
+        stateStepCounter = 8;
+        skip = true;
+        canSeeWindMill = true;
+        return;
+      }
 
+      stateStepCounter++;
 
       canMove = true;
     }
@@ -281,6 +288,17 @@ class Tutorial implements Drawable, Interactable
       {
         stateStepCounter = 1;
       }
+      
+      if (stateStepCounter == 8)
+      {
+        stateStepCounter = 5;
+        windTimer = 0;
+        windTimerCountDown = 4;
+        skip = false;
+        canSeeWindMill = false;
+        return;
+      }
+      
       stateStepCounter--;
 
 
@@ -392,28 +410,36 @@ class Tutorial implements Drawable, Interactable
 
   void Update()
   {
+    //print(stateStepCounter);
     //wind
-    if (stateStepCounter == 5)
+    if (stateStepCounter >= 5 && stateStepCounter < 9)
     {
-      windTimer += deltaTime;
-      windTimerCountDown -= deltaTime;
-      if (windTimerCountDown <= 0)
+      if (!canSeeWindMill && !skip)
       {
-        windTimerCountDown = 4;
-      }
-      if (windTimer >= 4)
-      {
-        showSecond = true;
-      }
-      if (windTimer >= 8)
-      {
-        showSecond = false;
-        showThird = true;
-      }
-      if (windTimer >= 12)
-      {
-        canSeeWindMill = true;
-        showThird = false;
+        windTimer += deltaTime;
+        windTimerCountDown -= deltaTime;
+        if (windTimerCountDown <= 0)
+        {
+          windTimerCountDown = 4;
+        }
+        if (windTimer >= 4)
+        {
+          stateStepCounter = 6;
+          showSecond = true;
+        }
+        if (windTimer >= 8)
+        {
+          stateStepCounter = 7;
+          showSecond = false;
+          showThird = true;
+        }
+
+        if (windTimer >= 12)
+        {
+          stateStepCounter++;
+          showThird = false;
+          canSeeWindMill = true;
+        }
       }
 
       windMillSpeed = windForce;
@@ -454,7 +480,7 @@ class Tutorial implements Drawable, Interactable
         }
         boxFiveKineticFriction = boxFiveStaticFriction - (boxFiveStaticFriction * 0.25);//make kinetic friction slightly smaller
         popUpReminder = false;
-        if (demenstrationBoxFive.posX < 634) 
+        if (demenstrationBoxFive.posX < 610)
         {
           if (boxFiveSpeed > 0)
           {
@@ -555,14 +581,14 @@ class Tutorial implements Drawable, Interactable
 
     windowBox.Draw();
 
-    if (stateStepCounter >=6)
+    if (stateStepCounter >= 9)
     {
 
       sim.tScreen.isTut = false;
       sim.tScreen.isTitle = true;
     }
 
-    if (stateStepCounter == 5)
+    if (stateStepCounter >= 5 && stateStepCounter < 9)
     {
       if (!canSeeWindMill)
       {
@@ -624,8 +650,8 @@ class Tutorial implements Drawable, Interactable
         windButton.Draw();
         popMatrix();
 
-        drawArrow(windMillTower.posX + 50, windMillTower.posY + 15, windMillTower.posX + 30, windMillTower.posY + 15);
-        drawArrow(windMillTower.posX - 30, windMillTower.posY + 15, windMillTower.posX, windMillTower.posY + 15);
+        drawArrow(windMillTower.posX + 70, windMillTower.posY + 15, windMillTower.posX + 30, windMillTower.posY + 15);
+        drawArrow(windMillTower.posX - 70, windMillTower.posY + 15, windMillTower.posX - 20, windMillTower.posY + 15);
       }
     }
 
@@ -824,6 +850,7 @@ class Tutorial implements Drawable, Interactable
   float boxFiveStaticFriction;
   float boxFiveKineticFriction;
   boolean popUpReminder = false;
+  boolean skip = false;
 
   int direction = 1;
 
