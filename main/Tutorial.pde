@@ -68,17 +68,17 @@ class Tutorial implements Drawable, Interactable
     demenstrationBoxThree = new Box();
     demenstrationBoxThree.MakeBox(30, 30);
     demenstrationBoxThree.SetColour(100, 255, 100);
-    demenstrationBoxThree.Translate(210, 260);
+    //demenstrationBoxThree.Translate(210, 260);
 
     demenstrationBoxFour = new Box();
     demenstrationBoxFour.MakeBox(30, 30);
     demenstrationBoxFour.SetColour(255, 100, 100);
-    demenstrationBoxFour.Translate(525, 260);
+    //demenstrationBoxFour.Translate(525, 260);
 
     demenstrationBoxFive = new Box();
     demenstrationBoxFive.MakeBox(30, 30);
     demenstrationBoxFive.SetColour(100, 100, 255);
-    demenstrationBoxFive.Translate(300, 450);
+    //demenstrationBoxFive.Translate(300, 450);
 
     demenstrationBoxFloor = new Box();
     demenstrationBoxFloor.MakeBox(560, 30);
@@ -105,8 +105,33 @@ class Tutorial implements Drawable, Interactable
 
     forceButton = new Button();
     forceButton.SetSize(60, 20);
-    forceButton.SetPosition(200, 350);
+    forceButton.SetPosition(330, 340);
     forceButton.SetOriginalColour(110, 110, 110);
+
+    boxFiveResetButton = new Button();
+    boxFiveResetButton.SetSize(60, 20);
+    boxFiveResetButton.SetPosition(500, 340);
+    boxFiveResetButton.SetOriginalColour(110, 110, 110);
+
+    sliderRail = new Box();
+    sliderRail.MakeBox(80, 10);
+    sliderRail.SetColour(80, 80, 80);
+    sliderRail.Translate(200, 230);
+
+    sliderButton = new Button();
+    sliderButton.SetSize(10, 10);
+    sliderButton.SetOriginalColour(90, 90, 90);
+    sliderButton.SetPosition(200, 230);
+
+    frictionSliderRail = new Box();
+    frictionSliderRail.MakeBox(80, 10);
+    frictionSliderRail.SetColour(80, 80, 80);
+    frictionSliderRail.Translate(500, 230);
+
+    frictionSliderButton = new Button();
+    frictionSliderButton.SetSize(10, 10);
+    frictionSliderButton.SetOriginalColour(90, 90, 90);
+    frictionSliderButton.SetPosition(500, 230);
 
     //wind mill part
 
@@ -206,19 +231,58 @@ class Tutorial implements Drawable, Interactable
 
     if (forceButton.b.canClick)
     {
-      boxFiveForce += 57.5;
+      boxFiveSpeed = boxFiveForce;
+      boxFiveCanMove = true;
+    }
+
+    if (boxFiveResetButton.b.canClick)
+    {
+
+      ResetFive();
+    }
+
+    if (sliderButton.b.canClick)
+    {
+      sliderIsPressed = true;
+    }
+
+    if (frictionSliderButton.b.canClick)
+    {
+      frictionSliderIsPressed = true;
     }
 
     if (nextTextButton.textSystem.canClick)
     {
+      if (stateStepCounter == 1)
+      {
+        ResetBoxLocation();
+      }
+
+      if (stateStepCounter == 3)
+      {
+        ResetFive();
+      }
+
       stateStepCounter++;
+
 
       canMove = true;
     }
 
     if (reverseTextButton.textSystem.canClick)
     {
+
+      if (stateStepCounter == 5)
+      {
+        ResetFive();
+      }
+
+      if (stateStepCounter == 3)
+      {
+        stateStepCounter = 1;
+      }
       stateStepCounter--;
+
 
       canReverse = true;
     } else
@@ -236,10 +300,94 @@ class Tutorial implements Drawable, Interactable
 
   void Reset()//Leave empty here, messes with State reset
   {
+    if (sliderIsPressed)
+    {
+      sliderIsPressed = false;
+    }
+
+    if (frictionSliderIsPressed)
+    {
+      frictionSliderIsPressed = false;
+    }
+
     if (backTextButton.textSystem.canClick)
     {
       backTextButton.textSystem.canClick = false;
     }
+  }
+
+  void UpdateSlider()
+  {
+    if (sliderIsPressed)
+    {
+      float minSlide = sliderRail.posX;
+      float maxSlide = sliderRail.posX + sliderRail.theWidth - sliderButton.b.theWidth;
+      float newPositionX = mouseX - sliderButton.b.theWidth / 2;
+      if (newPositionX < minSlide)
+      {
+
+        newPositionX = minSlide;
+      }
+      if (newPositionX > maxSlide)
+      {
+
+        newPositionX = maxSlide;
+      }
+      if (mouseY > sliderButton.b.shape.get(0).y && mouseY < sliderButton.b.shape.get(0).y + sliderButton.b.theHeight)
+      {
+
+        //lock the magnitude based on the size
+        float value = (newPositionX - minSlide) / (maxSlide - minSlide);
+        boxFiveForce = value * boxFiveMaxForce;
+        sliderButton.b.posX = newPositionX;
+      }
+    }
+  }
+
+  void UpdateFrictionSlider()
+  {
+    if (frictionSliderIsPressed)
+    {
+      float minSlide = frictionSliderRail.posX;
+      float maxSlide = frictionSliderRail.posX + frictionSliderRail.theWidth - frictionSliderButton.b.theWidth;
+      float newPositionX = mouseX - frictionSliderButton.b.theWidth / 2;
+      if (newPositionX < minSlide)
+      {
+
+        newPositionX = minSlide;
+      }
+      if (newPositionX > maxSlide)
+      {
+
+        newPositionX = maxSlide;
+      }
+      if (mouseY > frictionSliderButton.b.shape.get(0).y && mouseY < frictionSliderButton.b.shape.get(0).y + frictionSliderButton.b.theHeight)
+      {
+
+        //lock the magnitude based on the size
+        float value = (newPositionX - minSlide) / (maxSlide - minSlide);
+        boxFiveStaticFriction = value * boxFiveMaxFriction;
+        frictionSliderButton.b.posX = newPositionX;
+      }
+    }
+  }
+
+  void ResetBoxLocation()//state step counter 2 and 3
+  {
+    demenstrationBoxThree.SetPosition(0, 0);
+    demenstrationBoxFour.SetPosition(0, 0);
+
+    demenstrationBoxThree.Translate(210, 280);
+    demenstrationBoxFour.Translate(525, 280);
+  }
+
+  void ResetFive()
+  {
+    boxFiveCanMove = false;
+    boxFiveResetButton.b.canClick = false;
+
+    demenstrationBoxFive.SetPosition(0, 0);
+    demenstrationBoxFive.Translate(300, 464);
   }
 
   void Update()
@@ -292,31 +440,34 @@ class Tutorial implements Drawable, Interactable
     //user friction
     if (stateStepCounter == 4)
     {
-      if (!boxFiveCanMove)
-      {
-        boxFiveSpeed = boxFiveForce;
-      }
-      if (boxFiveForce >= 30)
-      {
-        boxFiveCanMove = true;
-      }
+      UpdateSlider();
+      UpdateFrictionSlider();
+
       if (boxFiveCanMove)
       {
-        if (demenstrationBoxFive.posX < 630)
+
+        if (boxFiveForce < boxFiveStaticFriction)
         {
-          if (boxFiveSpeed > 2)
+          boxFiveCanMove = false;
+          popUpReminder = true;
+          return;
+        }
+        boxFiveKineticFriction = boxFiveStaticFriction - (boxFiveStaticFriction * 0.25);//make kinetic friction slightly smaller
+        popUpReminder = false;
+        if (demenstrationBoxFive.posX < 634) 
+        {
+          if (boxFiveSpeed > 0)
           {
-            boxFiveSpeed -= 5 * deltaTime;
+            boxFiveSpeed -= boxFiveKineticFriction * deltaTime;
             demenstrationBoxFive.Translate(boxFiveSpeed * deltaTime, 0);
           } else
           {
-            boxFiveForce = 0;
             boxFiveSpeed = 0;
+            demenstrationBoxFive.Translate(0, 0);
           }
         }
       }
     }
-    print(stateStepCounter);
     //static kinetic explanation
     if (stateStepCounter <=3 && stateStepCounter > 1)
     {
@@ -368,7 +519,6 @@ class Tutorial implements Drawable, Interactable
       phraseLocationX = 300;
       phrase = "What is Friction?";
       ReverseStep();
-      stateStepCounter = 0;
       return;
     }
 
@@ -382,7 +532,7 @@ class Tutorial implements Drawable, Interactable
       canMove = false;
     }
 
-    if (canMove || stateStepCounter == 2)
+    if (canMove)
     {
       SaveState();
 
@@ -486,28 +636,72 @@ class Tutorial implements Drawable, Interactable
       demenstrationBoxFive.Draw();
       demenstrationBoxFloor.Draw();
       forceButton.Draw();
-
+      sliderRail.Draw();
+      sliderButton.Draw();
+      frictionSliderRail.Draw();
+      frictionSliderButton.Draw();
       //box five
+      if (!boxFiveCanMove)
+      {
+        pushMatrix();
+        fill(0, 0, 0);
+        textSize(frictionTypesTextSizeSmall);
+        text("sf = " + (int)boxFiveStaticFriction, demenstrationBoxFive.posX + 45, demenstrationBoxFive.posY + 10);
+        text("Force = " + (int)boxFiveForce + " ", demenstrationBoxFive.posX - 112, demenstrationBoxFive.posY + 10);
+        popMatrix();
+      } else
+      {
+        pushMatrix();
+        fill(0, 0, 0);
+        textSize(frictionTypesTextSizeSmall);
+        text("kf = " + (int)boxFiveKineticFriction, demenstrationBoxFive.posX + 45, demenstrationBoxFive.posY + 10);
+        text("Force = " + (int)boxFiveForce + " ", demenstrationBoxFive.posX - 112, demenstrationBoxFive.posY + 10);
+        popMatrix();
+
+        pushMatrix();
+        fill(0, 0, 0);
+        textSize(frictionTypesTextSizeTiny);
+        text("Reset!", boxFiveResetButton.b.posX + 5, boxFiveResetButton.b.posY - 20);
+        boxFiveResetButton.Draw();
+        popMatrix();
+      }
+
       pushMatrix();
       fill(0, 0, 0);
-      textSize(frictionTypesTextSizeSmall);
-      text("kf = 30", demenstrationBoxFive.posX + 45, demenstrationBoxFive.posY + 10);
-      text("force = " + (int)boxFiveSpeed + " ", demenstrationBoxFive.posX - 90, demenstrationBoxFive.posY + 10);
+      textSize(frictionTypesTextSizeTiny);
+      text("Friction Slider", frictionSliderRail.posX + 15, frictionSliderRail.posY + 30);
+      text("Force Slider", sliderRail.posX + 15, sliderRail.posY + 30);
       popMatrix();
+
+      if (popUpReminder)
+      {
+        pushMatrix();
+        fill(0, 0, 0);
+        textSize(frictionTypesTextSizeSmall);
+        text("Starting force must be larger than static friction! ", demenstrationBoxFive.posX, demenstrationBoxFive.posY - 50);
+        popMatrix();
+      }
+
 
       drawArrow(demenstrationBoxFive.posX + 50, demenstrationBoxFive.posY + 15, demenstrationBoxFive.posX + 30, demenstrationBoxFive.posY + 15);
       drawArrow(demenstrationBoxFive.posX - 30, demenstrationBoxFive.posY + 15, demenstrationBoxFive.posX, demenstrationBoxFive.posY + 15);
 
       pushMatrix();
       fill(0, 0, 0);
-      textSize(frictionTypesTextSizeSmall);
-      text(phraseThree, fPhraseLocationX - 100, fPhraseLocationY);
+      textSize(frictionTypesTextSize);
+      text(phraseThree, 300, 100);
       popMatrix();
 
       pushMatrix();
       fill(0, 0, 0);
       textSize(frictionTypesTextSizeSmall);
-      text(phraseFour, fPhraseLocationX - 100, fPhraseLocationY + 100);
+      text(phraseFive, fPhraseLocationX - 100, fPhraseLocationY);
+      popMatrix();
+
+      pushMatrix();
+      fill(0, 0, 0);
+      textSize(frictionTypesTextSizeTiny);
+      text(phraseFour, fPhraseLocationX - 20, fPhraseLocationY + 100);
       popMatrix();
     }
 
@@ -586,6 +780,14 @@ class Tutorial implements Drawable, Interactable
   //part one
   Box windowBox;
 
+  Box sliderRail;
+  Button sliderButton;
+
+  Box frictionSliderRail;
+  Button frictionSliderButton;
+
+  Button boxFiveResetButton;
+
   Box demenstrationBox;
   Box demenstrationBoxTwo;
 
@@ -600,8 +802,6 @@ class Tutorial implements Drawable, Interactable
   Button reverseTextButton;
 
   Button backTextButton;
-
-
   Button forceButton;
 
   int amount = 34;
@@ -619,6 +819,11 @@ class Tutorial implements Drawable, Interactable
 
   float boxFiveSpeed = 0;
   float boxFiveForce = 0;
+  float boxFiveMaxForce = 5000;
+  float boxFiveMaxFriction = 3000;
+  float boxFiveStaticFriction;
+  float boxFiveKineticFriction;
+  boolean popUpReminder = false;
 
   int direction = 1;
 
@@ -627,6 +832,7 @@ class Tutorial implements Drawable, Interactable
 
   int frictionTypesTextSize = 34;
   int frictionTypesTextSizeSmall = 21;
+  int frictionTypesTextSizeTiny = 16;
   float fPhraseLocationX = 250;
   float fPhraseLocationY = 200;
   String frictionTypes = "Two Types of Friction! ";
@@ -635,7 +841,8 @@ class Tutorial implements Drawable, Interactable
   String staticFrictionPhrase = "Static!";
 
   String phraseThree = "Now it's Your Turn!";
-  String phraseFour = "Click the button bellow to add a force!";
+  String phraseFour = "Click the button bellow to Move the Box";
+  String phraseFive = "Move Sliders to adjust a Force and Static Friction amount!";
 
   int stateStepCounter = 0;
 
@@ -666,6 +873,9 @@ class Tutorial implements Drawable, Interactable
 
   boolean showSecond = false;
   boolean showThird = false;
+
+  boolean sliderIsPressed = false;
+  boolean frictionSliderIsPressed = false;
 
   float windTimer = 0;
   float windTimerCountDown = 4;
