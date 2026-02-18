@@ -255,12 +255,15 @@ class Tutorial implements Drawable, Interactable
     {
       if (stateStepCounter == 1)
       {
+       
         ResetBoxLocation();
       }
 
-      if (stateStepCounter == 5 || stateStepCounter == 3 || stateStepCounter == 2)
+      if(stateStepCounter == 2 || stateStepCounter == 3)
       {
         ResetFive();
+        stateStepCounter = 4;
+        return;
       }
 
       if (stateStepCounter == 5 || stateStepCounter == 6 || stateStepCounter == 7)
@@ -287,6 +290,12 @@ class Tutorial implements Drawable, Interactable
       if (stateStepCounter == 3)
       {
         stateStepCounter = 1;
+      }
+      
+      if (stateStepCounter == 4)
+      {
+        ResetBoxLocation();
+        stateStepCounter = 2;
       }
       
       if (stateStepCounter == 8)
@@ -406,6 +415,7 @@ class Tutorial implements Drawable, Interactable
 
     demenstrationBoxFive.SetPosition(0, 0);
     demenstrationBoxFive.Translate(300, 464);
+   
   }
 
   void Update()
@@ -478,13 +488,13 @@ class Tutorial implements Drawable, Interactable
           popUpReminder = true;
           return;
         }
-        boxFiveKineticFriction = boxFiveStaticFriction - (boxFiveStaticFriction * 0.25);//make kinetic friction slightly smaller
+        boxFiveKineticFriction = boxFiveStaticFriction * 0.25;//make kinetic friction smaller
         popUpReminder = false;
         if (demenstrationBoxFive.posX < 610)
         {
           if (boxFiveSpeed > 0)
           {
-            boxFiveSpeed -= boxFiveKineticFriction * deltaTime;
+            boxFiveSpeed -= boxFiveKineticFriction;
             demenstrationBoxFive.Translate(boxFiveSpeed * deltaTime, 0);
           } else
           {
