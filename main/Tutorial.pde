@@ -144,7 +144,7 @@ class Tutorial implements Drawable, Interactable
     rotBox = new Box();
     rotBox.MakeRotBox(128, 128);
     rotBox.SetColour(180, 180, 220);
-    rotBox.Translate(300, 300);
+    rotBox.Translate(420, 300);
     rotBox.SetType(M_TYPE.FAN);
 
     windBladeUp = new Box();
@@ -419,7 +419,7 @@ class Tutorial implements Drawable, Interactable
     demenstrationBoxFour.SetPosition(0, 0);
 
     demenstrationBoxThree.Translate(220, 300);
-    demenstrationBoxFour.Translate(500, 280);
+    demenstrationBoxFour.Translate(500, 300);
   }
 
   void ResetFive()
@@ -430,6 +430,7 @@ class Tutorial implements Drawable, Interactable
     imageSpeed = 100;
     fanImageX = 600;
     dragImageX = 100;
+    fanSpeed = 300;
 
 
     demenstrationBoxFive.SetPosition(0, 0);
@@ -464,6 +465,11 @@ class Tutorial implements Drawable, Interactable
         }
         if (windTimer >= 8)
         {
+          fanSpeed -= 85 * deltaTime;
+          if (fanSpeed > 0)
+          {
+            rotBox.Rotate(fanSpeed * deltaTime);
+          }
           stateStepCounter = 7;
           showSecond = false;
           showThird = true;
@@ -783,9 +789,9 @@ class Tutorial implements Drawable, Interactable
       //box three
       pushMatrix();
       fill(0, 0, 0);
-      textSize(frictionTypesTextSizeSmall);
+      textSize(frictionTypesTextSizeTiny);
       text("kf = 30", demenstrationBoxThree.posX + 45, demenstrationBoxThree.posY + 10);
-      text("force = " + (int)boxThreeSpeed + " ", demenstrationBoxThree.posX - 130, demenstrationBoxThree.posY + 10);
+      text("force = " + (int)boxThreeSpeed + " ", demenstrationBoxThree.posX - 87, demenstrationBoxThree.posY + 10);
       popMatrix();
 
       drawArrow(demenstrationBoxThree.posX + 50, demenstrationBoxThree.posY + 15, demenstrationBoxThree.posX + 30, demenstrationBoxThree.posY + 15);
@@ -794,7 +800,7 @@ class Tutorial implements Drawable, Interactable
       //box four
       pushMatrix();
       fill(0, 0, 0);
-      textSize(frictionTypesTextSizeSmall);
+      textSize(frictionTypesTextSizeTiny);
       if (!boxFourCanMove)
       {
         text("sf = 30", demenstrationBoxFour.posX + 45, demenstrationBoxFour.posY + 10);
@@ -805,7 +811,7 @@ class Tutorial implements Drawable, Interactable
         text("After overcomming Static Friction", 300, 380);
         text("Kinetic Friction takes over! ", 300, 420);
       }
-      text("force = " + (int)boxFourSpeed + " ", demenstrationBoxFour.posX - 130, demenstrationBoxFour.posY + 10);
+      text("force = " + (int)boxFourSpeed + " ", demenstrationBoxFour.posX - 87, demenstrationBoxFour.posY + 10);
       popMatrix();
 
       drawArrow(demenstrationBoxFour.posX + 50, demenstrationBoxFour.posY + 15, demenstrationBoxFour.posX + 30, demenstrationBoxFour.posY + 15);
@@ -968,10 +974,11 @@ class Tutorial implements Drawable, Interactable
   float fanImageX = 600;
   float dragImageX = 100;
 
+  float fanSpeed = 300;
+
   Box rotBox;
 
   PImage frictionImage;
-  //PImage fanImage;
   PImage dragImage;
   PImage airImage;
 }
