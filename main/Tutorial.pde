@@ -238,11 +238,13 @@ class Tutorial implements Drawable, Interactable
 
     if (windButton.b.canClick)
     {
+      theSounds.PlayRandomUI();
       windForce += 200 * deltaTime;
     }
 
     if (forceButton.b.canClick)
     {
+      theSounds.PlayRandomUI();
       boxFiveSpeed = boxFiveForce;
 
 
@@ -251,22 +253,26 @@ class Tutorial implements Drawable, Interactable
 
     if (boxFiveResetButton.b.canClick)
     {
-
+      theSounds.PlayRandomUI();
       ResetFive();
     }
 
     if (sliderButton.b.canClick)
     {
+      theSounds.PlayRandomUI();
       sliderIsPressed = true;
     }
 
     if (frictionSliderButton.b.canClick)
     {
+      theSounds.PlayRandomUI();
       frictionSliderIsPressed = true;
     }
 
     if (nextTextButton.textSystem.canClick)
     {
+      theSounds.PlayRandomUI();
+
       if (stateStepCounter == 1)
       {
 
@@ -289,12 +295,32 @@ class Tutorial implements Drawable, Interactable
       }
 
       stateStepCounter++;
+      if (stateStepCounter >= 9)
+      {
+
+        theSounds.StopAllUI();
+        sim.tScreen.isTut = false;
+
+        sim.tScreen.isTitle = true;
+        //stateStepCounter = 0;
+        //return;
+      }
 
       canMove = true;
     }
 
     if (reverseTextButton.textSystem.canClick)
     {
+      if (stateStepCounter == 0)
+      {
+
+        theSounds.StopAllUI();
+        sim.tScreen.isTut = false;
+
+        sim.tScreen.isTitle = true;
+
+      }
+      theSounds.PlayRandomUI();
 
       if (stateStepCounter == 5)
       {
@@ -333,13 +359,15 @@ class Tutorial implements Drawable, Interactable
 
     if (backTextButton.textSystem.canClick)
     {
+      theSounds.StopAllUI();
+      theSounds.PlayRandomUI();
 
       sim.tScreen.isTut = false;
       sim.tScreen.isTitle = true;
     }
   }
 
-  void Reset()//Leave empty here, messes with State reset
+  void Reset()
   {
     if (sliderIsPressed)
     {
@@ -615,13 +643,6 @@ class Tutorial implements Drawable, Interactable
   {
 
     windowBox.Draw();
-
-    if (stateStepCounter >= 9)
-    {
-
-      sim.tScreen.isTut = false;
-      sim.tScreen.isTitle = true;
-    }
 
     if (stateStepCounter >= 5 && stateStepCounter < 9)
     {

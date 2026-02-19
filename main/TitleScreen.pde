@@ -54,19 +54,19 @@ class TitleScreen implements Drawable, Interactable
 
     if (tempTut.textSystem.canClick)
     {
-
+      theSounds.PlayRandomUI();
       isTitle = false;
       isTut = true;
     }
-
     if (tempSim.textSystem.canClick)
     {
+      theSounds.PlayRandomUI();
       isTitle = false;
       isSim = true;
     }
-
     if (tempWind.textSystem.canClick)
     {
+      theSounds.PlayRandomUI();
       isTitle = false;
       isWind = true;
     }
@@ -80,13 +80,13 @@ class TitleScreen implements Drawable, Interactable
       tempTut.textSystem.canClick = false;
     }
 
-    Button tempSim = buttons.get(0);
+    Button tempSim = buttons.get(1);
     if (tempSim.textSystem.canClick)
     {
       tempSim.textSystem.canClick = false;
     }
 
-    Button tempWind = buttons.get(0);
+    Button tempWind = buttons.get(2);
     if (tempWind.textSystem.canClick)
     {
       tempWind.textSystem.canClick = false;

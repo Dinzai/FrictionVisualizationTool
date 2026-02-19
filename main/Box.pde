@@ -407,6 +407,7 @@ class Box
 
     if (m.useTexture)
     {
+      
       texture(m.texture2D);
       vertex(shape.get(0).x, shape.get(0).y, 0, 0);      
       vertex(shape.get(1).x, shape.get(1).y, 256, 0);    

@@ -92,16 +92,19 @@ class DropDownMenu implements Drawable, Interactable
 
     if (sliderButton.b.canClick)
     {
+      theSounds.PlayRandomUI();
       sliderIsPressed = true;
     }
 
     if (directionSliderButton.b.canClick)
     {
+      theSounds.PlayRandomUI();
       directionSliderIsPressed = true;
     }
 
     if (button.b.canClick && canExpand)
     {
+      theSounds.PlayRandomUI();
       box.Translate(-10, -10);
       box.Scale(1.6, 8);
       box.Translate(10, 10);
@@ -111,6 +114,7 @@ class DropDownMenu implements Drawable, Interactable
       canExpand = false;
     } else if (button.b.canClick && !canExpand)
     {
+      theSounds.PlayRandomUI();
       box.Translate(-10, -10);
       box.Scale(0.625, 0.125);
       box.Translate(10, 10);
@@ -122,6 +126,7 @@ class DropDownMenu implements Drawable, Interactable
     }
     if (!canExpand && objectTextButton.textSystem.canClick)
     {
+      theSounds.PlayRandomUI();
       canShowMaterials = false;
       sliderIsPressed = false;
       directionSliderIsPressed = false;
@@ -130,6 +135,7 @@ class DropDownMenu implements Drawable, Interactable
 
     if (forceButton.b.canClick)
     {
+      theSounds.PlayRandomUI();
       sliderIsPressed = false;
       directionSliderIsPressed = false;
       canAddForce = true;
@@ -138,6 +144,7 @@ class DropDownMenu implements Drawable, Interactable
     //Material Mode
     if (!canExpand && materialTextButton.textSystem.canClick)
     {
+      theSounds.PlayRandomUI();
       sliderIsPressed = false;
       directionSliderIsPressed = false;
       canShowMaterials = !canShowMaterials;
@@ -146,6 +153,7 @@ class DropDownMenu implements Drawable, Interactable
     //play mode
     if (playButton.t.canClick)
     {
+      theSounds.PlayRandomUI();
       sliderIsPressed = false;
       directionSliderIsPressed = false;
       playButton.isActive = !playButton.isActive;
@@ -156,6 +164,7 @@ class DropDownMenu implements Drawable, Interactable
     //selection mode
     if (!canExpand && selectTextButton.textSystem.canClick)
     {
+      theSounds.PlayRandomUI();
       sliderIsPressed = false;
       directionSliderIsPressed = false;
       canShowMaterials = false;
@@ -170,6 +179,7 @@ class DropDownMenu implements Drawable, Interactable
     //scale mode
     if (!canExpand && scaleUpTextButton.textSystem.canClick)
     {
+      theSounds.PlayRandomUI();
       sliderIsPressed = false;
       directionSliderIsPressed = false;
       canShowMaterials = false;
@@ -183,6 +193,7 @@ class DropDownMenu implements Drawable, Interactable
 
     if (!canExpand && scaleDownTextButton.textSystem.canClick)
     {
+      theSounds.PlayRandomUI();
       sliderIsPressed = false;
       directionSliderIsPressed = false;
       canShowMaterials = false;
@@ -195,6 +206,7 @@ class DropDownMenu implements Drawable, Interactable
 
     if (backTextButton.textSystem.canClick)
     {
+      theSounds.PlayRandomUI();
       sliderIsPressed = false;
       directionSliderIsPressed = false;
       canShowMaterials = false;
