@@ -34,9 +34,20 @@ class Point
     this.y = y;
   }
   
+  Point(float x, float y, float u, float v)
+  {
+    this.x = x;
+    this.y = y;
+    this.u = u;
+    this.v = v;
+  }
+  
   
   float x;
   float y;
+  
+  float u;
+  float v;
   
 }
 

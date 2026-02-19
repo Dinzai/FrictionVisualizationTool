@@ -27,11 +27,16 @@ class Box
   {
     theWidth = w;
     theHeight = h;
+    //time to add image! uv's baby
+    //Point TL = new Point();
+    //Point TR = new Point(w, 0);
+    //Point BL = new Point(0, h);
+    //Point BR = new Point(w, h);
 
-    Point TL = new Point();
-    Point TR = new Point(w, 0);
-    Point BL = new Point(0, h);
-    Point BR = new Point(w, h);
+    Point TL = new Point(0, 0, 0, 0);
+    Point TR = new Point(w, 0, 1, 0);
+    Point BR = new Point(w, h, 1, 1);
+    Point BL = new Point(0, h, 0, 1);
 
     baseShape.add(TL);
     baseShape.add(TR);
@@ -194,7 +199,6 @@ class Box
 
       theWidth = maxX - minX;
       theHeight = maxY - minY;
-      
     }
   }
 
@@ -395,13 +399,25 @@ class Box
     Identity();
     pushMatrix();
     beginShape();
-    fill(c.r, c.g, c.b);
-    strokeWeight(3);
-    for (Point p : shape)
+
+    if (m.useTexture)
     {
-      vertex(p.x, p.y);
+      texture(m.texture2D);
+      for (Point p : shape)
+      {
+        vertex(p.x, p.y);
+      }
+    } else
+    {
+      fill(c.r, c.g, c.b);
+      strokeWeight(3);
+      for (Point p : shape)
+      {
+        vertex(p.x, p.y);
+      }
     }
     endShape(CLOSE);
+
     popMatrix();
   }
 
@@ -454,7 +470,7 @@ class Box
   int directionSquish = 1;
   boolean canBounce = false;
   boolean canGetCurrentScale = true;
-  
+
   boolean setForDeletion = false;
 
   float minX = 17;

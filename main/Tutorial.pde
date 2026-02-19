@@ -232,6 +232,8 @@ class Tutorial implements Drawable, Interactable
     if (forceButton.b.canClick)
     {
       boxFiveSpeed = boxFiveForce;
+
+
       boxFiveCanMove = true;
     }
 
@@ -255,11 +257,11 @@ class Tutorial implements Drawable, Interactable
     {
       if (stateStepCounter == 1)
       {
-       
+
         ResetBoxLocation();
       }
 
-      if(stateStepCounter == 2 || stateStepCounter == 3)
+      if (stateStepCounter == 2 || stateStepCounter == 3)
       {
         ResetFive();
         stateStepCounter = 4;
@@ -291,13 +293,13 @@ class Tutorial implements Drawable, Interactable
       {
         stateStepCounter = 1;
       }
-      
+
       if (stateStepCounter == 4)
       {
         ResetBoxLocation();
         stateStepCounter = 2;
       }
-      
+
       if (stateStepCounter == 8)
       {
         stateStepCounter = 5;
@@ -307,7 +309,7 @@ class Tutorial implements Drawable, Interactable
         canSeeWindMill = false;
         return;
       }
-      
+
       stateStepCounter--;
 
 
@@ -415,12 +417,12 @@ class Tutorial implements Drawable, Interactable
 
     demenstrationBoxFive.SetPosition(0, 0);
     demenstrationBoxFive.Translate(300, 464);
-   
   }
 
   void Update()
   {
     //print(stateStepCounter);
+
     //wind
     if (stateStepCounter >= 5 && stateStepCounter < 9)
     {
@@ -430,7 +432,7 @@ class Tutorial implements Drawable, Interactable
         windTimerCountDown -= deltaTime;
         if (windTimerCountDown <= 0)
         {
-          windTimerCountDown = 4;
+          windTimerCountDown = windTimerMax;
         }
         if (windTimer >= 4)
         {
@@ -481,27 +483,22 @@ class Tutorial implements Drawable, Interactable
 
       if (boxFiveCanMove)
       {
-
         if (boxFiveForce < boxFiveStaticFriction)
         {
           boxFiveCanMove = false;
           popUpReminder = true;
-          return;
-        }
-        boxFiveKineticFriction = boxFiveStaticFriction * 0.25;//make kinetic friction smaller
-        popUpReminder = false;
-        if (demenstrationBoxFive.posX < 610)
+        } else
         {
-          if (boxFiveSpeed > 0)
-          {
-            boxFiveSpeed -= boxFiveKineticFriction;
-            demenstrationBoxFive.Translate(boxFiveSpeed * deltaTime, 0);
-          } else
-          {
-            boxFiveSpeed = 0;
-            demenstrationBoxFive.Translate(0, 0);
-          }
+          popUpReminder = false;
         }
+
+        boxFiveSpeed -= boxFiveStaticFriction * deltaTime;
+        if (boxFiveSpeed <= 0)
+        {
+          boxFiveSpeed = 0;
+        }
+        demenstrationBoxFive.Translate(boxFiveSpeed * deltaTime, 0);
+
       }
     }
     //static kinetic explanation
@@ -690,7 +687,7 @@ class Tutorial implements Drawable, Interactable
         pushMatrix();
         fill(0, 0, 0);
         textSize(frictionTypesTextSizeSmall);
-        text("kf = " + (int)boxFiveKineticFriction, demenstrationBoxFive.posX + 45, demenstrationBoxFive.posY + 10);
+        text("kf = " + (int)boxFiveStaticFriction, demenstrationBoxFive.posX + 45, demenstrationBoxFive.posY + 10);
         text("Force = " + (int)boxFiveForce + " ", demenstrationBoxFive.posX - 112, demenstrationBoxFive.posY + 10);
         popMatrix();
 
@@ -843,11 +840,8 @@ class Tutorial implements Drawable, Interactable
   int amount = 34;
 
   float timer = 0;
-
-  float resetTimer = 0;
-
   float velocity = 30;
-  float realVelocity = 30;
+
   float frictionAmount = 10;
 
   float boxThreeSpeed = 50;
@@ -855,10 +849,10 @@ class Tutorial implements Drawable, Interactable
 
   float boxFiveSpeed = 0;
   float boxFiveForce = 0;
-  float boxFiveMaxForce = 5000;
-  float boxFiveMaxFriction = 3000;
+  float boxFiveMaxForce = 1000;
+  float boxFiveMaxFriction = 900;
   float boxFiveStaticFriction;
-  float boxFiveKineticFriction;
+
   boolean popUpReminder = false;
   boolean skip = false;
 

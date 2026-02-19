@@ -321,4 +321,4 @@ class Spawnable implements Drawable, Interactable
 }
 
 
-Spawnable spawner = new Spawnable();
+Spawnable spawner;// = new Spawnable();

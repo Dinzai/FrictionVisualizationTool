@@ -4,7 +4,7 @@ class Loop
 {
   Loop()
   {
-
+       
     title = new Scene();
     tScreen = new TitleScreen();
 
@@ -15,6 +15,8 @@ class Loop
     tScreen.isTitle = true;
     tutScreen = new Tutorial();
     windScreen = new Windmill();
+    
+    spawner = new Spawnable();
 
     menu = new DropDownMenu();
     

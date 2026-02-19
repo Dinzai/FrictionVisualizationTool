@@ -56,6 +56,13 @@ class Material
     UpdateType();
     materialType = mType;
     SetColour();
+    SetTexture(materialType.ordinal());
+    useTexture = true;
+  }
+  
+  void SetTexture(int num)
+  {
+    texture2D = cache.GetTexture(num);
   }
 
   void SetColour()
@@ -128,8 +135,13 @@ class Material
 
   boolean foundStaticValues = false;
   boolean foundKineticValues = false;
+  
+  boolean useTexture = false;
+  
   M_TYPE materialType;
   Colour c;
+  
+  PImage texture2D;
 }
 
 class MaterialIconObject implements Drawable, Interactable
