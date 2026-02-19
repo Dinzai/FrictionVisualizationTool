@@ -174,7 +174,7 @@ class Button
         if (mouseX > textSystem.textPos.x && mouseX < textSystem.textPos.x + textSystem.offsetCheck
           && mouseY > textSystem.textPos.y - 15 && mouseY < textSystem.textPos.y + 15)
         {
-          SetColour(100, 200, 100);
+          SetColour(0, 255, 0);
           textSystem.canClick = true;
         } else
         {
@@ -184,7 +184,7 @@ class Button
         }
       } else if (textSystem.isActive)
       {
-        SetColour(100, 200, 100);
+        SetColour(0, 255, 0);
         textSystem.canClick = false;
       }
     }

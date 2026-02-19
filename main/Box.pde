@@ -60,10 +60,15 @@ class Box
     baseShape.clear();
     shape.clear();
 
-    Point TL = new Point(-halfWidth, -halfHeight);
-    Point TR = new Point(halfWidth, -halfHeight);
-    Point BR = new Point(halfWidth, halfHeight);
-    Point BL = new Point(-halfWidth, halfHeight);
+    //Point TL = new Point(-halfWidth, -halfHeight);
+    //Point TR = new Point(halfWidth, -halfHeight);
+    //Point BR = new Point(halfWidth, halfHeight);
+    //Point BL = new Point(-halfWidth, halfHeight);
+    
+    Point TL = new Point(-halfWidth, -halfHeight, 0, 0);
+    Point TR = new Point(halfWidth, -halfHeight, 1, 0);
+    Point BR = new Point(halfWidth, halfHeight, 1, 1);
+    Point BL = new Point(-halfWidth, halfHeight, 0, 1);
 
     baseShape.add(TL);
     baseShape.add(TR);

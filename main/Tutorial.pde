@@ -45,6 +45,10 @@ class Tutorial implements Drawable, Interactable
 
   Tutorial()
   {
+    frictionImage = cache.GetTexture(6);
+    airImage = cache.GetTexture(7);
+    dragImage = cache.GetTexture(8);
+
     Add();
   }
 
@@ -133,7 +137,15 @@ class Tutorial implements Drawable, Interactable
     frictionSliderButton.SetOriginalColour(90, 90, 90);
     frictionSliderButton.SetPosition(500, 230);
 
+
+
     //wind mill part
+
+    rotBox = new Box();
+    rotBox.MakeRotBox(128, 128);
+    rotBox.SetColour(180, 180, 220);
+    rotBox.Translate(300, 300);
+    rotBox.SetType(M_TYPE.FAN);
 
     windBladeUp = new Box();
     windBladeUp.MakeRotBox(20, 150);
@@ -415,6 +427,11 @@ class Tutorial implements Drawable, Interactable
     boxFiveCanMove = false;
     boxFiveResetButton.b.canClick = false;
 
+    imageSpeed = 100;
+    fanImageX = 600;
+    dragImageX = 100;
+
+
     demenstrationBoxFive.SetPosition(0, 0);
     demenstrationBoxFive.Translate(300, 464);
   }
@@ -428,6 +445,7 @@ class Tutorial implements Drawable, Interactable
     {
       if (!canSeeWindMill && !skip)
       {
+        fanImageX -= imageSpeed * deltaTime;
         windTimer += deltaTime;
         windTimerCountDown -= deltaTime;
         if (windTimerCountDown <= 0)
@@ -436,6 +454,11 @@ class Tutorial implements Drawable, Interactable
         }
         if (windTimer >= 4)
         {
+          imageSpeed -= 25 * deltaTime;
+          if (imageSpeed > 0)
+          {
+            dragImageX += imageSpeed * deltaTime;
+          }
           stateStepCounter = 6;
           showSecond = true;
         }
@@ -498,7 +521,6 @@ class Tutorial implements Drawable, Interactable
           boxFiveSpeed = 0;
         }
         demenstrationBoxFive.Translate(boxFiveSpeed * deltaTime, 0);
-
       }
     }
     //static kinetic explanation
@@ -605,14 +627,22 @@ class Tutorial implements Drawable, Interactable
         text("Word Timer: " + (int)windTimerCountDown, 100, 100);
         if (!showSecond && !showThird)
         {
+          image(airImage, fanImageX, 300, 128, 128);
           text(windMillText, 250, 200);
         }
         if (showSecond)
         {
+          image(dragImage, dragImageX, 300, 128, 128);
           text(windMillTextTwo, 250, 200);
         }
         if (showThird)
         {
+
+          //image(fanImage, 320, 300, 128, 128);
+          pushMatrix();
+          noStroke();
+          rotBox.Draw();
+          popMatrix();
           text(windMillTextThree, 140, 200);
         }
         popMatrix();
@@ -656,7 +686,7 @@ class Tutorial implements Drawable, Interactable
         strokeWeight(5);
         windButton.Draw();
         popMatrix();
-        
+
         pushMatrix();
         fill(0, 0, 0);
         textSize(windTextSize);
@@ -792,10 +822,11 @@ class Tutorial implements Drawable, Interactable
 
     if (stateStepCounter < 2)
     {
+      image(frictionImage, 500, 420, 64, 64);
       pushMatrix();
       fill(0, 0, 0);
       textSize(amount);
-      text(phrase, phraseLocationX - 25, phraseLocationY);
+      text(phrase, phraseLocationX - 25, phraseLocationY - 100);
       if (canShowSecondText)
       {
         text(phraseTwo, phraseLocationTwoX, phraseLocationTwoY);
@@ -904,7 +935,7 @@ class Tutorial implements Drawable, Interactable
   int windTextSize = 21;
   String windMillText = "Friction also works in the air!";
   String windMillTextTwo = "This is called Drag!";
-  String windMillTextThree = "Think about fans slowing down when they turn off!";
+  String windMillTextThree = "Drag slows down fans after they turn off!";
 
   boolean canSeeWindMill = false;
   boolean canMoveWindmill = false;
@@ -932,4 +963,15 @@ class Tutorial implements Drawable, Interactable
   Box windBladeDown;
   Box windBladeLeft;
   Box windMillTower;
+
+  float imageSpeed = 100;
+  float fanImageX = 600;
+  float dragImageX = 100;
+
+  Box rotBox;
+
+  PImage frictionImage;
+  //PImage fanImage;
+  PImage dragImage;
+  PImage airImage;
 }

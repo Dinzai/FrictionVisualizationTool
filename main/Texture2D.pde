@@ -23,6 +23,11 @@ class CacheTextures
     allTextures.add(SetImage("metal"));//2
     allTextures.add(SetImage("rock"));//3
     allTextures.add(SetImage("ice"));//4
+    allTextures.add(SetImage("fanIcon"));//5
+    allTextures.add(SetImage("frictionIcon"));//6
+    allTextures.add(SetImage("airIcon"));//7
+    allTextures.add(SetImage("dragIcon"));//8
+    allTextures.add(SetImage("scienceIcon"));//9
   }
   
   PImage GetTexture(int num)

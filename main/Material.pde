@@ -6,6 +6,7 @@ enum M_TYPE
     METAL,
     ROCK,
     ICE,
+    FAN,
 }
 
 class Material
