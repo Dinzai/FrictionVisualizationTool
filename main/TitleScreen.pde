@@ -102,8 +102,8 @@ class TitleScreen implements Drawable, Interactable
 
     pushMatrix();
     fill(0, 0, 0);
-    textSize(55);
-    text("Friction Simulator!", 200, 100);
+    textSize(54);
+    text("Friction Simulator", 170, 100);
     popMatrix();
     for (Button b : buttons)
     {

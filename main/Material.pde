@@ -266,7 +266,7 @@ class MaterialPannel
   MaterialPannel()
   {
     pannel = new Box();
-    pannel.MakeBox(130, 135);
+    pannel.MakeBox(145, 150);
     pannel.SetColour(110, 110, 110);
     pannel.Translate(170, 100);
     materials = new ArrayList<MaterialIconObject>();

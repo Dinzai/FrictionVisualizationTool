@@ -88,19 +88,19 @@ class Tutorial implements Drawable, Interactable
     nextTextButton = new Button("Next");
     nextTextButton.SetSize(21);
     nextTextButton.SetTextOffsetCheck(30);
-    nextTextButton.SetPosition(750, 580);
+    nextTextButton.SetPosition(740, 575);
     nextTextButton.SetOriginalColour(0, 0, 0);
 
     reverseTextButton = new Button("Previous");
     reverseTextButton.SetSize(21);
     reverseTextButton.SetTextOffsetCheck(70);
-    reverseTextButton.SetPosition(20, 580);
+    reverseTextButton.SetPosition(20, 575);
     reverseTextButton.SetOriginalColour(0, 0, 0);
 
     backTextButton = new Button("Back");
     backTextButton.SetSize(21);
     backTextButton.SetTextOffsetCheck(30);
-    backTextButton.SetPosition(750, 20);
+    backTextButton.SetPosition(740, 25);
     backTextButton.SetOriginalColour(0, 0, 0);
 
     forceButton = new Button();
@@ -406,8 +406,8 @@ class Tutorial implements Drawable, Interactable
     demenstrationBoxThree.SetPosition(0, 0);
     demenstrationBoxFour.SetPosition(0, 0);
 
-    demenstrationBoxThree.Translate(210, 280);
-    demenstrationBoxFour.Translate(525, 280);
+    demenstrationBoxThree.Translate(220, 300);
+    demenstrationBoxFour.Translate(500, 280);
   }
 
   void ResetFive()
@@ -456,7 +456,7 @@ class Tutorial implements Drawable, Interactable
 
       windMillSpeed = windForce;
 
-      if (windMillSpeed >= 5)
+      if (windMillSpeed >= 1)
       {
         canMoveWindmill = true;
       }
@@ -605,15 +605,15 @@ class Tutorial implements Drawable, Interactable
         text("Word Timer: " + (int)windTimerCountDown, 100, 100);
         if (!showSecond && !showThird)
         {
-          text(windMillText, 300, 200);
+          text(windMillText, 250, 200);
         }
         if (showSecond)
         {
-          text(windMillTextTwo, 300, 200);
+          text(windMillTextTwo, 250, 200);
         }
         if (showThird)
         {
-          text(windMillTextThree, 200, 200);
+          text(windMillTextThree, 140, 200);
         }
         popMatrix();
       }
@@ -635,7 +635,7 @@ class Tutorial implements Drawable, Interactable
         pushMatrix();
         fill(0, 0, 0);
         textSize(windTextSize);
-        text("Tap the button to add wind! ", 100, 300);
+        text("Tap the button to add wind! ", 100, 330);
         popMatrix();
 
         pushMatrix();
@@ -656,9 +656,16 @@ class Tutorial implements Drawable, Interactable
         strokeWeight(5);
         windButton.Draw();
         popMatrix();
+        
+        pushMatrix();
+        fill(0, 0, 0);
+        textSize(windTextSize);
+        text("Drag", windMillTower.posX + 105, windMillTower.posY + 5);
+        text("Wind", windMillTower.posX - 110, windMillTower.posY + 5);
+        popMatrix();
 
-        drawArrow(windMillTower.posX + 70, windMillTower.posY + 15, windMillTower.posX + 30, windMillTower.posY + 15);
-        drawArrow(windMillTower.posX - 70, windMillTower.posY + 15, windMillTower.posX - 20, windMillTower.posY + 15);
+        drawArrow(windMillTower.posX + 150, windMillTower.posY + 15, windMillTower.posX + 100, windMillTower.posY + 15);
+        drawArrow(windMillTower.posX - 105, windMillTower.posY + 15, windMillTower.posX - 55, windMillTower.posY + 15);
       }
     }
 
@@ -711,7 +718,7 @@ class Tutorial implements Drawable, Interactable
         pushMatrix();
         fill(0, 0, 0);
         textSize(frictionTypesTextSizeSmall);
-        text("Starting force must be larger than static friction! ", demenstrationBoxFive.posX, demenstrationBoxFive.posY - 50);
+        text("Starting force must be larger than static friction! ", demenstrationBoxFive.posX - 125, demenstrationBoxFive.posY - 50);
         popMatrix();
       }
 
@@ -722,13 +729,13 @@ class Tutorial implements Drawable, Interactable
       pushMatrix();
       fill(0, 0, 0);
       textSize(frictionTypesTextSize);
-      text(phraseThree, 300, 100);
+      text(phraseThree, 250, 100);
       popMatrix();
 
       pushMatrix();
       fill(0, 0, 0);
       textSize(frictionTypesTextSizeSmall);
-      text(phraseFive, fPhraseLocationX - 100, fPhraseLocationY);
+      text(phraseFive, fPhraseLocationX - 160, fPhraseLocationY);
       popMatrix();
 
       pushMatrix();
@@ -748,7 +755,7 @@ class Tutorial implements Drawable, Interactable
       fill(0, 0, 0);
       textSize(frictionTypesTextSizeSmall);
       text("kf = 30", demenstrationBoxThree.posX + 45, demenstrationBoxThree.posY + 10);
-      text("force = " + (int)boxThreeSpeed + " ", demenstrationBoxThree.posX - 90, demenstrationBoxThree.posY + 10);
+      text("force = " + (int)boxThreeSpeed + " ", demenstrationBoxThree.posX - 130, demenstrationBoxThree.posY + 10);
       popMatrix();
 
       drawArrow(demenstrationBoxThree.posX + 50, demenstrationBoxThree.posY + 15, demenstrationBoxThree.posX + 30, demenstrationBoxThree.posY + 15);
@@ -765,10 +772,10 @@ class Tutorial implements Drawable, Interactable
       {
 
         text("kf = 20", demenstrationBoxFour.posX + 45, demenstrationBoxFour.posY + 10);
-        text("After overcomming Static Friction", 300, 320);
+        text("After overcomming Static Friction", 300, 380);
         text("Kinetic Friction takes over! ", 300, 420);
       }
-      text("force = " + (int)boxFourSpeed + " ", demenstrationBoxFour.posX - 90, demenstrationBoxFour.posY + 10);
+      text("force = " + (int)boxFourSpeed + " ", demenstrationBoxFour.posX - 130, demenstrationBoxFour.posY + 10);
       popMatrix();
 
       drawArrow(demenstrationBoxFour.posX + 50, demenstrationBoxFour.posY + 15, demenstrationBoxFour.posX + 30, demenstrationBoxFour.posY + 15);
@@ -777,7 +784,7 @@ class Tutorial implements Drawable, Interactable
       pushMatrix();
       fill(0, 0, 0);
       textSize(frictionTypesTextSize);
-      text(frictionTypes, fPhraseLocationX, fPhraseLocationY);
+      text(frictionTypes, fPhraseLocationX, fPhraseLocationY - 75);
       text(kineticFrictionPhrase, fPhraseLocationX - 50, fPhraseLocationY + 50);
       text(staticFrictionPhrase, fPhraseLocationX + 250, fPhraseLocationY + 50);
       popMatrix();
@@ -788,7 +795,7 @@ class Tutorial implements Drawable, Interactable
       pushMatrix();
       fill(0, 0, 0);
       textSize(amount);
-      text(phrase, phraseLocationX, phraseLocationY);
+      text(phrase, phraseLocationX - 25, phraseLocationY);
       if (canShowSecondText)
       {
         text(phraseTwo, phraseLocationTwoX, phraseLocationTwoY);

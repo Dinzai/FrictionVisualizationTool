@@ -12,7 +12,7 @@ class Windmill implements Drawable, Interactable
     backTextButton = new Button("Back");
     backTextButton.SetSize(21);
     backTextButton.SetTextOffsetCheck(30);
-    backTextButton.SetPosition(750, 20);
+    backTextButton.SetPosition(740, 25);
     backTextButton.SetOriginalColour(0, 0, 0);
 
     //wind mill part
@@ -52,12 +52,12 @@ class Windmill implements Drawable, Interactable
     sliderRail = new Box();
     sliderRail.MakeBox(80, 10);
     sliderRail.SetColour(80, 80, 80);
-    sliderRail.Translate(200, 210);
+    sliderRail.Translate(200, 200);
 
     sliderButton = new Button();
     sliderButton.SetSize(10, 10);
     sliderButton.SetOriginalColour(90, 90, 90);
-    sliderButton.SetPosition(200, 210);
+    sliderButton.SetPosition(200, 200);
     
     dragSliderRail = new Box();
     dragSliderRail.MakeBox(80, 10);
@@ -232,7 +232,7 @@ class Windmill implements Drawable, Interactable
     pushMatrix();
     fill(0, 0, 0);
     textSize(windTextSize);
-    text("Current Wind Force: " + (int)windForce, windMillTower.posX - 280, windMillTower.posY + 15);
+    text("Current Wind Force: " + (int)windForce, windMillTower.posX - 300, windMillTower.posY + 15);
     popMatrix();
 
     pushMatrix();
@@ -247,7 +247,7 @@ class Windmill implements Drawable, Interactable
     pushMatrix();
     fill(0, 0, 0);
     textSize(windTextSize);
-    text("Starting Wind force: " + (int)startingForce, 110, 200);
+    text("Starting Wind force: " + (int)startingForce, 110, 180);
     popMatrix();
     
     sliderRail.Draw();

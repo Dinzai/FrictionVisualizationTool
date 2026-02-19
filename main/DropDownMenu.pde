@@ -26,7 +26,7 @@ class DropDownMenu implements Drawable, Interactable
     backTextButton = new Button("Back");
     backTextButton.SetSize(21);
     backTextButton.SetTextOffsetCheck(30);
-    backTextButton.SetPosition(750, 20);
+    backTextButton.SetPosition(740, 25);
     backTextButton.SetOriginalColour(0, 0, 0);
 
     objectTextButton = new Button("Object");
@@ -67,12 +67,12 @@ class DropDownMenu implements Drawable, Interactable
     sliderRail = new Box();
     sliderRail.MakeBox(80, 10);
     sliderRail.SetColour(80, 80, 80);
-    sliderRail.Translate(520, 50);
+    sliderRail.Translate(480, 50);
 
     sliderButton = new Button();
     sliderButton.SetSize(10, 10);
     sliderButton.SetOriginalColour(90, 90, 90);
-    sliderButton.SetPosition(520, 50);
+    sliderButton.SetPosition(480, 50);
 
     directionSliderRail = new Box();
     directionSliderRail.MakeBox(80, 10);
@@ -300,24 +300,24 @@ class DropDownMenu implements Drawable, Interactable
     fill(0, 0, 0);
     textSize(16);
 
-    text("Add Force to Selected!", 340, 15);
+    text("Add Force to Selected!", 310, 15);
 
-    text("Current Force: " + (int)startingForce, 465, 35);
+    text("Current Force: " + (int)startingForce, 450, 35);
     if (startingDirection > -1 && startingDirection < 1)
     {
-      text("Force Direction: None", 172, 35);
+      text("Force Direction: None", 140, 35);
     }
     if (startingDirection == -1)
     {
-      text("Force Direction: Left", 172, 35);
+      text("Force Direction: Left", 140, 35);
     }
     if (startingDirection == 1)
     {
-      text("Force Direction: Right", 172, 35);
+      text("Force Direction: Right", 140, 35);
     }
 
-    text("Add", 625, 29);
-    text("Gravity!", 625, 40);
+    text("Add", 615, 29);
+    text("Gravity!", 615, 40);
 
     sliderRail.Draw();
     sliderButton.Draw();
@@ -330,7 +330,7 @@ class DropDownMenu implements Drawable, Interactable
     pushMatrix();
     fill(0, 0, 0);
     textSize(14);
-    text("Click!", 60, 60);
+    text("Click!", 55, 60);
     popMatrix();
 
     pushMatrix();
@@ -355,7 +355,7 @@ class DropDownMenu implements Drawable, Interactable
       textSize(12);
       text("Click on Menu", 80, 200);
       text("Options", 80, 212);
-      text("Click!", 90, 245);
+      text("Click!", 85, 245);
       popMatrix();
       drawArrow(120, 240, 140, 240);
       selectTextButton.Draw();
