@@ -403,10 +403,14 @@ class Box
     if (m.useTexture)
     {
       texture(m.texture2D);
-      for (Point p : shape)
-      {
-        vertex(p.x, p.y);
-      }
+      vertex(shape.get(0).x, shape.get(0).y, 0, 0);      
+      vertex(shape.get(1).x, shape.get(1).y, 256, 0);    
+      vertex(shape.get(2).x, shape.get(2).y, 256, 256);  
+      vertex(shape.get(3).x, shape.get(3).y, 0, 256);
+      //for (Point p : shape)
+      //{
+       // vertex(p.x, p.y, 256, 256);
+     //}
     } else
     {
       fill(c.r, c.g, c.b);

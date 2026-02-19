@@ -302,7 +302,7 @@ class DropDownMenu implements Drawable, Interactable
 
     text("Add Force to Selected!", 340, 15);
 
-    text("Current Force: " + (int)startingForce, 490, 35);
+    text("Current Force: " + (int)startingForce, 465, 35);
     if (startingDirection > -1 && startingDirection < 1)
     {
       text("Force Direction: None", 172, 35);
