@@ -44,9 +44,9 @@ class InputManager
   
 }
 
-InputManager input = new InputManager();
+InputManager input = new InputManager();//SINGLETON
 
-
+//only thins that are interactable are capable of the mousepresses to detect input
 void mousePressed()
 {
   input.Clicked();

@@ -8,7 +8,7 @@ enum Layers
   UI,
 }
 
-interface Drawable// a complex object needs to implment this
+interface Drawable// a complex object needs to implment this, never box, or button, rather, a container that carries those objects as memebers
 {
   void DrawToScreen();
 }

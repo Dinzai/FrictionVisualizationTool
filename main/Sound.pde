@@ -1,4 +1,4 @@
-
+//The sound manager
 import processing.sound.*;
 
 enum UI_SOUND

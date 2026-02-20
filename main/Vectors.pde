@@ -1,4 +1,4 @@
-
+//I like to define a colur, i think of it like a vec3
 class Colour
 {
   Colour()
@@ -20,6 +20,8 @@ class Colour
   float b;
 }
 
+
+//Instead of using processings PVector class, I opted to define my own vector system
 class Point
 {
   Point()
@@ -51,7 +53,7 @@ class Point
   
 }
 
-
+//this is a callable global function that allows arros drawn to the screen. Many systems need arrows, might as well have it callable from anywhere
 
 void drawArrow(float x1, float y1, float x2, float y2)
   {

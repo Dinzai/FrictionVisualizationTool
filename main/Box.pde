@@ -28,12 +28,8 @@ class Box
   {
     theWidth = w;
     theHeight = h;
-    //time to add image! uv's baby
-    //Point TL = new Point();
-    //Point TR = new Point(w, 0);
-    //Point BL = new Point(0, h);
-    //Point BR = new Point(w, h);
 
+    //time to add image! uv's baby
     Point TL = new Point(0, 0, 0, 0);
     Point TR = new Point(w, 0, 1, 0);
     Point BR = new Point(w, h, 1, 1);
@@ -43,8 +39,6 @@ class Box
     baseShape.add(TR);
     baseShape.add(BR);
     baseShape.add(BL);
-    
-    
 
     for (Point p : baseShape)
     {
@@ -63,11 +57,6 @@ class Box
     baseShape.clear();
     shape.clear();
 
-    //Point TL = new Point(-halfWidth, -halfHeight);
-    //Point TR = new Point(halfWidth, -halfHeight);
-    //Point BR = new Point(halfWidth, halfHeight);
-    //Point BL = new Point(-halfWidth, halfHeight);
-    
     Point TL = new Point(-halfWidth, -halfHeight, 0, 0);
     Point TR = new Point(halfWidth, -halfHeight, 1, 0);
     Point BR = new Point(halfWidth, halfHeight, 1, 1);
@@ -82,7 +71,6 @@ class Box
     {
       shape.add(new Point(p.x, p.y));
     }
-    
   }
 
   void MakeTri(float w, float h)
@@ -141,10 +129,9 @@ class Box
 
       originalShape.x = rx + posX;
       originalShape.y = ry + posY;
-      forceOnObjectBasedOnMass = mass * gravity;
+      forceOnObjectBasedOnMass = mass * gravity;//not realistic, but adds 'polish' feel
     }
   }
-
 
   void SetPosition(float x, float y)
   {
@@ -216,7 +203,6 @@ class Box
   {
     scaleX *= sx;
     scaleY *= sy;
-    //forceOnObjectBasedOnMass = mass * accleration;
   }
 
   Point Normalize(Point vec)
@@ -265,34 +251,6 @@ class Box
 
     return contain;
   }
-  //this effect is to enhance uswer feedback to have a squishy, bounce like effect when howvered over, instead of change in colour
-  void Bounce()
-  {
-    if (canGetCurrentScale)
-    {
-      baseX = scaleX;
-      baseY = scaleY;
-      canGetCurrentScale = false;
-    }
-
-    if (!canBounce)
-      return;
-
-    bounceTime += deltaTime * bounceSpeed;
-
-    float waveX = cos(bounceTime);
-    float waveY = sin(bounceTime);
-
-    float stretchX = baseX * (1.0f + waveX * bounceAmount);
-    float stretchY = baseY * (1.0f - waveY * bounceAmount);
-    if (bounceTime > 2)
-    {
-      directionSquish *= -1;
-      bounceTime = 0;
-    }
-    Scale(stretchX * directionSquish, stretchY * directionSquish);
-  }
-
 
   boolean Collision(Box otherShape)
   {
@@ -340,7 +298,6 @@ class Box
 
       changeVector = new Point(bestAxis.x * smallestOverlap, 0);
       velocityX = 0;
-      //otherShape.accleration = otherShape.velocityX / deltaTime;
       otherShape.force = otherShape.mass * accleration;
       otherShape.gotImpulse = true;
     }
@@ -359,14 +316,15 @@ class Box
     Translate(changeVector.x, changeVector.y);
   }
 
-  void PhysicsUpdate()
+  void CheckArea()
   {
-    if (gotImpulse)
+    if (posY < minY)
     {
-      accleration = force / mass;
-      velocityX = accleration;
-      force = 0;
-      gotImpulse = false;
+      setForDeletion = true;
+    }
+    if (posY > maxY)
+    {
+      setForDeletion = true;
     }
     if (posX < minX)
     {
@@ -376,6 +334,18 @@ class Box
     {
       setForDeletion = true;
     }
+  }
+
+  void PhysicsUpdate()
+  {
+    if (gotImpulse)
+    {
+      accleration = force / mass;
+      velocityX = accleration;
+      force = 0;
+      gotImpulse = false;
+    }
+    
     posX += velocityX * deltaTime;
 
     if (velocityX > 0)
@@ -394,11 +364,10 @@ class Box
   {
     if (!isPaused)
     {
-      
       velocityY += forceOnObjectBasedOnMass * deltaTime;
       Translate(0, velocityY * deltaTime);
     }
-
+    
     PhysicsUpdate();
     UpdateBounds();
     CalculateNormals();
@@ -408,33 +377,29 @@ class Box
 
   void Draw()
   {
+    CheckArea();
     Identity();
     pushMatrix();
-    beginShape();
-
     if (m.useTexture)
     {
-      
+      beginShape(QUADS);
       texture(m.texture2D);
-      vertex(shape.get(0).x, shape.get(0).y, 0, 0);      
-      vertex(shape.get(1).x, shape.get(1).y, 256, 0);    
-      vertex(shape.get(2).x, shape.get(2).y, 256, 256);  
+      vertex(shape.get(0).x, shape.get(0).y, 0, 0);
+      vertex(shape.get(1).x, shape.get(1).y, 256, 0);
+      vertex(shape.get(2).x, shape.get(2).y, 256, 256);
       vertex(shape.get(3).x, shape.get(3).y, 0, 256);
-      //for (Point p : shape)
-      //{
-       // vertex(p.x, p.y, 256, 256);
-     //}
+      endShape(CLOSE);
     } else
     {
+      beginShape();
       fill(c.r, c.g, c.b);
       strokeWeight(3);
       for (Point p : shape)
       {
         vertex(p.x, p.y);
       }
+      endShape(CLOSE);
     }
-    endShape(CLOSE);
-
     popMatrix();
   }
 
@@ -454,14 +419,12 @@ class Box
 
   boolean isSelected = false;
   boolean canClick = false;
-
   boolean isPaused = true;
 
   float gravity = 98;
-  float forceOnObjectBasedOnMass = 0;
+  float forceOnObjectBasedOnMass = 0;//yes unrealistic, but adds a 'polish'
 
   float angle = 0;
-
   float accleration = 0;
   float mass = 10;
 
@@ -476,30 +439,19 @@ class Box
 
   Material m;
 
-  //For the bounce effect
-  float baseX = 0;
-  float baseY = 0;
-
   boolean gotImpulse = false;
-
-  float bounceAmount = 0.25;
-  float bounceSpeed = 6;
-  float bounceTime = 0;
-  int directionSquish = 1;
-  boolean canBounce = false;
-  boolean canGetCurrentScale = true;
-
   boolean setForDeletion = false;
 
   float minX = 17;
   float maxX = 730;
+
+  float minY = 70;
+  float maxY = 550;
 }
 
 
 class Container
 {
-
-
   void Add(float value)
   {
     values.add(value);

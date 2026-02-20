@@ -1,4 +1,4 @@
-
+//a simple num system to keep track of systems
 enum M_TYPE
 {
   NONE,
@@ -8,7 +8,7 @@ enum M_TYPE
     ICE,
     FAN,
 }
-
+//materials are used for the simulation mode
 class Material
 {
 
@@ -65,7 +65,7 @@ class Material
   {
     texture2D = cache.GetTexture(num);
   }
-
+//also changes the mass for the objects based on the materials
   void SetColour()
   {
     if (materialType == M_TYPE.NONE)
@@ -94,11 +94,11 @@ class Material
 
     if (materialType == M_TYPE.ICE)
     {
-      mass = 50;
+      mass = 5;
       c = new Colour(110, 110, 255);
     }
   }
-
+//change the static/kinetic friction based on the materials
   float DetermineStaticInteraction(Material other)
   {
     if (!foundStaticValues)
@@ -150,7 +150,7 @@ class Material
   
   PImage texture2D;
 }
-
+//this Container holds a material object, that is dragable, that will be a member of the pannel
 class MaterialIconObject implements Drawable, Interactable
 {
 
@@ -190,7 +190,7 @@ class MaterialIconObject implements Drawable, Interactable
       return false;
     }
 
-    if (xPos + radius * 2 > b.posX + b.theWidth)
+    if (xPos - radius > b.posX + b.theWidth)
     {
       return false;
     }
@@ -200,8 +200,7 @@ class MaterialIconObject implements Drawable, Interactable
       return false;
     }
 
-
-    if (yPos + radius * 2 > b.posY + b.theHeight)
+    if (yPos - radius > b.posY + b.theHeight)
     {
       return false;
     }
@@ -217,7 +216,6 @@ class MaterialIconObject implements Drawable, Interactable
     {
       if (Collision(spawner.floor))
       {
-        //print("hit");
         spawner.floor.SetType(m.materialType);
       }
 
@@ -249,7 +247,7 @@ class MaterialIconObject implements Drawable, Interactable
     Check();
     pushMatrix();
     fill(m.c.r, m.c.g, m.c.b);
-    circle(xPos, yPos, radius * 2);
+    circle(xPos, yPos, radius * 2);//lmao, yes, i decided to use porocessings built in circle object...
     popMatrix();
   }
 
@@ -276,7 +274,7 @@ class MaterialPannel
     pannel.MakeBox(145, 150);
     pannel.SetColour(110, 110, 110);
     pannel.Translate(170, 100);
-    materials = new ArrayList<MaterialIconObject>();
+    materials = new ArrayList<MaterialIconObject>();//all the materials
     AddMaterialTypes();
   }
 

@@ -1,5 +1,5 @@
 
-
+//this class handles all the spawn logic used in the simulation mode
 class Spawnable implements Drawable, Interactable
 {
 
@@ -23,6 +23,7 @@ class Spawnable implements Drawable, Interactable
     Box temp = new Box();
     temp.MakeBox(50, 50); //default box size
     temp.Translate(400, 300);
+    temp.SetType(M_TYPE.NONE);
     allObjects.add(temp);
   }
 
@@ -120,13 +121,13 @@ class Spawnable implements Drawable, Interactable
       b.canClick = false;
       b.posX = newPositionX;
       b.posY = newPositionY;
-      //b.SetPosition(mouseX, mouseY);
+
     }
   }
 
   void Scale(Box b)
   {
-    //print("The Width: " + b.theWidth + " ");
+
     if (b.isSelected && mode == "massUp")
     {
       if (b.scaleX < 2 && b.scaleY < 2)
@@ -157,7 +158,6 @@ class Spawnable implements Drawable, Interactable
       Box b = allObjects.get(index);
       if (b.isPaused)
       {
-        //b.isPaused = !b.isPaused;
         b.gotImpulse = true;
         b.force = amount;
       }
@@ -174,13 +174,11 @@ class Spawnable implements Drawable, Interactable
           mouseY > b.shape.get(0).y && mouseY < b.shape.get(0).y + b.theHeight)
         {
           b.SetColour(100, 200, 100);
-          //b.canBounce = true;
           b.canClick = true;
         } else
         {
           b.c = b.originalC;
           b.SetColour(b.c.r, b.c.g, b.c.b);
-          //b.canBounce = false;
           b.canClick = false;
         }
       }
@@ -216,7 +214,6 @@ class Spawnable implements Drawable, Interactable
       }
       index--;
       allObjects.remove(temp);
-      //delete temp;
     }
   }
 
@@ -341,4 +338,4 @@ class Spawnable implements Drawable, Interactable
 }
 
 
-Spawnable spawner;// = new Spawnable();
+Spawnable spawner;
