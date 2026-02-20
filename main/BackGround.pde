@@ -5,7 +5,7 @@ class BackGround implements Drawable
   {
     windowBox = new Box();
     windowBox.MakeBox(768, 480);
-    windowBox.SetColour(135, 135, 135);
+    windowBox.SetColour(105, 102, 82);
     windowBox.Translate(15, 70);
   }
   

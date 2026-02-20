@@ -71,7 +71,7 @@ class Material
     if (materialType == M_TYPE.NONE)
     {
       mass = 10;
-      c = new Colour(255, 255, 255);
+      c = new Colour(227, 238, 179);
     }
 
     if (materialType == M_TYPE.WOOD)
