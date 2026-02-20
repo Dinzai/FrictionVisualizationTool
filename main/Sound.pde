@@ -47,14 +47,7 @@ class SoundManager
   {
     SoundFile tempSound;
     String filePath = "assets/" + name + ".wav";
-    tempSound = new SoundFile(parrent, filePath);
-    
-    if(preLoadable)
-    {
-      tempSound.play();
-    }
-    tempSound.stop();
-    
+    tempSound = new SoundFile(parrent, filePath, preLoadable);
     return tempSound;
   }
 
@@ -113,7 +106,8 @@ class SoundManager
   void PlayMusic(int num)
   {
     StopMusic();
-    music.get(num).play();
+    music.get(num).amp(0.1);
+    music.get(num).loop();
   }
   
   void LoadAllMusic()

@@ -88,6 +88,7 @@ class Windmill implements Drawable, Interactable
     {
       theSounds.PlayRandomUI();
       sim.tScreen.isWind = false;
+      theSounds.PlayMusic(BACKGROUND_MUSIC.TITLE.ordinal());
       sim.tScreen.isTitle = true;
     }
     if (sliderButton.b.canClick)

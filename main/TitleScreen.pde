@@ -39,10 +39,10 @@ class TitleScreen implements Drawable, Interactable
   void Remove()
   {
     buttons.clear();
-    isTitle = true;
     isTut = false;
     isSim = false;
     isWind = false;
+    isTitle = true;
     Add();
   }
 
@@ -56,18 +56,21 @@ class TitleScreen implements Drawable, Interactable
     {
       theSounds.PlayRandomUI();
       isTitle = false;
+      theSounds.PlayMusic(BACKGROUND_MUSIC.TUTORIAL.ordinal());
       isTut = true;
     }
     if (tempSim.textSystem.canClick)
     {
       theSounds.PlayRandomUI();
       isTitle = false;
+      theSounds.PlayMusic(BACKGROUND_MUSIC.SIM.ordinal());
       isSim = true;
     }
     if (tempWind.textSystem.canClick)
     {
       theSounds.PlayRandomUI();
       isTitle = false;
+      theSounds.PlayMusic(BACKGROUND_MUSIC.WIND.ordinal());
       isWind = true;
     }
   }

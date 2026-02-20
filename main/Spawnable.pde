@@ -66,9 +66,11 @@ class Spawnable implements Drawable, Interactable
     {
       if (b.canClick)
       {
+        theSounds.PlayRandomUI();
         b.isSelected = true;
       }
     }
+    
   }
 
   void Reset()
@@ -94,7 +96,7 @@ class Spawnable implements Drawable, Interactable
 
       float halfWidth = b.theWidth * 0.5;
       float halfHeight = b.theHeight * 0.5;
-      
+
       float newPositionX = mouseX - halfWidth;
       float newPositionY = mouseY - halfHeight;
       if (newPositionX < minX)
@@ -203,13 +205,13 @@ class Spawnable implements Drawable, Interactable
       b.isPaused = !b.isPaused;
     }
   }
-  
+
   void GarbageCollection()
   {
-    for(int i = 0; i < allObjects.size(); i++)
+    for (int i = 0; i < allObjects.size(); i++)
     {
       Box temp = allObjects.get(i);
-      if(!temp.setForDeletion)
+      if (!temp.setForDeletion)
       {
         return;
       }
@@ -226,14 +228,14 @@ class Spawnable implements Drawable, Interactable
       Box temp = allObjects.get(i);
       if (temp.Collision(floor))
       {
-        if(!temp.isPaused)
+        if (!temp.isPaused)
         {
           temp.m.foundStaticValues = false;
           temp.m.foundKineticValues = false;
         }
         temp.m.staticFrictionValue = temp.m.DetermineStaticInteraction(floor.m);
         temp.m.kineticFrictionValue = temp.m.DeterminekineticInteraction(floor.m);
-        
+
         temp.Resolution();
         temp.isPaused = true;
       }
@@ -254,7 +256,7 @@ class Spawnable implements Drawable, Interactable
               //I did not copy paste, but, asked many questions, and wrote down its suggestion with the collision code here
               boolean tempMoving = Math.abs(temp.velocityX) > 0.01 || Math.abs(temp.velocityY) > 0.01;
               boolean otherMoving = Math.abs(other.velocityX) > 0.01 || Math.abs(other.velocityY) > 0.01;
-//this bellow i logically deducted from the case above
+              //this bellow i logically deducted from the case above
               if (tempMoving && !otherMoving)
               {
                 other.force = other.mass * temp.velocityX;

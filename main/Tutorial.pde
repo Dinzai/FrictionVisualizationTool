@@ -316,7 +316,7 @@ class Tutorial implements Drawable, Interactable
 
         theSounds.StopAllUI();
         sim.tScreen.isTut = false;
-
+        theSounds.PlayMusic(BACKGROUND_MUSIC.TITLE.ordinal());
         sim.tScreen.isTitle = true;
 
       }
@@ -361,7 +361,7 @@ class Tutorial implements Drawable, Interactable
     {
       theSounds.StopAllUI();
       theSounds.PlayRandomUI();
-
+      theSounds.PlayMusic(BACKGROUND_MUSIC.TITLE.ordinal());
       sim.tScreen.isTut = false;
       sim.tScreen.isTitle = true;
     }

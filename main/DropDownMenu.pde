@@ -214,6 +214,8 @@ class DropDownMenu implements Drawable, Interactable
       playButton.isActive = false;
 
       sim.tScreen.isSim = false;
+      theSounds.PlayMusic(BACKGROUND_MUSIC.TITLE.ordinal());
+
       sim.tScreen.isTitle = true;
     }
   }
