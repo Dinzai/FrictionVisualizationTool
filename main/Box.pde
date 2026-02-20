@@ -21,6 +21,7 @@ class Box
     m.SetType(mType);
     c = m.c;
     originalC = m.c;
+    mass = m.mass;
   }
 
   void MakeBox(float w, float h)
@@ -42,6 +43,8 @@ class Box
     baseShape.add(TR);
     baseShape.add(BR);
     baseShape.add(BL);
+    
+    
 
     for (Point p : baseShape)
     {
@@ -79,6 +82,7 @@ class Box
     {
       shape.add(new Point(p.x, p.y));
     }
+    
   }
 
   void MakeTri(float w, float h)
@@ -137,6 +141,7 @@ class Box
 
       originalShape.x = rx + posX;
       originalShape.y = ry + posY;
+      forceOnObjectBasedOnMass = mass * gravity;
     }
   }
 
@@ -211,6 +216,7 @@ class Box
   {
     scaleX *= sx;
     scaleY *= sy;
+    //forceOnObjectBasedOnMass = mass * accleration;
   }
 
   Point Normalize(Point vec)
@@ -388,7 +394,8 @@ class Box
   {
     if (!isPaused)
     {
-      velocityY += gravity * deltaTime;
+      
+      velocityY += forceOnObjectBasedOnMass * deltaTime;
       Translate(0, velocityY * deltaTime);
     }
 
@@ -450,7 +457,8 @@ class Box
 
   boolean isPaused = true;
 
-  float gravity = 200;
+  float gravity = 98;
+  float forceOnObjectBasedOnMass = 0;
 
   float angle = 0;
 
