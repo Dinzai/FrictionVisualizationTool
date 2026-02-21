@@ -173,13 +173,19 @@ class Spawnable implements Drawable, Interactable
       Box b = allObjects.get(i);
       if (!b.isSelected)
       {
-        
+        if(b.CheckPoints(mouseX, mouseY))
+        {
+          b.SetColour(100, 200, 100);
+          b.canClick = true;
+        }
+        /*
         if (mouseX > b.shape.get(0).x && mouseX < b.shape.get(0).x + b.theWidth  &&
           mouseY > b.shape.get(0).y && mouseY < b.shape.get(0).y + b.theHeight)
         {
           b.SetColour(100, 200, 100);
           b.canClick = true;
         } 
+        */
         else
         {
           b.c = b.originalC;
@@ -271,11 +277,7 @@ class Spawnable implements Drawable, Interactable
               DoOnce(temp, true);
             }
 
-            if (!other.isPaused)
-            {
-              DoOnce(other, temp.isPaused);
-              other.isPaused = true;
-            }
+            
 
             temp.Resolution(other);
             other.Resolution(temp);

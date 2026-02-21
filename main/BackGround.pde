@@ -12,11 +12,12 @@ class BackGround implements Drawable
     windowBox.SetColour(105, 102, 82);
     windowBox.Translate(15, 70);
   }
-  
+
   void DrawToScreen()
   {
-     windowBox.Draw();
+    background(95, 80, 200);
+    windowBox.Draw();
   }
-  
+
   Box windowBox;
 }

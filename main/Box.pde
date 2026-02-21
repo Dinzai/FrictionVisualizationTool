@@ -92,6 +92,27 @@ class Box
     }
   }
 
+  boolean CheckPoints(float px, float py)
+  {
+    //is my point
+    Point p = new Point(px, py);
+
+    for (Point axis : normals)
+    {
+      axis = Normalize(axis);
+
+      Container shapeProjection = DotPointsToAxis(axis);
+
+      float dot = p.x * axis.x + p.y * axis.y;
+      if (dot < shapeProjection.GetMin() || dot > shapeProjection.GetMax())
+      {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
 
   float AngleToRad(float angle)
   {
@@ -121,7 +142,7 @@ class Box
 
       originalShape.x = rx + posX;
       originalShape.y = ry + posY;
-      
+
       forceOnObjectBasedOnMass = mass * gravity;//not realistic, but adds 'polish' feel
     }
   }
@@ -141,7 +162,6 @@ class Box
   {
     posX += x;
     posY += y;
-    
   }
 
   Point GetCenter()
@@ -311,6 +331,7 @@ class Box
   void Resolution()//floor
   {
     setToSpin = false;
+    setToSpinOp = false;
     Translate(changeVector.x, changeVector.y);
   }
 
@@ -345,14 +366,17 @@ class Box
       if (bestAxis.y != -1)
       {
         setToSpin = true;
+        //setToSpinOp = true;
         isPaused = false;
       }
-    } 
+    }
   }
 
 
   float tangentalSpeed = 100;
+  float tangentalSpeedOp = -100;
   boolean setToSpin = false;
+  boolean setToSpinOp = false;
   boolean checkParalel = false;
   //this function is to handle the rotation of the objects when they smack into eachother
   void SpecialResolution(Box otherShape)
@@ -363,8 +387,12 @@ class Box
     {
       setToSpin = true;
       checkParalel = true;
+    } 
+    else if (posX + halfWidth < otherShape.posX && posY < otherShape.posY)
+    {
+      setToSpinOp = true;
+      checkParalel = true;
     }
-    
   }
 
 
@@ -387,7 +415,7 @@ class Box
       setForDeletion = true;
     }
   }
-  float preservetheY = 0;
+
   void PhysicsUpdate()
   {
     if (gotImpulse)
@@ -400,11 +428,14 @@ class Box
 
     if (setToSpin)
     {
-      
+
       Rotate(tangentalSpeed * deltaTime);
-
     }
+    else if (setToSpinOp)
+    {
 
+      Rotate(tangentalSpeedOp * deltaTime);
+    }
 
     posX += velocityX * deltaTime;
 
