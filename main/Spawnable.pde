@@ -173,26 +173,25 @@ class Spawnable implements Drawable, Interactable
       Box b = allObjects.get(i);
       if (!b.isSelected)
       {
-        if(b.CheckPoints(mouseX, mouseY))
+        if (b.CheckPoints(mouseX, mouseY))
         {
           b.SetColour(100, 200, 100);
           b.canClick = true;
         }
         /*
         if (mouseX > b.shape.get(0).x && mouseX < b.shape.get(0).x + b.theWidth  &&
-          mouseY > b.shape.get(0).y && mouseY < b.shape.get(0).y + b.theHeight)
-        {
-          b.SetColour(100, 200, 100);
-          b.canClick = true;
-        } 
-        */
+         mouseY > b.shape.get(0).y && mouseY < b.shape.get(0).y + b.theHeight)
+         {
+         b.SetColour(100, 200, 100);
+         b.canClick = true;
+         }
+         */
         else
         {
           b.c = b.originalC;
           b.SetColour(b.c.r, b.c.g, b.c.b);
           b.canClick = false;
         }
-        
       }
 
       if (b.isSelected)
@@ -229,33 +228,27 @@ class Spawnable implements Drawable, Interactable
     }
   }
 
-  void DoOnce(Box temp, boolean canReset)
-  {
-    if (canReset)
-    {
-      theSounds.PlayPhysicsSound(temp.m.materialType.ordinal());
-      canReset = false;
-    }
-  }
-
   void CheckCollision()
   {
     for (int i = 0; i < allObjects.size(); i++)
     {
       Box temp = allObjects.get(i);
 
-      temp.CheckParrelCorners(floor);
-
-
       if (temp.Collision(floor))
       {
-        temp.checkParalel = false;
+
         if (!temp.isPaused)
         {
           temp.m.foundStaticValues = false;
           temp.m.foundKineticValues = false;
-          DoOnce(temp, true);
         }
+
+        if (!temp.isPaused && !temp.hasPlayedCollisionSound)
+        {
+          theSounds.PlayPhysicsSound(temp.m.materialType.ordinal());
+          temp.hasPlayedCollisionSound = true;
+        }
+
         temp.m.staticFrictionValue = temp.m.DetermineStaticInteraction(floor.m);
         temp.m.kineticFrictionValue = temp.m.DeterminekineticInteraction(floor.m);
 
@@ -272,12 +265,17 @@ class Spawnable implements Drawable, Interactable
           if (temp.Collision(other))
           {
 
-            if (!temp.isPaused)
+            if (!temp.isPaused && !temp.hasPlayedCollisionSound)
             {
-              DoOnce(temp, true);
+              theSounds.PlayPhysicsSound(temp.m.materialType.ordinal());
+              temp.hasPlayedCollisionSound = true;
             }
 
-            
+            if (!other.isPaused && !other.hasPlayedCollisionSound)
+            {
+              theSounds.PlayPhysicsSound(other.m.materialType.ordinal());
+              other.hasPlayedCollisionSound = true;
+            }
 
             temp.Resolution(other);
             other.Resolution(temp);
@@ -307,10 +305,11 @@ class Spawnable implements Drawable, Interactable
 
             if (temp.posY < other.posY)
             {
-              temp.isPaused = true;
-              other.isPaused = true;
+              //temp.isPaused = true;
+              //other.isPaused = true;
             }
           }
+
         }
       }
     }
@@ -329,13 +328,12 @@ class Spawnable implements Drawable, Interactable
 
   void Update()
   {
-    
+
     GarbageCollection();
-    
+
     EachUpdate();
     CheckCollision();
     Grab();
-    
   }
 
   void DrawToScreen()

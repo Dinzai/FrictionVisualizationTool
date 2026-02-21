@@ -182,9 +182,9 @@ class Box
   void UpdateBounds()
   {
     float minX = shape.get(0).x;
-    float maxX = shape.get(1).x;
-    float minY = shape.get(2).y;
-    float maxY = shape.get(3).y;
+    float maxX = shape.get(0).x;
+    float minY = shape.get(0).y;
+    float maxY = shape.get(0).y;
 
     for (Point p : shape)
     {
@@ -284,7 +284,7 @@ class Box
 
       if (one.GetMax() < two.GetMin() || two.GetMax() < one.GetMin())
       {
-
+        hasPlayedCollisionSound = false;
         return false;
       }
 
@@ -306,7 +306,57 @@ class Box
 
     if (Math.abs(bestAxis.y) > Math.abs(bestAxis.x))
     {
+
+      boolean thisMoving = abs(velocityY) > 0.1;
+      boolean otherMoving = abs(otherShape.velocityY) > 0.1;
+
       changeVector = new Point(0, bestAxis.y * smallestOverlap);
+
+      if (bestAxis.y < 0)
+      {
+        changeVector = new Point(0, smallestOverlap);
+
+        if (bestAxis.y < 0)
+        {
+          isGrounded = true;
+          otherShape.isGrounded = true;
+
+          posY -= smallestOverlap;
+          velocityY = 0;
+          if (abs(angularVelocity) < 1)
+          {
+            angularVelocity = 0;
+            otherShape.angularVelocity = 0;
+          }
+
+          if (isGrounded)
+          {
+            angularVelocity = 0;
+            otherShape.angularVelocity = 0;
+          }
+        }
+      }
+
+      Point centerA = GetCenter();
+      Point centerB = otherShape.GetCenter();
+
+      float offsetX = centerA.x - centerB.x;
+      float torque = offsetX / (theWidth * 0.5);
+
+      if (abs(torque) > 0.1)
+      {
+        if (thisMoving && !otherMoving)
+        {
+          angularVelocity += torque * spinSpeed;
+        } else if (!thisMoving && otherMoving)
+        {
+          otherShape.angularVelocity -= torque * spinSpeed;
+        } else
+        {
+          angularVelocity += torque * spinSpeed * 0.5;
+          otherShape.angularVelocity -= torque * spinSpeed * 0.5;
+        }
+      }
 
       velocityY = 0;
     } else
@@ -320,81 +370,19 @@ class Box
 
     return true;
   }
+  float angularVelocity = 0;
+  float spinSpeed = 7;
 
   void Resolution(Box otherShape)
   {
-    SpecialResolution(otherShape);
     Translate(changeVector.x * 0.5f, changeVector.y * 0.5f);
     otherShape.Translate(-changeVector.x * 0.5f, -changeVector.y * 0.5f);
   }
 
   void Resolution()//floor
   {
-    setToSpin = false;
-    setToSpinOp = false;
-    Translate(changeVector.x, changeVector.y);
+    //Translate(changeVector.x, changeVector.y);
   }
-
-
-  void CheckParrelCorners(Box otherShape)//with the floor
-  {
-    if (checkParalel)
-    {
-
-      ArrayList<Point> axes = new ArrayList<Point>();
-      axes.addAll(normals);
-      axes.addAll(otherShape.normals);
-
-      Point bestAxis = new Point();
-
-      for (Point axis : axes)
-      {
-        axis = Normalize(axis);
-      }
-      bestAxis = axes.get(0);
-
-      Point d = new Point(GetCenter().x - otherShape.GetCenter().x, GetCenter().y - otherShape.GetCenter().y);
-      float dot = d.x * bestAxis.x + d.y * bestAxis.y;
-      if (dot < 0)
-      {
-
-        bestAxis.x *= -1;
-        bestAxis.y *= -1;
-      }
-
-
-      if (bestAxis.y != -1)
-      {
-        setToSpin = true;
-        //setToSpinOp = true;
-        isPaused = false;
-      }
-    }
-  }
-
-
-  float tangentalSpeed = 100;
-  float tangentalSpeedOp = -100;
-  boolean setToSpin = false;
-  boolean setToSpinOp = false;
-  boolean checkParalel = false;
-  //this function is to handle the rotation of the objects when they smack into eachother
-  void SpecialResolution(Box otherShape)
-  {
-    float halfWidth = theWidth * 0.5;
-
-    if (posX - halfWidth > otherShape.posX && posY < otherShape.posY)
-    {
-      setToSpin = true;
-      checkParalel = true;
-    } 
-    else if (posX + halfWidth < otherShape.posX && posY < otherShape.posY)
-    {
-      setToSpinOp = true;
-      checkParalel = true;
-    }
-  }
-
 
   void CheckArea()
   {
@@ -426,15 +414,16 @@ class Box
       gotImpulse = false;
     }
 
-    if (setToSpin)
-    {
+    angle += angularVelocity * deltaTime;
+    angularVelocity *= 0.98; // damping
 
-      Rotate(tangentalSpeed * deltaTime);
-    }
-    else if (setToSpinOp)
-    {
+    float angleDeg = degrees(angle);
+    float snapped = round(angleDeg / 90.0) * 90.0;
 
-      Rotate(tangentalSpeedOp * deltaTime);
+    if (abs(angleDeg - snapped) < 2 && abs(angularVelocity) < 5)
+    {
+      angle = radians(snapped);
+      angularVelocity = 0;
     }
 
     posX += velocityX * deltaTime;
@@ -449,22 +438,36 @@ class Box
       if (velocityX > 0) velocityX = 0;
     }
   }
-
-
   void Update()
   {
     if (!isPaused)
     {
-      velocityY += forceOnObjectBasedOnMass * deltaTime;
-      Translate(0, velocityY * deltaTime);
+      velocityY += gravity * deltaTime;
+
+      float predictedY = posY + velocityY * deltaTime;
+
+      posY = predictedY;
+    }
+
+    isGrounded = false;
+
+    if (posY > maxY)
+    {
+      posY = maxY;
+      velocityY = 0;
+
+      isGrounded = true;
+
+      if (Math.abs(angularVelocity) < 3)
+      {
+        angularVelocity = 0;
+      }
     }
 
     PhysicsUpdate();
     UpdateBounds();
     CalculateNormals();
   }
-
-
 
   void Draw()
   {
@@ -511,6 +514,8 @@ class Box
   boolean isSelected = false;
   boolean canClick = false;
   boolean isPaused = true;
+  boolean isGrounded = false;
+  boolean hasPlayedCollisionSound = false;
 
   float gravity = 98;
   float forceOnObjectBasedOnMass = 0;//yes unrealistic, but adds a 'polish'
@@ -518,6 +523,7 @@ class Box
   float angle = 0;
   float accleration = 0;
   float mass = 10;
+  float groundRestThreshold = 0.5f;
 
   ArrayList<Point> shape;
   ArrayList<Point> baseShape;

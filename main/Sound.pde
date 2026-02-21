@@ -87,9 +87,17 @@ class SoundManager
     physicsSounds.add(SetSound("iceSmack"));
   }
   
+  void StopPhysicsSounds()
+  {
+    for (SoundFile p : physicsSounds)
+    {
+      p.stop();
+    }
+  }
+  
   void PlayPhysicsSound(int num)
   {
-    physicsSounds.get(num).stop();
+    StopPhysicsSounds();
     physicsSounds.get(num).play();
   }
 
