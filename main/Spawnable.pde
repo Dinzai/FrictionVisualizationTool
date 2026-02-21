@@ -21,7 +21,7 @@ class Spawnable implements Drawable, Interactable
   void Spawn()
   {
     Box temp = new Box();
-    temp.MakeBox(50, 50); //default box size
+    temp.MakeRotBox(50, 50); //default box size
     temp.Translate(400, 300);
     temp.SetType(M_TYPE.NONE);
     allObjects.add(temp);
@@ -89,17 +89,20 @@ class Spawnable implements Drawable, Interactable
   {
     if (b.isSelected && mode == "select")
     {
-      float minX = 17;
-      float maxX = 730;
-      float minY = 72;
-      float maxY = 497;
 
-      float halfWidth = b.theWidth * 0.5;
-      float halfHeight = b.theHeight * 0.5;
+      float halfWidth = b.theWidth / 2;
 
-      float newPositionX = mouseX - halfWidth;
-      float newPositionY = mouseY - halfHeight;
-      if (newPositionX < minX)
+      float minX = 40;
+      float maxX = 757;
+      float minY = 95;
+      float maxY = 524;
+
+      float newPositionX = mouseX;
+      float newPositionY = mouseY;
+
+
+
+      if (newPositionX - halfWidth <= minX)
       {
         newPositionX = minX;
       }
@@ -121,7 +124,6 @@ class Spawnable implements Drawable, Interactable
       b.canClick = false;
       b.posX = newPositionX;
       b.posY = newPositionY;
-
     }
   }
 
@@ -163,6 +165,7 @@ class Spawnable implements Drawable, Interactable
       }
     }
   }
+
   void Grab()
   {
     for (int i = 0; i < allObjects.size(); i++)
@@ -170,17 +173,20 @@ class Spawnable implements Drawable, Interactable
       Box b = allObjects.get(i);
       if (!b.isSelected)
       {
-        if (mouseX > b.shape.get(0).x && mouseX < b.shape.get(0).x + b.theWidth &&
+        
+        if (mouseX > b.shape.get(0).x && mouseX < b.shape.get(0).x + b.theWidth  &&
           mouseY > b.shape.get(0).y && mouseY < b.shape.get(0).y + b.theHeight)
         {
           b.SetColour(100, 200, 100);
           b.canClick = true;
-        } else
+        } 
+        else
         {
           b.c = b.originalC;
           b.SetColour(b.c.r, b.c.g, b.c.b);
           b.canClick = false;
         }
+        
       }
 
       if (b.isSelected)
@@ -231,8 +237,13 @@ class Spawnable implements Drawable, Interactable
     for (int i = 0; i < allObjects.size(); i++)
     {
       Box temp = allObjects.get(i);
+
+      temp.CheckParrelCorners(floor);
+
+
       if (temp.Collision(floor))
       {
+        temp.checkParalel = false;
         if (!temp.isPaused)
         {
           temp.m.foundStaticValues = false;
@@ -241,6 +252,7 @@ class Spawnable implements Drawable, Interactable
         }
         temp.m.staticFrictionValue = temp.m.DetermineStaticInteraction(floor.m);
         temp.m.kineticFrictionValue = temp.m.DeterminekineticInteraction(floor.m);
+
 
         temp.Resolution();
         temp.isPaused = true;
@@ -261,7 +273,7 @@ class Spawnable implements Drawable, Interactable
 
             if (!other.isPaused)
             {
-              DoOnce(other, true);
+              DoOnce(other, temp.isPaused);
               other.isPaused = true;
             }
 
@@ -315,10 +327,13 @@ class Spawnable implements Drawable, Interactable
 
   void Update()
   {
+    
     GarbageCollection();
+    
     EachUpdate();
     CheckCollision();
     Grab();
+    
   }
 
   void DrawToScreen()

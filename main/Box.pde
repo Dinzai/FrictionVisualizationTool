@@ -92,14 +92,6 @@ class Box
     }
   }
 
-  float GetMaxY() {
-    float maxY = shape.get(0).y;
-    for (Point p : shape) {
-      if (p.y > maxY) maxY = p.y;
-    }
-    return maxY;
-  }
-
 
   float AngleToRad(float angle)
   {
@@ -129,6 +121,7 @@ class Box
 
       originalShape.x = rx + posX;
       originalShape.y = ry + posY;
+      
       forceOnObjectBasedOnMass = mass * gravity;//not realistic, but adds 'polish' feel
     }
   }
@@ -148,6 +141,7 @@ class Box
   {
     posX += x;
     posY += y;
+    
   }
 
   Point GetCenter()
@@ -270,6 +264,7 @@ class Box
 
       if (one.GetMax() < two.GetMin() || two.GetMax() < one.GetMin())
       {
+
         return false;
       }
 
@@ -292,6 +287,7 @@ class Box
     if (Math.abs(bestAxis.y) > Math.abs(bestAxis.x))
     {
       changeVector = new Point(0, bestAxis.y * smallestOverlap);
+
       velocityY = 0;
     } else
     {
@@ -307,14 +303,70 @@ class Box
 
   void Resolution(Box otherShape)
   {
+    SpecialResolution(otherShape);
     Translate(changeVector.x * 0.5f, changeVector.y * 0.5f);
     otherShape.Translate(-changeVector.x * 0.5f, -changeVector.y * 0.5f);
   }
 
   void Resolution()//floor
   {
+    setToSpin = false;
     Translate(changeVector.x, changeVector.y);
   }
+
+
+  void CheckParrelCorners(Box otherShape)//with the floor
+  {
+    if (checkParalel)
+    {
+
+      ArrayList<Point> axes = new ArrayList<Point>();
+      axes.addAll(normals);
+      axes.addAll(otherShape.normals);
+
+      Point bestAxis = new Point();
+
+      for (Point axis : axes)
+      {
+        axis = Normalize(axis);
+      }
+      bestAxis = axes.get(0);
+
+      Point d = new Point(GetCenter().x - otherShape.GetCenter().x, GetCenter().y - otherShape.GetCenter().y);
+      float dot = d.x * bestAxis.x + d.y * bestAxis.y;
+      if (dot < 0)
+      {
+
+        bestAxis.x *= -1;
+        bestAxis.y *= -1;
+      }
+
+
+      if (bestAxis.y != -1)
+      {
+        setToSpin = true;
+        isPaused = false;
+      }
+    } 
+  }
+
+
+  float tangentalSpeed = 100;
+  boolean setToSpin = false;
+  boolean checkParalel = false;
+  //this function is to handle the rotation of the objects when they smack into eachother
+  void SpecialResolution(Box otherShape)
+  {
+    float halfWidth = theWidth * 0.5;
+
+    if (posX - halfWidth > otherShape.posX && posY < otherShape.posY)
+    {
+      setToSpin = true;
+      checkParalel = true;
+    }
+    
+  }
+
 
   void CheckArea()
   {
@@ -335,7 +387,7 @@ class Box
       setForDeletion = true;
     }
   }
-
+  float preservetheY = 0;
   void PhysicsUpdate()
   {
     if (gotImpulse)
@@ -345,7 +397,15 @@ class Box
       force = 0;
       gotImpulse = false;
     }
-    
+
+    if (setToSpin)
+    {
+      
+      Rotate(tangentalSpeed * deltaTime);
+
+    }
+
+
     posX += velocityX * deltaTime;
 
     if (velocityX > 0)
@@ -367,7 +427,7 @@ class Box
       velocityY += forceOnObjectBasedOnMass * deltaTime;
       Translate(0, velocityY * deltaTime);
     }
-    
+
     PhysicsUpdate();
     UpdateBounds();
     CalculateNormals();
@@ -442,8 +502,8 @@ class Box
   boolean gotImpulse = false;
   boolean setForDeletion = false;
 
-  float minX = 17;
-  float maxX = 730;
+  float minX = 15;
+  float maxX = 800;
 
   float minY = 70;
   float maxY = 550;
