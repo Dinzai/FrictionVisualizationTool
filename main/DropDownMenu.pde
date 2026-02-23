@@ -383,17 +383,22 @@ class DropDownMenu implements Drawable, Interactable
         pannel.Draw();
       }
     }
+
     popMatrix();
   }
 
   boolean canExpand = true;
+
   boolean canShowMaterials = false;
+
   boolean canAddForce = false;
+
   boolean sliderIsPressed = false;
   boolean directionSliderIsPressed = false;
 
   float maxForceAmount = 5000;
   float startingForce = 0;
+
   float startingDirection = -1;
 
   int direction = 1;
@@ -405,16 +410,17 @@ class DropDownMenu implements Drawable, Interactable
   Button scaleUpTextButton;
   Button scaleDownTextButton;
   Button backTextButton;
-  Button forceButton;
 
   Button materialTextButton;
   Button objectTextButton;
-//rails
+
   Box sliderRail;
   Button sliderButton;
 
   Box directionSliderRail;
   Button directionSliderButton;
 
-  MaterialPannel pannel;  
+  MaterialPannel pannel;
+
+  Button forceButton;
 }

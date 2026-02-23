@@ -1,6 +1,5 @@
 
-//'simple struct'
-//really, thats what this is, justa  container with variables in it, no methods
+
 class TextSystem
 {
   TextSystem()

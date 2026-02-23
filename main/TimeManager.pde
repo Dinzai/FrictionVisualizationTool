@@ -14,7 +14,7 @@ void CalculateDeltaTime()
 
 }
 
-void CalculateFixedDeltaTime()//never ended up using..
+void CalculateFixedDeltaTime()
 {
   float fixedCurrentTime = millis();
   

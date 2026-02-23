@@ -28,8 +28,12 @@ class Box
   {
     theWidth = w;
     theHeight = h;
-
     //time to add image! uv's baby
+    //Point TL = new Point();
+    //Point TR = new Point(w, 0);
+    //Point BL = new Point(0, h);
+    //Point BR = new Point(w, h);
+
     Point TL = new Point(0, 0, 0, 0);
     Point TR = new Point(w, 0, 1, 0);
     Point BR = new Point(w, h, 1, 1);
@@ -39,6 +43,8 @@ class Box
     baseShape.add(TR);
     baseShape.add(BR);
     baseShape.add(BL);
+    
+    
 
     for (Point p : baseShape)
     {
@@ -57,6 +63,11 @@ class Box
     baseShape.clear();
     shape.clear();
 
+    //Point TL = new Point(-halfWidth, -halfHeight);
+    //Point TR = new Point(halfWidth, -halfHeight);
+    //Point BR = new Point(halfWidth, halfHeight);
+    //Point BL = new Point(-halfWidth, halfHeight);
+    
     Point TL = new Point(-halfWidth, -halfHeight, 0, 0);
     Point TR = new Point(halfWidth, -halfHeight, 1, 0);
     Point BR = new Point(halfWidth, halfHeight, 1, 1);
@@ -71,6 +82,7 @@ class Box
     {
       shape.add(new Point(p.x, p.y));
     }
+    
   }
 
   void MakeTri(float w, float h)
@@ -92,25 +104,12 @@ class Box
     }
   }
 
-  boolean CheckPoints(float px, float py)
-  {
-    //is my point
-    Point p = new Point(px, py);
-
-    for (Point axis : normals)
-    {
-      axis = Normalize(axis);
-
-      Container shapeProjection = DotPointsToAxis(axis);
-
-      float dot = p.x * axis.x + p.y * axis.y;
-      if (dot < shapeProjection.GetMin() || dot > shapeProjection.GetMax())
-      {
-        return false;
-      }
+  float GetMaxY() {
+    float maxY = shape.get(0).y;
+    for (Point p : shape) {
+      if (p.y > maxY) maxY = p.y;
     }
-
-    return true;
+    return maxY;
   }
 
 
@@ -142,10 +141,10 @@ class Box
 
       originalShape.x = rx + posX;
       originalShape.y = ry + posY;
-
-      forceOnObjectBasedOnMass = mass * gravity;//not realistic, but adds 'polish' feel
+      forceOnObjectBasedOnMass = mass * gravity;
     }
   }
+
 
   void SetPosition(float x, float y)
   {
@@ -182,9 +181,9 @@ class Box
   void UpdateBounds()
   {
     float minX = shape.get(0).x;
-    float maxX = shape.get(0).x;
-    float minY = shape.get(0).y;
-    float maxY = shape.get(0).y;
+    float maxX = shape.get(1).x;
+    float minY = shape.get(2).y;
+    float maxY = shape.get(3).y;
 
     for (Point p : shape)
     {
@@ -217,6 +216,7 @@ class Box
   {
     scaleX *= sx;
     scaleY *= sy;
+    //forceOnObjectBasedOnMass = mass * accleration;
   }
 
   Point Normalize(Point vec)
@@ -265,6 +265,34 @@ class Box
 
     return contain;
   }
+  //this effect is to enhance uswer feedback to have a squishy, bounce like effect when howvered over, instead of change in colour
+  void Bounce()
+  {
+    if (canGetCurrentScale)
+    {
+      baseX = scaleX;
+      baseY = scaleY;
+      canGetCurrentScale = false;
+    }
+
+    if (!canBounce)
+      return;
+
+    bounceTime += deltaTime * bounceSpeed;
+
+    float waveX = cos(bounceTime);
+    float waveY = sin(bounceTime);
+
+    float stretchX = baseX * (1.0f + waveX * bounceAmount);
+    float stretchY = baseY * (1.0f - waveY * bounceAmount);
+    if (bounceTime > 2)
+    {
+      directionSquish *= -1;
+      bounceTime = 0;
+    }
+    Scale(stretchX * directionSquish, stretchY * directionSquish);
+  }
+
 
   boolean Collision(Box otherShape)
   {
@@ -284,7 +312,6 @@ class Box
 
       if (one.GetMax() < two.GetMin() || two.GetMax() < one.GetMin())
       {
-        hasPlayedCollisionSound = false;
         return false;
       }
 
@@ -306,72 +333,20 @@ class Box
 
     if (Math.abs(bestAxis.y) > Math.abs(bestAxis.x))
     {
-
-      boolean thisMoving = abs(velocityY) > 0.1;
-      boolean otherMoving = abs(otherShape.velocityY) > 0.1;
-
       changeVector = new Point(0, bestAxis.y * smallestOverlap);
-
-      if (bestAxis.y < 0)
-      {
-        changeVector = new Point(0, smallestOverlap);
-
-        if (bestAxis.y < 0)
-        {
-          isGrounded = true;
-          otherShape.isGrounded = true;
-
-          posY -= smallestOverlap;
-          velocityY = 0;
-          if (abs(angularVelocity) < 1)
-          {
-            angularVelocity = 0;
-            otherShape.angularVelocity = 0;
-          }
-
-          if (isGrounded)
-          {
-            angularVelocity = 0;
-            otherShape.angularVelocity = 0;
-          }
-        }
-      }
-
-      Point centerA = GetCenter();
-      Point centerB = otherShape.GetCenter();
-
-      float offsetX = centerA.x - centerB.x;
-      float torque = offsetX / (theWidth * 0.5);
-
-      if (abs(torque) > 0.1)
-      {
-        if (thisMoving && !otherMoving)
-        {
-          angularVelocity += torque * spinSpeed;
-        } else if (!thisMoving && otherMoving)
-        {
-          otherShape.angularVelocity -= torque * spinSpeed;
-        } else
-        {
-          angularVelocity += torque * spinSpeed * 0.5;
-          otherShape.angularVelocity -= torque * spinSpeed * 0.5;
-        }
-      }
-
       velocityY = 0;
     } else
     {
 
       changeVector = new Point(bestAxis.x * smallestOverlap, 0);
       velocityX = 0;
+      //otherShape.accleration = otherShape.velocityX / deltaTime;
       otherShape.force = otherShape.mass * accleration;
       otherShape.gotImpulse = true;
     }
 
     return true;
   }
-  float angularVelocity = 0;
-  float spinSpeed = 7;
 
   void Resolution(Box otherShape)
   {
@@ -381,27 +356,7 @@ class Box
 
   void Resolution()//floor
   {
-    //Translate(changeVector.x, changeVector.y);
-  }
-
-  void CheckArea()
-  {
-    if (posY < minY)
-    {
-      setForDeletion = true;
-    }
-    if (posY > maxY)
-    {
-      setForDeletion = true;
-    }
-    if (posX < minX)
-    {
-      setForDeletion = true;
-    }
-    if (posX > maxX)
-    {
-      setForDeletion = true;
-    }
+    Translate(changeVector.x, changeVector.y);
   }
 
   void PhysicsUpdate()
@@ -413,19 +368,14 @@ class Box
       force = 0;
       gotImpulse = false;
     }
-
-    angle += angularVelocity * deltaTime;
-    angularVelocity *= 0.98; // damping
-
-    float angleDeg = degrees(angle);
-    float snapped = round(angleDeg / 90.0) * 90.0;
-
-    if (abs(angleDeg - snapped) < 2 && abs(angularVelocity) < 5)
+    if (posX < minX)
     {
-      angle = radians(snapped);
-      angularVelocity = 0;
+      setForDeletion = true;
     }
-
+    if (posX > maxX)
+    {
+      setForDeletion = true;
+    }
     posX += velocityX * deltaTime;
 
     if (velocityX > 0)
@@ -438,30 +388,15 @@ class Box
       if (velocityX > 0) velocityX = 0;
     }
   }
+
+
   void Update()
   {
     if (!isPaused)
     {
-      velocityY += gravity * deltaTime;
-
-      float predictedY = posY + velocityY * deltaTime;
-
-      posY = predictedY;
-    }
-
-    isGrounded = false;
-
-    if (posY > maxY)
-    {
-      posY = maxY;
-      velocityY = 0;
-
-      isGrounded = true;
-
-      if (Math.abs(angularVelocity) < 3)
-      {
-        angularVelocity = 0;
-      }
+      
+      velocityY += forceOnObjectBasedOnMass * deltaTime;
+      Translate(0, velocityY * deltaTime);
     }
 
     PhysicsUpdate();
@@ -469,31 +404,37 @@ class Box
     CalculateNormals();
   }
 
+
+
   void Draw()
   {
-    CheckArea();
     Identity();
     pushMatrix();
+    beginShape();
+
     if (m.useTexture)
     {
-      beginShape(QUADS);
+      
       texture(m.texture2D);
-      vertex(shape.get(0).x, shape.get(0).y, 0, 0);
-      vertex(shape.get(1).x, shape.get(1).y, 256, 0);
-      vertex(shape.get(2).x, shape.get(2).y, 256, 256);
+      vertex(shape.get(0).x, shape.get(0).y, 0, 0);      
+      vertex(shape.get(1).x, shape.get(1).y, 256, 0);    
+      vertex(shape.get(2).x, shape.get(2).y, 256, 256);  
       vertex(shape.get(3).x, shape.get(3).y, 0, 256);
-      endShape(CLOSE);
+      //for (Point p : shape)
+      //{
+       // vertex(p.x, p.y, 256, 256);
+     //}
     } else
     {
-      beginShape();
       fill(c.r, c.g, c.b);
       strokeWeight(3);
       for (Point p : shape)
       {
         vertex(p.x, p.y);
       }
-      endShape(CLOSE);
     }
+    endShape(CLOSE);
+
     popMatrix();
   }
 
@@ -513,17 +454,16 @@ class Box
 
   boolean isSelected = false;
   boolean canClick = false;
+
   boolean isPaused = true;
-  boolean isGrounded = false;
-  boolean hasPlayedCollisionSound = false;
 
   float gravity = 98;
-  float forceOnObjectBasedOnMass = 0;//yes unrealistic, but adds a 'polish'
+  float forceOnObjectBasedOnMass = 0;
 
   float angle = 0;
+
   float accleration = 0;
   float mass = 10;
-  float groundRestThreshold = 0.5f;
 
   ArrayList<Point> shape;
   ArrayList<Point> baseShape;
@@ -536,19 +476,30 @@ class Box
 
   Material m;
 
+  //For the bounce effect
+  float baseX = 0;
+  float baseY = 0;
+
   boolean gotImpulse = false;
+
+  float bounceAmount = 0.25;
+  float bounceSpeed = 6;
+  float bounceTime = 0;
+  int directionSquish = 1;
+  boolean canBounce = false;
+  boolean canGetCurrentScale = true;
+
   boolean setForDeletion = false;
 
-  float minX = 15;
-  float maxX = 800;
-
-  float minY = 70;
-  float maxY = 550;
+  float minX = 17;
+  float maxX = 730;
 }
 
 
 class Container
 {
+
+
   void Add(float value)
   {
     values.add(value);

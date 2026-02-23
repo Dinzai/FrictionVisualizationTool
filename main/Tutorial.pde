@@ -1,7 +1,6 @@
 import java.util.ArrayDeque; //used for tracking states for reversal
 
 
-//storage object for rewind
 class TutorialState
 {
   TutorialState(Box b, float v, float t, boolean m, boolean s,
@@ -37,7 +36,10 @@ class TutorialState
   int direction;
 }
 
-//Object that is the tutorial state
+
+
+
+
 class Tutorial implements Drawable, Interactable
 {
 
@@ -50,8 +52,10 @@ class Tutorial implements Drawable, Interactable
     Add();
   }
 
-  void Add()//alloate
-  {    
+  void Add()
+  {
+    
+    
     windowBox = new Box();
     windowBox.MakeBox(650, 480);
     windowBox.SetColour(105, 102, 82);
@@ -70,14 +74,17 @@ class Tutorial implements Drawable, Interactable
     demenstrationBoxThree = new Box();
     demenstrationBoxThree.MakeBox(30, 30);
     demenstrationBoxThree.SetColour(100, 255, 100);
+    //demenstrationBoxThree.Translate(210, 260);
 
     demenstrationBoxFour = new Box();
     demenstrationBoxFour.MakeBox(30, 30);
     demenstrationBoxFour.SetColour(255, 100, 100);
+    //demenstrationBoxFour.Translate(525, 260);
 
     demenstrationBoxFive = new Box();
     demenstrationBoxFive.MakeBox(30, 30);
     demenstrationBoxFive.SetColour(100, 100, 255);
+    //demenstrationBoxFive.Translate(300, 450);
 
     demenstrationBoxFloor = new Box();
     demenstrationBoxFloor.MakeBox(560, 30);
@@ -132,14 +139,16 @@ class Tutorial implements Drawable, Interactable
     frictionSliderButton.SetOriginalColour(150, 138, 62);
     frictionSliderButton.SetPosition(500, 230);
 
-    //fan anim
+
+
+    //wind mill part
+
     rotBox = new Box();
     rotBox.MakeRotBox(128, 128);
     rotBox.SetColour(180, 180, 220);
     rotBox.Translate(420, 300);
     rotBox.SetType(M_TYPE.FAN);
     
-    //wind mill part  
     mainBlade = new Box();
     mainBlade.MakeRotBox(128, 128);
     mainBlade.SetColour(180, 180, 220);
@@ -160,7 +169,7 @@ class Tutorial implements Drawable, Interactable
     windButton.SetPosition(200, 350);
     windButton.SetOriginalColour(150, 138, 62);
   }
-  //chatgpt helped with the save state logic, I knew a queue could handle the logic that I needed, but I needed direction on how to store that data
+  //chatgpt helped with the save state logic, I knew a queue could handle the logic i needed, but needed direction on how to store that data
   void SaveState()
   {
 
@@ -191,11 +200,13 @@ class Tutorial implements Drawable, Interactable
 
     TutorialState s = history.removeLast();
 
+    // Restore basic
     canMove = s.canMove;
     canShowSecondText = s.canShowSecondText;
     velocity = s.velocity;
     timer = s.timer;
 
+    // Restore step 2
     boxThreeSpeed = s.boxThreeSpeed;
     boxFourSpeed = s.boxFourSpeed;
     force = s.force;
@@ -211,7 +222,7 @@ class Tutorial implements Drawable, Interactable
     demenstrationBox.Translate(dx, dy);
   }
 
-//implments interactable
+
   void Click()
   {
 
@@ -225,6 +236,7 @@ class Tutorial implements Drawable, Interactable
     {
       theSounds.PlayRandomUI();
       boxFiveSpeed = boxFiveForce;
+
 
       boxFiveCanMove = true;
     }
@@ -344,8 +356,7 @@ class Tutorial implements Drawable, Interactable
       sim.tScreen.isTitle = true;
     }
   }
-  
-//implments interactable
+
   void Reset()
   {
     if (sliderIsPressed)
@@ -446,6 +457,8 @@ class Tutorial implements Drawable, Interactable
 
   void Update()
   {
+    //print(stateStepCounter);
+
     //wind
     if (stateStepCounter >= 5 && stateStepCounter < 9)
     {
@@ -614,7 +627,6 @@ class Tutorial implements Drawable, Interactable
     }
   }
 
-//Each if statement, is a state
   void DrawToScreen()
   {
 
@@ -693,6 +705,7 @@ class Tutorial implements Drawable, Interactable
         drawArrow(windMillTower.posX - 105, windMillTower.posY + 15, windMillTower.posX - 55, windMillTower.posY + 15);
       }
     }
+
 
     if (stateStepCounter == 4)
     {
@@ -842,8 +855,6 @@ class Tutorial implements Drawable, Interactable
     reverseTextButton.Draw();
     backTextButton.Draw();
   }
-  //bloated variable area, got messy
-  
   //part one
   Box windowBox;
 

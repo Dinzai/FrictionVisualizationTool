@@ -1,4 +1,4 @@
-//This is the windmill mode
+
 class Windmill implements Drawable, Interactable
 {
 
@@ -6,10 +6,13 @@ class Windmill implements Drawable, Interactable
   {
     Add();
   }
-  //allocates the needed objects, inits postions, colours. stuff like that
+
   void Add()
   {
-
+    
+    //(68, 62, 107);//boxes
+    //(150, 138, 62);//buttons
+    
     backTextButton = new Button("Back");
     backTextButton.SetSize(21);
     backTextButton.SetTextOffsetCheck(30);
@@ -63,7 +66,7 @@ class Windmill implements Drawable, Interactable
     windowBox.SetColour(105, 102, 82);
     windowBox.Translate(80, 40);
   }
-  //this is because windmill implments Interactable, defines it, used only on mouse pressed
+
   void Click()
   {
     if (windButton.b.canClick)
@@ -91,7 +94,7 @@ class Windmill implements Drawable, Interactable
       dragSliderIsPressed = true;
     }
   }
-  //same, this is for interactables
+
   void Reset()
   {
 
@@ -110,7 +113,7 @@ class Windmill implements Drawable, Interactable
       backTextButton.textSystem.canClick = false;
     }
   }
-  //the windmill speed changes/slider positions
+
   void Update()
   {
     windMillSpeed = windForce;
@@ -186,10 +189,11 @@ class Windmill implements Drawable, Interactable
       mainBlade.Rotate(windMillSpeed * deltaTime);
     }
   }
-  //the draw loop
+
   void DrawToScreen()
   {
     pushMatrix();
+
     windowBox.Draw();
     fill(0, 0, 0);
     textSize(windTextSize);
@@ -197,12 +201,13 @@ class Windmill implements Drawable, Interactable
     text("Push the Button!", 120, 350);
     popMatrix();
 
+
     pushMatrix();
     noStroke();
     windMillTower.Draw();
     mainBlade.Draw();
+
     popMatrix();
-    
     pushMatrix();
     stroke(0);
     strokeWeight(5);
@@ -239,43 +244,41 @@ class Windmill implements Drawable, Interactable
     backTextButton.Draw();
   }
 
+  Button backTextButton;
+  int windTextSize = 21;
+
   boolean canSeeWindMill = false;
   boolean canMoveWindmill = false;
 
   boolean sliderIsPressed = false;
   boolean dragSliderIsPressed = false;
-  
-  int windTextSize = 21;
 
   float windTimer = 0;
   float windTimerCountDown = 4;
   float windTimerMax = 4;
-  float windForce = 0;
-  float windMillSpeed = 0;
-  float startingForce = 0;
-  float maxWindForce = 10000;
-  
+
   float dragResistence = 0;
   float maxDragResistence = 5000;
+
+  float windForce = 0;
+  float windMillSpeed = 0;
+
+  Button windButton;
 
   float windmillPositionX = 420;
   float windmillPositionY = 250;
 
-  //fake screen
-  Box windowBox;
+  float startingForce = 0;
+  float maxWindForce = 10000;
 
-  //buttons
-  Button windButton;
-  Button backTextButton;
-  //windmill objects
-  
   Box windMillTower;
-  Box mainBlade;
-  
-  //sliders, with buttons
+
   Box sliderRail;
   Button sliderButton;
 
   Box dragSliderRail;
   Button dragSliderButton;
+  Box windowBox;
+
+  Box mainBlade;
 }

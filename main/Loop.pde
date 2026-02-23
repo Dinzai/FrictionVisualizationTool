@@ -1,5 +1,5 @@
 
-//this is basically the game loop
+
 class Loop
 {
   Loop()
@@ -55,7 +55,7 @@ class Loop
   }
 
 
-  void Update()//the main update
+  void Update()
   {
 
     if (tScreen.isTut)
@@ -78,7 +78,7 @@ class Loop
     
   }
 
-  void Draw()//the main draw
+  void Draw()
   {
     if (tScreen.isTitle)
     {

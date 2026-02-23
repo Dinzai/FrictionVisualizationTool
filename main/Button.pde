@@ -206,6 +206,7 @@ class Button
 
     if (isText)
     {
+
       textSize(textSystem.charSize);
       fill(textSystem.c.r, textSystem.c.g, textSystem.c.b);
       text(textSystem.words, textSystem.textPos.x, textSystem.textPos.y);

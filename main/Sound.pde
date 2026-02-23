@@ -1,4 +1,4 @@
-//The sound manager
+
 import processing.sound.*;
 
 enum UI_SOUND
@@ -87,17 +87,9 @@ class SoundManager
     physicsSounds.add(SetSound("iceSmack"));
   }
   
-  void StopPhysicsSounds()
-  {
-    for (SoundFile p : physicsSounds)
-    {
-      p.stop();
-    }
-  }
-  
   void PlayPhysicsSound(int num)
   {
-    StopPhysicsSounds();
+    physicsSounds.get(num).stop();
     physicsSounds.get(num).play();
   }
 
