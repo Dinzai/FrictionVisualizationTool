@@ -2,6 +2,11 @@
 //a small rectangle, with button, that 'expands' when clicked, and 'shows' options
 //each option is a button, that 'activates'
 
+
+//Drop down menu is a Drawable, Interactable entity, so things defined in DrawToScreen are drawn on the layer, and things defined in
+// click, and reset are reachable by the mouseButtonDown and mouseButtonUp functions
+
+//this containter holds many buttons, and boxes, and a Background,(class BackGround) and a pannel(from materials)
 class DropDownMenu implements Drawable, Interactable
 {
   DropDownMenu()
@@ -304,7 +309,7 @@ class DropDownMenu implements Drawable, Interactable
       spawner.AddForce(startingForce * startingDirection);
     }
   }
-
+//DropDownMenu's Update loop, is going to use the draw system
   void DrawToScreen()
   {
     ForceUpdate();

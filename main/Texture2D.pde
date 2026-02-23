@@ -1,6 +1,11 @@
 
 //need to have a system to load, cache, and handle used images for the program
 
+//This object runs at the start of the program, loading the textures into memory
+//In the Material class, is an enumoratror M_TYPE
+//using the same order as previously dtermined, the textures will load into memory
+//that way, calling M_TYPE.whateverType.oridinal()<- will chose the correct texture
+
 class CacheTextures
 {
   CacheTextures()
@@ -23,6 +28,7 @@ class CacheTextures
     allTextures.add(SetImage("metal"));//2
     allTextures.add(SetImage("rock"));//3
     allTextures.add(SetImage("ice"));//4
+    //From here down, are textures that do no need to be defined in materials
     allTextures.add(SetImage("fanIcon"));//5
     allTextures.add(SetImage("frictionIcon"));//6
     allTextures.add(SetImage("airIcon"));//7

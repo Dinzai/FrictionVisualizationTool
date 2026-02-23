@@ -1,4 +1,12 @@
-//this
+//This is a custom box class that avoids use of the rect draw function givin by processing
+
+//Even though Box has a Draw function, this class is not designed for, or intended to be
+//created & drawn on its own accord. Box Should be a member, in a container class that
+//implments the Drawable function
+//Box it's self is designed with the Point() class to create a box, that has UV's, positions,
+//and collison information
+
+//there is one tringle defined here for one button, that is its ONLY intended use
 class Box
 {
   Box()
@@ -29,10 +37,6 @@ class Box
     theWidth = w;
     theHeight = h;
     //time to add image! uv's baby
-    //Point TL = new Point();
-    //Point TR = new Point(w, 0);
-    //Point BL = new Point(0, h);
-    //Point BR = new Point(w, h);
 
     Point TL = new Point(0, 0, 0, 0);
     Point TR = new Point(w, 0, 1, 0);
@@ -43,8 +47,6 @@ class Box
     baseShape.add(TR);
     baseShape.add(BR);
     baseShape.add(BL);
-    
-    
 
     for (Point p : baseShape)
     {
@@ -63,11 +65,6 @@ class Box
     baseShape.clear();
     shape.clear();
 
-    //Point TL = new Point(-halfWidth, -halfHeight);
-    //Point TR = new Point(halfWidth, -halfHeight);
-    //Point BR = new Point(halfWidth, halfHeight);
-    //Point BL = new Point(-halfWidth, halfHeight);
-    
     Point TL = new Point(-halfWidth, -halfHeight, 0, 0);
     Point TR = new Point(halfWidth, -halfHeight, 1, 0);
     Point BR = new Point(halfWidth, halfHeight, 1, 1);
@@ -82,7 +79,6 @@ class Box
     {
       shape.add(new Point(p.x, p.y));
     }
-    
   }
 
   void MakeTri(float w, float h)
@@ -394,7 +390,7 @@ class Box
   {
     if (!isPaused)
     {
-      
+
       velocityY += forceOnObjectBasedOnMass * deltaTime;
       Translate(0, velocityY * deltaTime);
     }
@@ -406,7 +402,7 @@ class Box
 
 
 
-  void Draw()
+  void Draw()//NEVER manually draw the box, only something that implments Drawable should draw
   {
     Identity();
     pushMatrix();
@@ -414,16 +410,16 @@ class Box
 
     if (m.useTexture)
     {
-      
+
       texture(m.texture2D);
-      vertex(shape.get(0).x, shape.get(0).y, 0, 0);      
-      vertex(shape.get(1).x, shape.get(1).y, 256, 0);    
-      vertex(shape.get(2).x, shape.get(2).y, 256, 256);  
+      vertex(shape.get(0).x, shape.get(0).y, 0, 0);
+      vertex(shape.get(1).x, shape.get(1).y, 256, 0);
+      vertex(shape.get(2).x, shape.get(2).y, 256, 256);
       vertex(shape.get(3).x, shape.get(3).y, 0, 256);
       //for (Point p : shape)
       //{
-       // vertex(p.x, p.y, 256, 256);
-     //}
+      // vertex(p.x, p.y, 256, 256);
+      //}
     } else
     {
       fill(c.r, c.g, c.b);

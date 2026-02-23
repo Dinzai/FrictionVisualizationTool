@@ -1,4 +1,8 @@
-//these
+//Spawnable is used cohesivly with the DropDown menu, Both are seperate Objects, working in tandem to produce the Simulator system
+//Spawnable controls the draw, update, collision of any and all boxes that are created during runtime
+//DropDownMenu is simply the UI that communicates with Spawnable
+
+//Spawnable is a singleton 
 
 class Spawnable implements Drawable, Interactable
 {
@@ -340,5 +344,5 @@ class Spawnable implements Drawable, Interactable
   String mode;
 }
 
-
+//By making the object global, DropDownMenu can commmunicate with spawnable, this object is not created until loop runs
 Spawnable spawner;// = new Spawnable();

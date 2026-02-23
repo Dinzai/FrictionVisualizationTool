@@ -1,4 +1,4 @@
-//that
+//M_TYPE is an order of which materials are defined, helpful for applying textures, sounds, and friction values
 enum M_TYPE
 {
   NONE,
@@ -8,7 +8,7 @@ enum M_TYPE
     ICE,
     FAN,
 }
-
+//simeple container class defining what, and how a material behaves, notice the material does not implement my interfaces 
 class Material
 {
 
@@ -150,7 +150,7 @@ class Material
 
   PImage texture2D;
 }
-
+//this object defineds what a material Icon object is, and behaves, this will be a member of a larger class, 'Pannel'
 class MaterialIconObject implements Drawable, Interactable
 {
 
@@ -265,7 +265,7 @@ class MaterialIconObject implements Drawable, Interactable
   Material m;
 }
 
-
+//this holds the material icon objects, and is used in the DropDownMenu system
 class MaterialPannel
 {
 

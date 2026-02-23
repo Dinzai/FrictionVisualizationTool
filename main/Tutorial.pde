@@ -1,5 +1,5 @@
 import java.util.ArrayDeque; //used for tracking states for reversal
-
+//this section helps hold the useable information for a rewind
 
 class TutorialState
 {
@@ -37,7 +37,7 @@ class TutorialState
 }
 
 
-
+//This object is it's own scene
 
 
 class Tutorial implements Drawable, Interactable

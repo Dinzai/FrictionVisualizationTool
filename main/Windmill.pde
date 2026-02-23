@@ -1,4 +1,4 @@
-
+//This is it's own scene
 class Windmill implements Drawable, Interactable
 {
 

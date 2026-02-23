@@ -1,4 +1,4 @@
-
+//this is a sound manager system used to hold, control, and load sounds for the program
 import processing.sound.*;
 
 enum UI_SOUND

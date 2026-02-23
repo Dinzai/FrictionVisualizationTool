@@ -1,11 +1,11 @@
-
+//a promise that he whom implments this, will define the behavior
 interface Interactable
 {
   void Click();
   
   void Reset();
 }
-
+//this is going to act as a singleton
 class InputManager
 {
   

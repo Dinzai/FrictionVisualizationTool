@@ -1,3 +1,4 @@
+//this uses custom box to help define the shape of a button, text can also be a button
 
 class Button
 {

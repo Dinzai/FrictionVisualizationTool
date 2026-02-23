@@ -1,3 +1,5 @@
+//TIME is global, accesable anywhere
+
 float deltaTime;
 float previousTime;
 
@@ -13,12 +15,14 @@ void CalculateDeltaTime()
   previousTime = currentTime;
 
 }
+//I thought maybe of having a different version of time could prove helpful, never ended up using this, though, could be neat to use 
 
+//Found a use for this in Box, calculating the new forceOnObjectBasedOnMass doesnt need to happen every frame
 void CalculateFixedDeltaTime()
 {
   float fixedCurrentTime = millis();
   
-  fixedDeltaTime = (fixedCurrentTime - fixedPreviousTime) / 300.0;
+  fixedDeltaTime = (fixedCurrentTime - fixedPreviousTime) / 4000.0;
   
   fixedPreviousTime = fixedCurrentTime;
 

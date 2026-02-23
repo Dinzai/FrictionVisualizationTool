@@ -1,5 +1,5 @@
 
-
+//This is it's own container/scene that covers the title screen
 class TitleScreen implements Drawable, Interactable
 {
 
@@ -101,7 +101,7 @@ class TitleScreen implements Drawable, Interactable
     Button tempTut = buttons.get(0);
     if (tempTut.textSystem.canClick)
     {
-      sim.Reset();
+      sim.Reset();//this is defined in Loop, sim is a global object created in Main
     }
     image(titleImage, 135, 80);
 

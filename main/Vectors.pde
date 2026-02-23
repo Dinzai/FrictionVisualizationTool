@@ -1,4 +1,4 @@
-
+//Having a Vec3 for colour is very useful for quick colour changes
 class Colour
 {
   Colour()
@@ -19,7 +19,7 @@ class Colour
   float g;
   float b;
 }
-
+//This point system has UV's, that are connected with the Position of each point
 class Point
 {
   Point()

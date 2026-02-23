@@ -1,30 +1,40 @@
-
+//the actual 'Game Loop' of the program
 
 class Loop
 {
   Loop()
   {
-       
+    //Notice, each Object, is categorized with each scene
+    //the scene is the drawable layer
+    //Input is a singleton, made at the bottom of the Interact class
+    //The function is to grab objects thatbhave implmented the Interactable interface
+    
+    //The title Screen
     title = new Scene();
     tScreen = new TitleScreen();
-
+    tScreen.isTitle = true;//start in title
+    
+    //tutorial
     tutorial = new Scene();
-    sim = new Scene();
-    wind = new Scene();
-
-    tScreen.isTitle = true;
     tutScreen = new Tutorial();
+    
+    //Windmill
+    wind = new Scene();
     windScreen = new Windmill();
     
+    //Simulation Mode
+    simulator = new Scene();
     spawner = new Spawnable();
-
-    menu = new DropDownMenu();
-    
+    menu = new DropDownMenu();    
     back = new BackGround();
+    
   }
 
   void Add()
   {
+    //Add to layer has an option to chose the layer, and object
+    //input.Grab choses which object to grab
+    
     //title
     title.AddTolayer(Layers.UI, tScreen);
     input.Grab(tScreen);
@@ -34,9 +44,9 @@ class Loop
     input.Grab(tutScreen);
 
     //sim
-    sim.AddTolayer(Layers.UI, menu);
-    sim.AddTolayer(Layers.BACKGROUND, back);
-    sim.AddTolayer(Layers.ENTITY, spawner);
+    simulator.AddTolayer(Layers.UI, menu);//top most layer
+    simulator.AddTolayer(Layers.BACKGROUND, back);//bottom most layer
+    simulator.AddTolayer(Layers.ENTITY, spawner);//middle layer
     input.Grab(menu);
     input.Grab(spawner);
 
@@ -46,7 +56,7 @@ class Loop
   }
   
   void Reset()
-  {
+  {//eject basically removes that system from being interactable, for the moment
     tutorial.RemoveFromLayer(Layers.UI, tutScreen);
     input.Eject(tutScreen);
     tutScreen = new Tutorial();
@@ -57,7 +67,6 @@ class Loop
 
   void Update()
   {
-
     if (tScreen.isTut)
     {
       CalculateDeltaTime();
@@ -66,8 +75,9 @@ class Loop
 
     if (tScreen.isSim)
     {
-      spawner.Update();
       CalculateDeltaTime();
+      CalculateFixedDeltaTime();
+      spawner.Update();      
     }
     
     if (tScreen.isWind)
@@ -82,7 +92,7 @@ class Loop
   {
     if (tScreen.isTitle)
     {
-      background(95, 80, 200);
+      background(95, 80, 200);//I may not have to reset the bckground per if statement, noticed a strange bug that apears sometimes, hoping this fixes it
       title.DrawOrder();
     }
     if (tScreen.isTut)
@@ -93,7 +103,7 @@ class Loop
     if (tScreen.isSim)
     {
       background(95, 80, 200);
-      sim.DrawOrder();
+      simulator.DrawOrder();
     }
     if (tScreen.isWind)
     {
@@ -105,15 +115,14 @@ class Loop
   Scene title;
   TitleScreen tScreen;
 
-
   Scene tutorial;
   Tutorial tutScreen;
 
   Scene wind;
   Windmill windScreen;
 
-
-  Scene sim;
+  Scene simulator;
   DropDownMenu menu;
   BackGround back;
+  
 }
