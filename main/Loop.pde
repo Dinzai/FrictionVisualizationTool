@@ -82,18 +82,22 @@ class Loop
   {
     if (tScreen.isTitle)
     {
+      background(95, 80, 200);
       title.DrawOrder();
     }
     if (tScreen.isTut)
     {
+      background(95, 80, 200);
       tutorial.DrawOrder();
     }
     if (tScreen.isSim)
     {
+      background(95, 80, 200);
       sim.DrawOrder();
     }
     if (tScreen.isWind)
     {
+      background(95, 80, 200);
       wind.DrawOrder();
     }
   }
