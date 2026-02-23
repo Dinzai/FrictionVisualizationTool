@@ -1,4 +1,4 @@
-
+//that
 enum M_TYPE
 {
   NONE,
