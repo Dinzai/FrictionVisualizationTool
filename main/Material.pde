@@ -60,7 +60,7 @@ class Material
     SetTexture(materialType.ordinal());
     useTexture = true;
   }
-  
+
   void SetTexture(int num)
   {
     texture2D = cache.GetTexture(num);
@@ -141,13 +141,13 @@ class Material
 
   boolean foundStaticValues = false;
   boolean foundKineticValues = false;
-  
+
   boolean useTexture = false;
-  
+
   M_TYPE materialType;
   Colour c;
   float mass;
-  
+
   PImage texture2D;
 }
 
@@ -190,7 +190,7 @@ class MaterialIconObject implements Drawable, Interactable
       return false;
     }
 
-    if (xPos + radius * 2 > b.posX + b.theWidth)
+    if (xPos - radius > b.posX + b.theWidth)
     {
       return false;
     }
@@ -200,8 +200,7 @@ class MaterialIconObject implements Drawable, Interactable
       return false;
     }
 
-
-    if (yPos + radius * 2 > b.posY + b.theHeight)
+    if (yPos - radius > b.posY + b.theHeight)
     {
       return false;
     }
