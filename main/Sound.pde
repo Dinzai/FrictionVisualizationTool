@@ -77,7 +77,6 @@ class SoundManager
     }
   }
 
-
   void LoadPhysicsSound()
   {
     physicsSounds.add(SetSound("buttonSoundOne"));//should only play on NONE type
@@ -126,8 +125,6 @@ class SoundManager
     LoadUISounds();
     LoadPhysicsSound();
   }
-
-
 
   PApplet parrent;
 

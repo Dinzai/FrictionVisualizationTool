@@ -16,8 +16,6 @@ void CalculateDeltaTime()
 
 }
 //I thought maybe of having a different version of time could prove helpful, never ended up using this, though, could be neat to use 
-
-//Found a use for this in Box, calculating the new forceOnObjectBasedOnMass doesnt need to happen every frame
 void CalculateFixedDeltaTime()
 {
   float fixedCurrentTime = millis();

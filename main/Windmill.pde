@@ -9,10 +9,7 @@ class Windmill implements Drawable, Interactable
 
   void Add()
   {
-    
-    //(68, 62, 107);//boxes
-    //(150, 138, 62);//buttons
-    
+
     backTextButton = new Button("Back");
     backTextButton.SetSize(21);
     backTextButton.SetTextOffsetCheck(50);

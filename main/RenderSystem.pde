@@ -10,7 +10,12 @@ enum Layers
   UI,
 }
 
-interface Drawable// a complex object needs to implment this
+
+// Only complex containers that hold many objects to be drawn define the DrawToScreen function
+// So objects like boxes, buttons, and the materials pannel do not use these, but the DropDownMenu as a whole does, that holds the aformentioned Objects
+
+
+interface Drawable
 {
   void DrawToScreen();
 }
