@@ -80,11 +80,17 @@ class SoundManager
 
   void LoadPhysicsSound()
   {
-    physicsSounds.add(SetSound("buttonSoundOne"));
+    physicsSounds.add(SetSound("buttonSoundOne"));//should only play on NONE type
     physicsSounds.add(SetSound("woodSmack"));
     physicsSounds.add(SetSound("metalSmack"));
     physicsSounds.add(SetSound("rockSmack"));
     physicsSounds.add(SetSound("iceSmack"));
+  }
+  
+  void PlayPhysicsSound(int num)
+  {
+    physicsSounds.get(num).stop();
+    physicsSounds.get(num).play();
   }
 
   void LoadBackGroundMusic()

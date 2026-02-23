@@ -54,9 +54,11 @@ class Tutorial implements Drawable, Interactable
 
   void Add()
   {
+    
+    
     windowBox = new Box();
     windowBox.MakeBox(650, 480);
-    windowBox.SetColour(135, 135, 135);
+    windowBox.SetColour(105, 102, 82);
     windowBox.Translate(80, 40);
 
     demenstrationBox = new Box();
@@ -110,31 +112,31 @@ class Tutorial implements Drawable, Interactable
     forceButton = new Button();
     forceButton.SetSize(60, 20);
     forceButton.SetPosition(330, 340);
-    forceButton.SetOriginalColour(110, 110, 110);
+    forceButton.SetOriginalColour(150, 138, 62);
 
     boxFiveResetButton = new Button();
     boxFiveResetButton.SetSize(60, 20);
     boxFiveResetButton.SetPosition(500, 340);
-    boxFiveResetButton.SetOriginalColour(110, 110, 110);
+    boxFiveResetButton.SetOriginalColour(150, 138, 62);
 
     sliderRail = new Box();
     sliderRail.MakeBox(80, 10);
-    sliderRail.SetColour(80, 80, 80);
+    sliderRail.SetColour(68, 62, 107);;
     sliderRail.Translate(200, 230);
 
     sliderButton = new Button();
     sliderButton.SetSize(10, 10);
-    sliderButton.SetOriginalColour(90, 90, 90);
+    sliderButton.SetOriginalColour(150, 138, 62);
     sliderButton.SetPosition(200, 230);
 
     frictionSliderRail = new Box();
     frictionSliderRail.MakeBox(80, 10);
-    frictionSliderRail.SetColour(80, 80, 80);
+    frictionSliderRail.SetColour(68, 62, 107);;
     frictionSliderRail.Translate(500, 230);
 
     frictionSliderButton = new Button();
     frictionSliderButton.SetSize(10, 10);
-    frictionSliderButton.SetOriginalColour(90, 90, 90);
+    frictionSliderButton.SetOriginalColour(150, 138, 62);
     frictionSliderButton.SetPosition(500, 230);
 
 
@@ -146,38 +148,26 @@ class Tutorial implements Drawable, Interactable
     rotBox.SetColour(180, 180, 220);
     rotBox.Translate(420, 300);
     rotBox.SetType(M_TYPE.FAN);
-
-    windBladeUp = new Box();
-    windBladeUp.MakeRotBox(20, 150);
-    windBladeUp.SetColour(180, 180, 220);
-    windBladeUp.Translate(windmillPositionX, windmillPositionY);
-
-    windBladeRight = new Box();
-    windBladeRight.MakeRotBox(150, 20);
-    windBladeRight.SetColour(180, 180, 220);
-    windBladeRight.Translate(windmillPositionX, windmillPositionY);
-
-    windBladeDown = new Box();
-    windBladeDown.MakeRotBox(20, 150);
-    windBladeDown.SetColour(180, 180, 220);
-    windBladeDown.Rotate(40);
-    windBladeDown.Translate(windmillPositionX, windmillPositionY);
-
-    windBladeLeft = new Box();
-    windBladeLeft.MakeRotBox(150, 20);
-    windBladeLeft.SetColour(180, 180, 220);
-    windBladeLeft.Rotate(45);
-    windBladeLeft.Translate(windmillPositionX, windmillPositionY);
+    
+    mainBlade = new Box();
+    mainBlade.MakeRotBox(128, 128);
+    mainBlade.SetColour(180, 180, 220);
+    mainBlade.Translate(windmillPositionX, windmillPositionY + 20);
+    mainBlade.m.SetTexture(10);
+    mainBlade.m.useTexture = true;
+    mainBlade.Rotate(30);
 
     windMillTower = new Box();
-    windMillTower.MakeBox(40, 100);
+    windMillTower.MakeBox(20, 100);
     windMillTower.SetColour(190, 150, 130);
-    windMillTower.Translate(windmillPositionX - 20, windmillPositionY);
+    windMillTower.Translate(windmillPositionX - 10, windmillPositionY);
+    windMillTower.m.SetTexture(1);
+    windMillTower.m.useTexture = true;
 
     windButton = new Button();
     windButton.SetSize(60, 20);
     windButton.SetPosition(200, 350);
-    windButton.SetOriginalColour(110, 110, 110);
+    windButton.SetOriginalColour(150, 138, 62);
   }
   //chatgpt helped with the save state logic, I knew a queue could handle the logic i needed, but needed direction on how to store that data
   void SaveState()
@@ -526,10 +516,8 @@ class Tutorial implements Drawable, Interactable
           canMoveWindmill = false;
         }
 
-        windBladeUp.Rotate(windMillSpeed * deltaTime);
-        windBladeRight.Rotate(windMillSpeed * deltaTime);
-        windBladeDown.Rotate(windMillSpeed * deltaTime);
-        windBladeLeft.Rotate(windMillSpeed * deltaTime);
+        mainBlade.Rotate(windMillSpeed * deltaTime);
+
       }
     }
     //user friction
@@ -665,7 +653,6 @@ class Tutorial implements Drawable, Interactable
         if (showThird)
         {
 
-          //image(fanImage, 320, 300, 128, 128);
           pushMatrix();
           noStroke();
           rotBox.Draw();
@@ -696,16 +683,9 @@ class Tutorial implements Drawable, Interactable
         popMatrix();
 
         pushMatrix();
-        stroke(0);
-        strokeWeight(5);
-        windMillTower.Draw();
-        popMatrix();
-        pushMatrix();
         noStroke();
-        windBladeUp.Draw();
-        windBladeRight.Draw();
-        windBladeDown.Draw();
-        windBladeLeft.Draw();
+        windMillTower.Draw();
+        mainBlade.Draw();
         popMatrix();
 
         pushMatrix();
@@ -744,7 +724,7 @@ class Tutorial implements Drawable, Interactable
         fill(0, 0, 0);
         textSize(frictionTypesTextSizeSmall);
         text("sf = " + (int)boxFiveStaticFriction, demenstrationBoxFive.posX + 45, demenstrationBoxFive.posY + 10);
-        text("Force = " + (int)boxFiveForce + " ", demenstrationBoxFive.posX - 112, demenstrationBoxFive.posY + 10);
+        text("Force = " + (int)boxFiveForce + " ", demenstrationBoxFive.posX - 145, demenstrationBoxFive.posY + 10);
         popMatrix();
       } else
       {
@@ -752,7 +732,7 @@ class Tutorial implements Drawable, Interactable
         fill(0, 0, 0);
         textSize(frictionTypesTextSizeSmall);
         text("kf = " + (int)boxFiveStaticFriction, demenstrationBoxFive.posX + 45, demenstrationBoxFive.posY + 10);
-        text("Force = " + (int)boxFiveForce + " ", demenstrationBoxFive.posX - 112, demenstrationBoxFive.posY + 10);
+        text("Force = " + (int)boxFiveForce + " ", demenstrationBoxFive.posX - 145, demenstrationBoxFive.posY + 10);
         popMatrix();
 
         pushMatrix();
@@ -812,7 +792,7 @@ class Tutorial implements Drawable, Interactable
       fill(0, 0, 0);
       textSize(frictionTypesTextSizeTiny);
       text("kf = 30", demenstrationBoxThree.posX + 45, demenstrationBoxThree.posY + 10);
-      text("force = " + (int)boxThreeSpeed + " ", demenstrationBoxThree.posX - 87, demenstrationBoxThree.posY + 10);
+      text("force = " + (int)boxThreeSpeed + " ", demenstrationBoxThree.posX - 95, demenstrationBoxThree.posY + 10);
       popMatrix();
 
       drawArrow(demenstrationBoxThree.posX + 50, demenstrationBoxThree.posY + 15, demenstrationBoxThree.posX + 30, demenstrationBoxThree.posY + 15);
@@ -984,11 +964,8 @@ class Tutorial implements Drawable, Interactable
 
   float windmillPositionX = 420;
   float windmillPositionY = 250;
-
-  Box windBladeUp;
-  Box windBladeRight;
-  Box windBladeDown;
-  Box windBladeLeft;
+  
+  Box mainBlade;
   Box windMillTower;
 
   float imageSpeed = 100;

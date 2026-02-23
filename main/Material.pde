@@ -70,26 +70,31 @@ class Material
   {
     if (materialType == M_TYPE.NONE)
     {
-      c = new Colour(255, 255, 255);
+      mass = 10;
+      c = new Colour(227, 238, 179);
     }
 
     if (materialType == M_TYPE.WOOD)
     {
+      mass = 30;
       c = new Colour(125, 80, 35);
     }
 
     if (materialType == M_TYPE.METAL)
     {
+      mass = 75;
       c = new Colour(95, 80, 110);
     }
 
     if (materialType == M_TYPE.ROCK)
     {
+      mass = 125;
       c = new Colour(55, 55, 55);
     }
 
     if (materialType == M_TYPE.ICE)
     {
+      mass = 50;
       c = new Colour(110, 110, 255);
     }
   }
@@ -141,6 +146,7 @@ class Material
   
   M_TYPE materialType;
   Colour c;
+  float mass;
   
   PImage texture2D;
 }

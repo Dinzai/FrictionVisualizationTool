@@ -16,7 +16,7 @@ class TitleScreen implements Drawable, Interactable
     Button tempTut = new Button("Tutorial");
     tempTut.SetSize(34);
     tempTut.SetTextOffsetCheck(130);
-    tempTut.SetPosition(325, 220);
+    tempTut.SetPosition(325, 320);
     tempTut.SetOriginalColour(0, 0, 0);
 
     Button tempSim = new Button("Simulation");

@@ -135,7 +135,7 @@ class Button
       if (mouseX > b.shape.get(0).x && mouseX < b.shape.get(0).x + b.theWidth &&
         mouseY > b.shape.get(0).y && mouseY < b.shape.get(0).y + b.theHeight)
       {
-        SetColour(100, 200, 100);
+        SetColour(235, 206, 19);
         b.canClick = true;
       } else
       {
@@ -174,7 +174,7 @@ class Button
         if (mouseX > textSystem.textPos.x && mouseX < textSystem.textPos.x + textSystem.offsetCheck
           && mouseY > textSystem.textPos.y - 15 && mouseY < textSystem.textPos.y + 15)
         {
-          SetColour(0, 255, 0);
+          SetColour(235, 206, 19);
           textSystem.canClick = true;
         } else
         {
@@ -184,7 +184,7 @@ class Button
         }
       } else if (textSystem.isActive)
       {
-        SetColour(0, 255, 0);
+        SetColour(235, 206, 19);
         textSystem.canClick = false;
       }
     }

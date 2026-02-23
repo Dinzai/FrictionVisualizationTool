@@ -70,7 +70,6 @@ class Spawnable implements Drawable, Interactable
         b.isSelected = true;
       }
     }
-    
   }
 
   void Reset()
@@ -158,7 +157,7 @@ class Spawnable implements Drawable, Interactable
       Box b = allObjects.get(index);
       if (b.isPaused)
       {
-        b.isPaused = !b.isPaused;
+        //b.isPaused = !b.isPaused;
         b.gotImpulse = true;
         b.force = amount;
       }
@@ -221,6 +220,15 @@ class Spawnable implements Drawable, Interactable
     }
   }
 
+  void DoOnce(Box temp, boolean canReset)
+  {
+    if (canReset)
+    {
+      theSounds.PlayPhysicsSound(temp.m.materialType.ordinal());
+      canReset = false;
+    }
+  }
+
   void CheckCollision()
   {
     for (int i = 0; i < allObjects.size(); i++)
@@ -232,6 +240,7 @@ class Spawnable implements Drawable, Interactable
         {
           temp.m.foundStaticValues = false;
           temp.m.foundKineticValues = false;
+          DoOnce(temp, true);
         }
         temp.m.staticFrictionValue = temp.m.DetermineStaticInteraction(floor.m);
         temp.m.kineticFrictionValue = temp.m.DeterminekineticInteraction(floor.m);
@@ -247,39 +256,48 @@ class Spawnable implements Drawable, Interactable
 
           if (temp.Collision(other))
           {
-            if (temp.Collision(other))
+
+            if (!temp.isPaused)
             {
-              temp.Resolution(other);
-              other.Resolution(temp);
+              DoOnce(temp, true);
+            }
 
-              // ChatGPT helped with this code, I was struggling with what the interaction shoud resolve as
-              //I did not copy paste, but, asked many questions, and wrote down its suggestion with the collision code here
-              boolean tempMoving = Math.abs(temp.velocityX) > 0.01 || Math.abs(temp.velocityY) > 0.01;
-              boolean otherMoving = Math.abs(other.velocityX) > 0.01 || Math.abs(other.velocityY) > 0.01;
-              //this bellow i logically deducted from the case above
-              if (tempMoving && !otherMoving)
-              {
-                other.force = other.mass * temp.velocityX;
-                other.gotImpulse = true;
-                temp.velocityX = 0;
-                temp.velocityY = 0;
-              } else if (!tempMoving && otherMoving)
-              {
-                temp.force = temp.mass * other.velocityX;
-                temp.gotImpulse = true;
-                other.velocityX = 0;
-                other.velocityY = 0;
-              } else
-              {
-                temp.velocityX *= 0.5;
-                other.velocityX *= 0.5;
-              }
+            if (!other.isPaused)
+            {
+              DoOnce(other, true);
+              other.isPaused = true;
+            }
 
-              if (temp.posY < other.posY)
-              {
-                temp.isPaused = true;
-                other.isPaused = true;
-              }
+            temp.Resolution(other);
+            other.Resolution(temp);
+
+            // ChatGPT helped with this code, I was struggling with what the interaction shoud resolve as
+            //I did not copy paste, but, asked many questions, and wrote down its suggestion with the collision code here
+            boolean tempMoving = Math.abs(temp.velocityX) > 0.01 || Math.abs(temp.velocityY) > 0.01;
+            boolean otherMoving = Math.abs(other.velocityX) > 0.01 || Math.abs(other.velocityY) > 0.01;
+            //this bellow i logically deducted from the case above
+            if (tempMoving && !otherMoving)
+            {
+              other.force = other.mass * temp.velocityX;
+              other.gotImpulse = true;
+              temp.velocityX = 0;
+              temp.velocityY = 0;
+            } else if (!tempMoving && otherMoving)
+            {
+              temp.force = temp.mass * other.velocityX;
+              temp.gotImpulse = true;
+              other.velocityX = 0;
+              other.velocityY = 0;
+            } else
+            {
+              temp.velocityX *= 0.5;
+              other.velocityX *= 0.5;
+            }
+
+            if (temp.posY < other.posY)
+            {
+              temp.isPaused = true;
+              other.isPaused = true;
             }
           }
         }

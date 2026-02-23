@@ -28,6 +28,7 @@ class CacheTextures
     allTextures.add(SetImage("airIcon"));//7
     allTextures.add(SetImage("dragIcon"));//8
     allTextures.add(SetImage("scienceIcon"));//9
+    allTextures.add(SetImage("windMillIcon"));//10
   }
   
   PImage GetTexture(int num)

@@ -9,13 +9,13 @@ class DropDownMenu implements Drawable, Interactable
 
     box = new Box();
     box.MakeBox(100, 30);
-    box.SetColour(110, 110, 110);
+    box.SetColour(68, 62, 107);
     box.Translate(10, 10);
 
     button = new Button();
     button.SetSize(20, 10);
     button.SetPosition(90, 30);
-    button.SetOriginalColour(55, 55, 55);
+    button.SetOriginalColour(150, 138, 62);
 
     playButton = new Button(true);
     playButton.SetSize(30, 30);
@@ -62,26 +62,26 @@ class DropDownMenu implements Drawable, Interactable
     forceButton = new Button();
     forceButton.SetSize(60, 20);
     forceButton.SetPosition(370, 20);
-    forceButton.SetOriginalColour(110, 110, 110);
+    forceButton.SetOriginalColour(68, 62, 107);
 
     sliderRail = new Box();
     sliderRail.MakeBox(80, 10);
-    sliderRail.SetColour(80, 80, 80);
+    sliderRail.SetColour(68, 62, 107);
     sliderRail.Translate(480, 50);
 
     sliderButton = new Button();
     sliderButton.SetSize(10, 10);
-    sliderButton.SetOriginalColour(90, 90, 90);
+    sliderButton.SetOriginalColour(150, 138, 62);
     sliderButton.SetPosition(480, 50);
 
     directionSliderRail = new Box();
     directionSliderRail.MakeBox(80, 10);
-    directionSliderRail.SetColour(80, 80, 80);
+    directionSliderRail.SetColour(68, 62, 107);
     directionSliderRail.Translate(180, 50);
 
     directionSliderButton = new Button();
     directionSliderButton.SetSize(10, 10);
-    directionSliderButton.SetOriginalColour(90, 90, 90);
+    directionSliderButton.SetOriginalColour(150, 138, 62);
     directionSliderButton.SetPosition(180, 50);
 
     pannel = new MaterialPannel();
