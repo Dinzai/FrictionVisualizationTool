@@ -15,7 +15,7 @@ class Windmill implements Drawable, Interactable
     
     backTextButton = new Button("Back");
     backTextButton.SetSize(21);
-    backTextButton.SetTextOffsetCheck(30);
+    backTextButton.SetTextOffsetCheck(50);
     backTextButton.SetPosition(740, 25);
     backTextButton.SetOriginalColour(0, 0, 0);
 
@@ -26,15 +26,16 @@ class Windmill implements Drawable, Interactable
     mainBlade.Translate(windmillPositionX, windmillPositionY + 20);
     mainBlade.m.SetTexture(10);
     mainBlade.m.useTexture = true;
+    mainBlade.FlipColourOther();
     mainBlade.Rotate(30);
-
+    
     windMillTower = new Box();
     windMillTower.MakeBox(20, 100);
     windMillTower.SetColour(190, 150, 130);
     windMillTower.Translate(windmillPositionX - 10, windmillPositionY);
     windMillTower.m.SetTexture(1);
     windMillTower.m.useTexture = true;
-
+    windMillTower.FlipColourOther();
 
     windButton = new Button();
     windButton.SetSize(60, 20);
@@ -42,12 +43,12 @@ class Windmill implements Drawable, Interactable
     windButton.SetOriginalColour(150, 138, 62);
 
     sliderRail = new Box();
-    sliderRail.MakeBox(80, 10);
+    sliderRail.MakeBox(80, 15);
     sliderRail.SetColour(68, 62, 107);
     sliderRail.Translate(200, 200);
 
     sliderButton = new Button();
-    sliderButton.SetSize(10, 10);
+    sliderButton.SetSize(15, 15);
     sliderButton.SetOriginalColour(150, 138, 62);
     sliderButton.SetPosition(200, 200);
 
@@ -204,6 +205,7 @@ class Windmill implements Drawable, Interactable
 
     pushMatrix();
     noStroke();
+    
     windMillTower.Draw();
     mainBlade.Draw();
 

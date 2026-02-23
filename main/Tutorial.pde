@@ -1,4 +1,5 @@
 import java.util.ArrayDeque; //used for tracking states for reversal
+
 //this section helps hold the useable information for a rewind
 
 class TutorialState
@@ -6,6 +7,7 @@ class TutorialState
   TutorialState(Box b, float v, float t, boolean m, boolean s,
     float b3, float b4, float f, boolean b4m, int d)
   {
+    
     boxX = b.shape.get(0).x;
     boxY = b.shape.get(0).y;
 
@@ -20,6 +22,7 @@ class TutorialState
     force = f;
     boxFourCanMove = b4m;
     direction = d;
+    
   }
 
   float boxX, boxY;
@@ -53,9 +56,7 @@ class Tutorial implements Drawable, Interactable
   }
 
   void Add()
-  {
-    
-    
+  {    
     windowBox = new Box();
     windowBox.MakeBox(650, 480);
     windowBox.SetColour(105, 102, 82);
@@ -74,17 +75,14 @@ class Tutorial implements Drawable, Interactable
     demenstrationBoxThree = new Box();
     demenstrationBoxThree.MakeBox(30, 30);
     demenstrationBoxThree.SetColour(100, 255, 100);
-    //demenstrationBoxThree.Translate(210, 260);
-
+    
     demenstrationBoxFour = new Box();
     demenstrationBoxFour.MakeBox(30, 30);
     demenstrationBoxFour.SetColour(255, 100, 100);
-    //demenstrationBoxFour.Translate(525, 260);
 
     demenstrationBoxFive = new Box();
     demenstrationBoxFive.MakeBox(30, 30);
     demenstrationBoxFive.SetColour(100, 100, 255);
-    //demenstrationBoxFive.Translate(300, 450);
 
     demenstrationBoxFloor = new Box();
     demenstrationBoxFloor.MakeBox(560, 30);
@@ -93,19 +91,19 @@ class Tutorial implements Drawable, Interactable
 
     nextTextButton = new Button("Next");
     nextTextButton.SetSize(21);
-    nextTextButton.SetTextOffsetCheck(30);
+    nextTextButton.SetTextOffsetCheck(50);
     nextTextButton.SetPosition(740, 575);
     nextTextButton.SetOriginalColour(0, 0, 0);
 
     reverseTextButton = new Button("Previous");
     reverseTextButton.SetSize(21);
-    reverseTextButton.SetTextOffsetCheck(70);
+    reverseTextButton.SetTextOffsetCheck(85);
     reverseTextButton.SetPosition(20, 575);
     reverseTextButton.SetOriginalColour(0, 0, 0);
 
     backTextButton = new Button("Back");
     backTextButton.SetSize(21);
-    backTextButton.SetTextOffsetCheck(30);
+    backTextButton.SetTextOffsetCheck(50);
     backTextButton.SetPosition(740, 25);
     backTextButton.SetOriginalColour(0, 0, 0);
 
@@ -120,26 +118,24 @@ class Tutorial implements Drawable, Interactable
     boxFiveResetButton.SetOriginalColour(150, 138, 62);
 
     sliderRail = new Box();
-    sliderRail.MakeBox(80, 10);
+    sliderRail.MakeBox(80, 15);
     sliderRail.SetColour(68, 62, 107);;
     sliderRail.Translate(200, 230);
 
     sliderButton = new Button();
-    sliderButton.SetSize(10, 10);
+    sliderButton.SetSize(15, 15);
     sliderButton.SetOriginalColour(150, 138, 62);
     sliderButton.SetPosition(200, 230);
 
     frictionSliderRail = new Box();
-    frictionSliderRail.MakeBox(80, 10);
+    frictionSliderRail.MakeBox(80, 15);
     frictionSliderRail.SetColour(68, 62, 107);;
     frictionSliderRail.Translate(500, 230);
 
     frictionSliderButton = new Button();
-    frictionSliderButton.SetSize(10, 10);
+    frictionSliderButton.SetSize(15, 15);
     frictionSliderButton.SetOriginalColour(150, 138, 62);
     frictionSliderButton.SetPosition(500, 230);
-
-
 
     //wind mill part
 
@@ -147,6 +143,7 @@ class Tutorial implements Drawable, Interactable
     rotBox.MakeRotBox(128, 128);
     rotBox.SetColour(180, 180, 220);
     rotBox.Translate(420, 300);
+    rotBox.FlipColourOther();
     rotBox.SetType(M_TYPE.FAN);
     
     mainBlade = new Box();
@@ -155,6 +152,7 @@ class Tutorial implements Drawable, Interactable
     mainBlade.Translate(windmillPositionX, windmillPositionY + 20);
     mainBlade.m.SetTexture(10);
     mainBlade.m.useTexture = true;
+    mainBlade.FlipColourOther();
     mainBlade.Rotate(30);
 
     windMillTower = new Box();
@@ -163,12 +161,15 @@ class Tutorial implements Drawable, Interactable
     windMillTower.Translate(windmillPositionX - 10, windmillPositionY);
     windMillTower.m.SetTexture(1);
     windMillTower.m.useTexture = true;
-
+    windMillTower.FlipColourOther();
+    
     windButton = new Button();
     windButton.SetSize(60, 20);
     windButton.SetPosition(200, 350);
     windButton.SetOriginalColour(150, 138, 62);
   }
+  
+  
   //chatgpt helped with the save state logic, I knew a queue could handle the logic i needed, but needed direction on how to store that data
   void SaveState()
   {
@@ -229,7 +230,7 @@ class Tutorial implements Drawable, Interactable
     if (windButton.b.canClick)
     {
       theSounds.PlayRandomUI();
-      windForce += 200 * deltaTime;
+      windForce += 275 * deltaTime;
     }
 
     if (forceButton.b.canClick)
@@ -292,8 +293,6 @@ class Tutorial implements Drawable, Interactable
         sim.tScreen.isTut = false;
 
         sim.tScreen.isTitle = true;
-        //stateStepCounter = 0;
-        //return;
       }
 
       canMove = true;
@@ -394,8 +393,6 @@ class Tutorial implements Drawable, Interactable
       }
       if (mouseY > sliderButton.b.shape.get(0).y && mouseY < sliderButton.b.shape.get(0).y + sliderButton.b.theHeight)
       {
-
-        //lock the magnitude based on the size
         float value = (newPositionX - minSlide) / (maxSlide - minSlide);
         boxFiveForce = value * boxFiveMaxForce;
         sliderButton.b.posX = newPositionX;
@@ -412,17 +409,14 @@ class Tutorial implements Drawable, Interactable
       float newPositionX = mouseX - frictionSliderButton.b.theWidth / 2;
       if (newPositionX < minSlide)
       {
-
         newPositionX = minSlide;
       }
       if (newPositionX > maxSlide)
       {
-
         newPositionX = maxSlide;
       }
       if (mouseY > frictionSliderButton.b.shape.get(0).y && mouseY < frictionSliderButton.b.shape.get(0).y + frictionSliderButton.b.theHeight)
       {
-
         //lock the magnitude based on the size
         float value = (newPositionX - minSlide) / (maxSlide - minSlide);
         boxFiveStaticFriction = value * boxFiveMaxFriction;
@@ -450,14 +444,12 @@ class Tutorial implements Drawable, Interactable
     dragImageX = 100;
     fanSpeed = 300;
 
-
     demenstrationBoxFive.SetPosition(0, 0);
     demenstrationBoxFive.Translate(300, 464);
   }
 
   void Update()
   {
-    //print(stateStepCounter);
 
     //wind
     if (stateStepCounter >= 5 && stateStepCounter < 9)
@@ -486,7 +478,7 @@ class Tutorial implements Drawable, Interactable
           fanSpeed -= 85 * deltaTime;
           if (fanSpeed > 0)
           {
-            rotBox.Rotate(fanSpeed * deltaTime);
+            rotBox.Rotate(-fanSpeed * deltaTime);
           }
           stateStepCounter = 7;
           showSecond = false;
@@ -591,7 +583,6 @@ class Tutorial implements Drawable, Interactable
 
     if (canReverse)
     {
-
       amount = 34;
       phraseLocationX = 300;
       phrase = "What is Friction?";
@@ -601,10 +592,9 @@ class Tutorial implements Drawable, Interactable
 
     if (timer >= 3)
     {
-
       amount = 21;
       phraseLocationX = 200;
-      phrase = "Friction slows Down objects that touch! ";
+      phrase = "Friction slows down objects that touch! ";
       canShowSecondText = true;
       canMove = false;
     }
@@ -706,10 +696,8 @@ class Tutorial implements Drawable, Interactable
       }
     }
 
-
     if (stateStepCounter == 4)
     {
-
       demenstrationBoxFive.Draw();
       demenstrationBoxFloor.Draw();
       forceButton.Draw();
@@ -717,6 +705,7 @@ class Tutorial implements Drawable, Interactable
       sliderButton.Draw();
       frictionSliderRail.Draw();
       frictionSliderButton.Draw();
+      
       //box five
       if (!boxFiveCanMove)
       {
@@ -758,7 +747,6 @@ class Tutorial implements Drawable, Interactable
         text("Starting force must be larger than static friction! ", demenstrationBoxFive.posX - 125, demenstrationBoxFive.posY - 50);
         popMatrix();
       }
-
 
       drawArrow(demenstrationBoxFive.posX + 50, demenstrationBoxFive.posY + 15, demenstrationBoxFive.posX + 30, demenstrationBoxFive.posY + 15);
       drawArrow(demenstrationBoxFive.posX - 30, demenstrationBoxFive.posY + 15, demenstrationBoxFive.posX, demenstrationBoxFive.posY + 15);
@@ -807,7 +795,6 @@ class Tutorial implements Drawable, Interactable
         text("sf = 30", demenstrationBoxFour.posX + 45, demenstrationBoxFour.posY + 10);
       } else
       {
-
         text("kf = 20", demenstrationBoxFour.posX + 45, demenstrationBoxFour.posY + 10);
         text("After overcomming Static Friction", 300, 380);
         text("Kinetic Friction takes over! ", 300, 420);

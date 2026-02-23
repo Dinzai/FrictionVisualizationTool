@@ -1,4 +1,5 @@
 //Brett Rogers, Ferris State University, DAGD 420 Feb 20th, 2026 Friction Simulator 
+
 Loop sim;
 CacheTextures cache; 
 SoundManager theSounds;
@@ -19,8 +20,7 @@ void setup()
   theSounds.PlayMusic(BACKGROUND_MUSIC.TITLE.ordinal());
     
   sim = new Loop();
-  sim.Add();
-  
+  sim.Add(); 
 }
 
 void draw()

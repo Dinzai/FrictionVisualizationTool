@@ -17,6 +17,7 @@ class Box
     c = new Colour();
     originalC = new Colour();
     m = new Material(M_TYPE.NONE);
+
   }
 
   void SetColour(float r, float g, float b)
@@ -30,6 +31,11 @@ class Box
     c = m.c;
     originalC = m.c;
     mass = m.mass;
+  }
+  
+  void FlipColourOther()//sets colour on, or off
+  {
+    canShowColour = !canShowColour;
   }
 
   void MakeBox(float w, float h)
@@ -212,7 +218,7 @@ class Box
   {
     scaleX *= sx;
     scaleY *= sy;
-    //forceOnObjectBasedOnMass = mass * accleration;
+
   }
 
   Point Normalize(Point vec)
@@ -410,16 +416,16 @@ class Box
 
     if (m.useTexture)
     {
-
+      if(canShowColour)
+      {
+        stroke(c.r, c.g, c.b);
+      }      
       texture(m.texture2D);
       vertex(shape.get(0).x, shape.get(0).y, 0, 0);
       vertex(shape.get(1).x, shape.get(1).y, 256, 0);
       vertex(shape.get(2).x, shape.get(2).y, 256, 256);
       vertex(shape.get(3).x, shape.get(3).y, 0, 256);
-      //for (Point p : shape)
-      //{
-      // vertex(p.x, p.y, 256, 256);
-      //}
+
     } else
     {
       fill(c.r, c.g, c.b);
@@ -452,6 +458,7 @@ class Box
   boolean canClick = false;
 
   boolean isPaused = true;
+  boolean canShowColour = true;//defaults to true, for textures, but sometimes, you dont wanna see the stroke
 
   float gravity = 98;
   float forceOnObjectBasedOnMass = 0;

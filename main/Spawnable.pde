@@ -2,7 +2,7 @@
 //Spawnable controls the draw, update, collision of any and all boxes that are created during runtime
 //DropDownMenu is simply the UI that communicates with Spawnable
 
-//Spawnable is a singleton 
+//Spawnable is a singleton
 
 class Spawnable implements Drawable, Interactable
 {
@@ -27,6 +27,8 @@ class Spawnable implements Drawable, Interactable
     Box temp = new Box();
     temp.MakeBox(50, 50); //default box size
     temp.Translate(400, 300);
+    temp.SetType(M_TYPE.NONE);
+    index++;
     allObjects.add(temp);
   }
 
@@ -61,6 +63,16 @@ class Spawnable implements Drawable, Interactable
     {
       this.mode = mode;
     }
+  }
+  
+  void KillAllActive()
+  {
+    for(int i = 0; i < allObjects.size(); i++)
+    {
+      Box temp = allObjects.get(i);
+      temp.setForDeletion = true;
+    }
+    index = -1;
   }
 
 
@@ -124,13 +136,13 @@ class Spawnable implements Drawable, Interactable
       b.canClick = false;
       b.posX = newPositionX;
       b.posY = newPositionY;
-      //b.SetPosition(mouseX, mouseY);
+
     }
   }
 
   void Scale(Box b)
   {
-    //print("The Width: " + b.theWidth + " ");
+
     if (b.isSelected && mode == "massUp")
     {
       if (b.scaleX < 2 && b.scaleY < 2)
@@ -161,7 +173,6 @@ class Spawnable implements Drawable, Interactable
       Box b = allObjects.get(index);
       if (b.isPaused)
       {
-        //b.isPaused = !b.isPaused;
         b.gotImpulse = true;
         b.force = amount;
       }
@@ -178,13 +189,13 @@ class Spawnable implements Drawable, Interactable
           mouseY > b.shape.get(0).y && mouseY < b.shape.get(0).y + b.theHeight)
         {
           b.SetColour(100, 200, 100);
-          //b.canBounce = true;
+          
           b.canClick = true;
         } else
         {
           b.c = b.originalC;
           b.SetColour(b.c.r, b.c.g, b.c.b);
-          //b.canBounce = false;
+          
           b.canClick = false;
         }
       }
@@ -192,6 +203,7 @@ class Spawnable implements Drawable, Interactable
       if (b.isSelected)
       {
         index = i;
+
       }
 
       Move(b);
@@ -214,14 +226,13 @@ class Spawnable implements Drawable, Interactable
     for (int i = 0; i < allObjects.size(); i++)
     {
       Box temp = allObjects.get(i);
-      if (!temp.setForDeletion)
+      if (temp.setForDeletion)
       {
-        return;
+        allObjects.remove(temp);
+        index--;
       }
-      index--;
-      allObjects.remove(temp);
-      //delete temp;
     }
+    return;
   }
 
   void DoOnce(Box temp, boolean canReset)
@@ -330,15 +341,24 @@ class Spawnable implements Drawable, Interactable
 
   void DrawToScreen()
   {
-
+ 
+    pushMatrix();
+    stroke(1);
+    strokeWeight(3);
     for (Box b : allObjects)
     {
       b.Draw();
     }
+    popMatrix();
+
+    pushMatrix();
+    noStroke();
     floor.Draw();
+    popMatrix();
   }
 
   int index = -1;
+
   Box floor;
   ArrayList<Box> allObjects;
   String mode;

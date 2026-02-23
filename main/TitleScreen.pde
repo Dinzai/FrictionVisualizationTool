@@ -12,7 +12,6 @@ class TitleScreen implements Drawable, Interactable
 
   void Add()
   {
-
     Button tempTut = new Button("Tutorial");
     tempTut.SetSize(34);
     tempTut.SetTextOffsetCheck(130);
@@ -21,13 +20,13 @@ class TitleScreen implements Drawable, Interactable
 
     Button tempSim = new Button("Simulation");
     tempSim.SetSize(34);
-    tempSim.SetTextOffsetCheck(155);
+    tempSim.SetTextOffsetCheck(180);
     tempSim.SetPosition(195, 460);
     tempSim.SetOriginalColour(0, 0, 0);
 
     Button tempWind = new Button("Windmill");
     tempWind.SetSize(34);
-    tempWind.SetTextOffsetCheck(130);
+    tempWind.SetTextOffsetCheck(150);
     tempWind.SetPosition(420, 460);
     tempWind.SetOriginalColour(0, 0, 0);
 

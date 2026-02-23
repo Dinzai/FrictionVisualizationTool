@@ -54,8 +54,8 @@ class Material
 
   void SetType(M_TYPE mType)
   {
-    UpdateType();
     materialType = mType;
+    UpdateType();
     SetColour();
     SetTexture(materialType.ordinal());
     useTexture = true;
@@ -71,12 +71,12 @@ class Material
     if (materialType == M_TYPE.NONE)
     {
       mass = 10;
-      c = new Colour(227, 238, 179);
+      c = new Colour(0, 0, 0);
     }
 
     if (materialType == M_TYPE.WOOD)
     {
-      mass = 30;
+      mass = 50;
       c = new Colour(125, 80, 35);
     }
 
@@ -88,13 +88,13 @@ class Material
 
     if (materialType == M_TYPE.ROCK)
     {
-      mass = 125;
+      mass = 100;
       c = new Colour(55, 55, 55);
     }
 
     if (materialType == M_TYPE.ICE)
     {
-      mass = 50;
+      mass = 10;
       c = new Colour(110, 110, 255);
     }
   }
@@ -150,6 +150,7 @@ class Material
 
   PImage texture2D;
 }
+
 //this object defineds what a material Icon object is, and behaves, this will be a member of a larger class, 'Pannel'
 class MaterialIconObject implements Drawable, Interactable
 {
@@ -226,6 +227,7 @@ class MaterialIconObject implements Drawable, Interactable
         if (Collision(temp))
         {
           temp.SetType(m.materialType);
+          //print(" Material type: " + temp.m.materialType + " ");
         }
       }
     }
@@ -272,7 +274,7 @@ class MaterialPannel
   MaterialPannel()
   {
     pannel = new Box();
-    pannel.MakeBox(145, 150);
+    pannel.MakeBox(160, 175);
     pannel.SetColour(110, 110, 110);
     pannel.Translate(170, 100);
     materials = new ArrayList<MaterialIconObject>();
@@ -281,19 +283,19 @@ class MaterialPannel
 
   void AddMaterialTypes()
   {
-    MaterialIconObject none = new MaterialIconObject(M_TYPE.NONE, pannel.posX + 24, pannel.posY + 35, 10);
+    MaterialIconObject none = new MaterialIconObject(M_TYPE.NONE, pannel.posX + 24, pannel.posY + 40, 10);
     none.SetColour();
 
-    MaterialIconObject wood = new MaterialIconObject(M_TYPE.WOOD, pannel.posX + 24, pannel.posY + 70, 10);
+    MaterialIconObject wood = new MaterialIconObject(M_TYPE.WOOD, pannel.posX + 24, pannel.posY + 90, 10);
     wood.SetColour();
 
-    MaterialIconObject metal = new MaterialIconObject(M_TYPE.METAL, pannel.posX + 24, pannel.posY + 105, 10);
+    MaterialIconObject metal = new MaterialIconObject(M_TYPE.METAL, pannel.posX + 114, pannel.posY + 40, 10);
     metal.SetColour();
 
-    MaterialIconObject rock = new MaterialIconObject(M_TYPE.ROCK, pannel.posX + 69, pannel.posY + 35, 10);
+    MaterialIconObject rock = new MaterialIconObject(M_TYPE.ROCK, pannel.posX + 69, pannel.posY + 40, 10);
     rock.SetColour();
 
-    MaterialIconObject ice = new MaterialIconObject(M_TYPE.ICE, pannel.posX + 69, pannel.posY + 70, 10);
+    MaterialIconObject ice = new MaterialIconObject(M_TYPE.ICE, pannel.posX + 69, pannel.posY + 90, 10);
     ice.SetColour();
 
     materials.add(none);
@@ -313,14 +315,25 @@ class MaterialPannel
     pannel.Draw();
     pushMatrix();
     fill(0, 0, 0);
-    textSize(10);
-    text("None", pannel.posX + 15, pannel.posY + 20);
-    text("Wood", pannel.posX + 15, pannel.posY + 55);
-    text("Metal", pannel.posX + 15, pannel.posY + 90);
+    textSize(13);
+    text("None", pannel.posX + 12, pannel.posY + 20);
+    text("Wood", pannel.posX + 12, pannel.posY + 70);
+    text("Metal", pannel.posX + 105, pannel.posY + 20);
     text("Rock", pannel.posX + 60, pannel.posY + 20);
-    text("Ice", pannel.posX + 60, pannel.posY + 55);
-    text("Click and Drag", pannel.posX + 45, pannel.posY + 95);
-    text("Materials to Objects", pannel.posX + 45, pannel.posY + 105);
+    text("Ice", pannel.posX + 60, pannel.posY + 70);    
+    popMatrix();
+    
+    pushMatrix();
+    fill(0, 0, 0);
+    textSize(16);
+    text("Click and Drag", pannel.posX + 25, pannel.posY + 135);
+    popMatrix();
+    
+    pushMatrix();
+    fill(0, 0, 0);
+    textSize(12);
+    text("Materials to Objects", pannel.posX + 25, pannel.posY + 150);
+    text("Materials to Floor", pannel.posX + 25, pannel.posY + 160);
     popMatrix();
 
     for (MaterialIconObject m : materials)

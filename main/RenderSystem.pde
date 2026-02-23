@@ -1,6 +1,8 @@
 
 import java.util.Map;
+
 //what layers can we draw to
+
 enum Layers
 {
   BACKGROUND,

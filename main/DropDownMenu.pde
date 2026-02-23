@@ -18,7 +18,7 @@ class DropDownMenu implements Drawable, Interactable
     box.Translate(10, 10);
 
     button = new Button();
-    button.SetSize(20, 10);
+    button.SetSize(20, 15);
     button.SetPosition(90, 30);
     button.SetOriginalColour(150, 138, 62);
 
@@ -30,37 +30,43 @@ class DropDownMenu implements Drawable, Interactable
 
     backTextButton = new Button("Back");
     backTextButton.SetSize(21);
-    backTextButton.SetTextOffsetCheck(30);
+    backTextButton.SetTextOffsetCheck(50);
     backTextButton.SetPosition(740, 25);
     backTextButton.SetOriginalColour(0, 0, 0);
+    
+    resetTextButton = new Button("Reset");
+    resetTextButton.SetSize(12);
+    resetTextButton.SetTextOffsetCheck(40);
+    resetTextButton.SetPosition(100, 30);
+    resetTextButton.SetOriginalColour(0, 0, 0);
 
     objectTextButton = new Button("Object");
     objectTextButton.SetSize(12);
-    objectTextButton.SetTextOffsetCheck(30);
+    objectTextButton.SetTextOffsetCheck(45);
     objectTextButton.SetPosition(100, 70);
     objectTextButton.SetOriginalColour(0, 0, 0);
 
     materialTextButton = new Button("Material");
     materialTextButton.SetSize(12);
-    materialTextButton.SetTextOffsetCheck(30);
+    materialTextButton.SetTextOffsetCheck(50);
     materialTextButton.SetPosition(100, 140);
     materialTextButton.SetOriginalColour(0, 0, 0);
 
     selectTextButton = new Button("Select");
     selectTextButton.SetSize(12);
-    selectTextButton.SetTextOffsetCheck(30);
+    selectTextButton.SetTextOffsetCheck(45);
     selectTextButton.SetPosition(20, 70);
     selectTextButton.SetOriginalColour(0, 0, 0);
 
     scaleUpTextButton = new Button("+ Mass");
     scaleUpTextButton.SetSize(12);
-    scaleUpTextButton.SetTextOffsetCheck(30);
+    scaleUpTextButton.SetTextOffsetCheck(45);
     scaleUpTextButton.SetPosition(20, 140);
     scaleUpTextButton.SetOriginalColour(0, 0, 0);
 
     scaleDownTextButton = new Button("- Mass");
     scaleDownTextButton.SetSize(12);
-    scaleDownTextButton.SetTextOffsetCheck(30);
+    scaleDownTextButton.SetTextOffsetCheck(45);
     scaleDownTextButton.SetPosition(20, 210);
     scaleDownTextButton.SetOriginalColour(0, 0, 0);
 
@@ -70,22 +76,22 @@ class DropDownMenu implements Drawable, Interactable
     forceButton.SetOriginalColour(68, 62, 107);
 
     sliderRail = new Box();
-    sliderRail.MakeBox(80, 10);
+    sliderRail.MakeBox(80, 15);
     sliderRail.SetColour(68, 62, 107);
     sliderRail.Translate(480, 50);
 
     sliderButton = new Button();
-    sliderButton.SetSize(10, 10);
+    sliderButton.SetSize(15, 15);
     sliderButton.SetOriginalColour(150, 138, 62);
     sliderButton.SetPosition(480, 50);
 
     directionSliderRail = new Box();
-    directionSliderRail.MakeBox(80, 10);
+    directionSliderRail.MakeBox(80, 15);
     directionSliderRail.SetColour(68, 62, 107);
     directionSliderRail.Translate(180, 50);
 
     directionSliderButton = new Button();
-    directionSliderButton.SetSize(10, 10);
+    directionSliderButton.SetSize(15, 15);
     directionSliderButton.SetOriginalColour(150, 138, 62);
     directionSliderButton.SetPosition(180, 50);
 
@@ -136,6 +142,15 @@ class DropDownMenu implements Drawable, Interactable
       sliderIsPressed = false;
       directionSliderIsPressed = false;
       spawner.Spawn();
+    }
+    
+    if (spawner.index >= 0 && !canExpand && resetTextButton.textSystem.canClick)
+    {
+      theSounds.PlayRandomUI();
+      canShowMaterials = false;
+      sliderIsPressed = false;
+      directionSliderIsPressed = false;
+      spawner.KillAllActive();
     }
 
     if (forceButton.b.canClick)
@@ -304,14 +319,17 @@ class DropDownMenu implements Drawable, Interactable
 
   void ForceUpdate()
   {
-    if (canAddForce)
+    if (canAddForce && spawner.index >= 0)
     {
       spawner.AddForce(startingForce * startingDirection);
     }
   }
-//DropDownMenu's Update loop, is going to use the draw system
+  //DropDownMenu's Update loop, is going to use the draw system
   void DrawToScreen()
   {
+    stroke(1);
+    strokeWeight(3);
+
     ForceUpdate();
     SliderUpdate();
     DirectionSliderUpdate();
@@ -335,8 +353,7 @@ class DropDownMenu implements Drawable, Interactable
       text("Force Direction: Right", 140, 35);
     }
 
-    text("Add", 615, 29);
-    text("Gravity!", 615, 40);
+    text("Play! ", 625, 40);
 
     sliderRail.Draw();
     sliderButton.Draw();
@@ -377,6 +394,7 @@ class DropDownMenu implements Drawable, Interactable
       text("Click!", 85, 245);
       popMatrix();
       drawArrow(120, 240, 140, 240);
+      resetTextButton.Draw();
       selectTextButton.Draw();
       scaleUpTextButton.Draw();
       scaleDownTextButton.Draw();
@@ -415,6 +433,7 @@ class DropDownMenu implements Drawable, Interactable
   Button scaleUpTextButton;
   Button scaleDownTextButton;
   Button backTextButton;
+  Button resetTextButton;
 
   Button materialTextButton;
   Button objectTextButton;
