@@ -50,12 +50,12 @@ class Windmill implements Drawable, Interactable
     sliderButton.SetPosition(200, 200);
 
     dragSliderRail = new Box();
-    dragSliderRail.MakeBox(80, 10);
+    dragSliderRail.MakeBox(80, 15);
     dragSliderRail.SetColour(68, 62, 107);
     dragSliderRail.Translate(560, 285);
 
     dragSliderButton = new Button();
-    dragSliderButton.SetSize(10, 10);
+    dragSliderButton.SetSize(15, 15);
     dragSliderButton.SetOriginalColour(150, 138, 62);
     dragSliderButton.SetPosition(560, 285);
 

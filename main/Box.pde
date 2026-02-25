@@ -126,6 +126,22 @@ class Box
 
     this.angle += AngleToRad(angle);
   }
+  
+  boolean FindPointInBox(float x, float y)
+  {
+    for(Point n : normals)
+    {
+      Point axis = Normalize(n);
+      Container project = DotPointsToAxis(axis);
+      float dot = x * axis.x + y * axis.y;
+      if(dot < project.GetMin() || dot > project.GetMax())
+      {
+        return false;
+      }
+      
+    }
+    return true;
+  }
 
   void Identity()
   {
@@ -479,7 +495,7 @@ class Box
 
   Material m;
 
-  //For the bounce effect
+  //For the bounce effectcha
   float baseX = 0;
   float baseY = 0;
 
@@ -495,7 +511,7 @@ class Box
   boolean setForDeletion = false;
 
   float minX = 17;
-  float maxX = 730;
+  float maxX = 760;
 }
 
 

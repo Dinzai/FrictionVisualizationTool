@@ -170,7 +170,6 @@ class Tutorial implements Drawable, Interactable
   }
   
   
-  //chatgpt helped with the save state logic, I knew a queue could handle the logic i needed, but needed direction on how to store that data
   void SaveState()
   {
 

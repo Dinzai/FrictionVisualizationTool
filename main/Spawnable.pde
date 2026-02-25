@@ -25,7 +25,7 @@ class Spawnable implements Drawable, Interactable
   void Spawn()
   {
     Box temp = new Box();
-    temp.MakeBox(50, 50); //default box size
+    temp.MakeRotBox(50, 50); //default box size
     temp.Translate(400, 300);
     temp.SetType(M_TYPE.NONE);
     index++;
@@ -64,10 +64,10 @@ class Spawnable implements Drawable, Interactable
       this.mode = mode;
     }
   }
-  
+
   void KillAllActive()
   {
-    for(int i = 0; i < allObjects.size(); i++)
+    for (int i = 0; i < allObjects.size(); i++)
     {
       Box temp = allObjects.get(i);
       temp.setForDeletion = true;
@@ -104,16 +104,13 @@ class Spawnable implements Drawable, Interactable
   {
     if (b.isSelected && mode == "select")
     {
-      float minX = 17;
-      float maxX = 730;
-      float minY = 72;
-      float maxY = 497;
+      float minX = 40;
+      float maxX = 755;
+      float minY = 95;
+      float maxY = 525;
 
-      float halfWidth = b.theWidth * 0.5;
-      float halfHeight = b.theHeight * 0.5;
-
-      float newPositionX = mouseX - halfWidth;
-      float newPositionY = mouseY - halfHeight;
+      float newPositionX = mouseX;
+      float newPositionY = mouseY;
       if (newPositionX < minX)
       {
         newPositionX = minX;
@@ -136,7 +133,6 @@ class Spawnable implements Drawable, Interactable
       b.canClick = false;
       b.posX = newPositionX;
       b.posY = newPositionY;
-
     }
   }
 
@@ -185,17 +181,16 @@ class Spawnable implements Drawable, Interactable
       Box b = allObjects.get(i);
       if (!b.isSelected)
       {
-        if (mouseX > b.shape.get(0).x && mouseX < b.shape.get(0).x + b.theWidth &&
-          mouseY > b.shape.get(0).y && mouseY < b.shape.get(0).y + b.theHeight)
+        if (b.FindPointInBox(mouseX, mouseY))
         {
           b.SetColour(100, 200, 100);
-          
+
           b.canClick = true;
         } else
         {
           b.c = b.originalC;
           b.SetColour(b.c.r, b.c.g, b.c.b);
-          
+
           b.canClick = false;
         }
       }
@@ -203,7 +198,6 @@ class Spawnable implements Drawable, Interactable
       if (b.isSelected)
       {
         index = i;
-
       }
 
       Move(b);
@@ -288,8 +282,10 @@ class Spawnable implements Drawable, Interactable
 
             // ChatGPT helped with this code, I was struggling with what the interaction shoud resolve as
             //I did not copy paste, but, asked many questions, and wrote down its suggestion with the collision code here
+            
             boolean tempMoving = Math.abs(temp.velocityX) > 0.01 || Math.abs(temp.velocityY) > 0.01;
             boolean otherMoving = Math.abs(other.velocityX) > 0.01 || Math.abs(other.velocityY) > 0.01;
+            
             //this bellow i logically deducted from the case above
             if (tempMoving && !otherMoving)
             {
@@ -341,7 +337,7 @@ class Spawnable implements Drawable, Interactable
 
   void DrawToScreen()
   {
- 
+
     pushMatrix();
     stroke(1);
     strokeWeight(3);

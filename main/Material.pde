@@ -8,7 +8,7 @@ enum M_TYPE
     ICE,
     FAN,
 }
-//simeple container class defining what, and how a material behaves, notice the material does not implement my interfaces 
+//simeple container class defining what, and how a material behaves, notice the material does not implement my interfaces
 class Material
 {
 
@@ -186,28 +186,13 @@ class MaterialIconObject implements Drawable, Interactable
   boolean Collision(Box b)
   {
 
-    if (xPos + radius < b.posX)
+    if (b.FindPointInBox(xPos, yPos))
+    {
+      return true;
+    } else
     {
       return false;
     }
-
-    if (xPos - radius > b.posX + b.theWidth)
-    {
-      return false;
-    }
-
-    if (yPos + radius < b.posY)
-    {
-      return false;
-    }
-
-    if (yPos - radius > b.posY + b.theHeight)
-    {
-      return false;
-    }
-
-
-    return true;
   }
 
   void Check()
@@ -320,15 +305,15 @@ class MaterialPannel
     text("Wood", pannel.posX + 12, pannel.posY + 70);
     text("Metal", pannel.posX + 105, pannel.posY + 20);
     text("Rock", pannel.posX + 60, pannel.posY + 20);
-    text("Ice", pannel.posX + 60, pannel.posY + 70);    
+    text("Ice", pannel.posX + 60, pannel.posY + 70);
     popMatrix();
-    
+
     pushMatrix();
     fill(0, 0, 0);
     textSize(16);
     text("Click and Drag", pannel.posX + 25, pannel.posY + 135);
     popMatrix();
-    
+
     pushMatrix();
     fill(0, 0, 0);
     textSize(12);
