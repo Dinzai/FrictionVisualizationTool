@@ -29,15 +29,23 @@ class TitleScreen implements Drawable, Interactable
     tempWind.SetTextOffsetCheck(150);
     tempWind.SetPosition(420, 460);
     tempWind.SetOriginalColour(0, 0, 0);
+    
+    Button tempCredit = new Button("Credits");
+    tempCredit.SetSize(25);
+    tempCredit.SetTextOffsetCheck(100);
+    tempCredit.SetPosition(350, 500);
+    tempCredit.SetOriginalColour(0, 0, 0);
 
     buttons.add(tempTut);
     buttons.add(tempSim);
     buttons.add(tempWind);
+    buttons.add(tempCredit);
   }
 
   void Remove()
   {
     buttons.clear();
+    isCredits = false;
     isTut = false;
     isSim = false;
     isWind = false;
@@ -50,6 +58,7 @@ class TitleScreen implements Drawable, Interactable
     Button tempTut = buttons.get(0);
     Button tempSim = buttons.get(1);
     Button tempWind = buttons.get(2);
+    Button tempCredit = buttons.get(3);
 
     if (tempTut.textSystem.canClick)
     {
@@ -72,6 +81,13 @@ class TitleScreen implements Drawable, Interactable
       theSounds.PlayMusic(BACKGROUND_MUSIC.WIND.ordinal());
       isWind = true;
     }
+    if (tempCredit.textSystem.canClick)
+    {
+      theSounds.PlayRandomUI();
+      isTitle = false;
+      theSounds.PlayMusic(BACKGROUND_MUSIC.WIND.ordinal());
+      isCredits = true;
+    }
   }
 
   void Reset()
@@ -93,6 +109,13 @@ class TitleScreen implements Drawable, Interactable
     {
       tempWind.textSystem.canClick = false;
     }
+    
+    Button tempCredits = buttons.get(3);
+    if (tempCredits.textSystem.canClick)
+    {
+      tempCredits.textSystem.canClick = false;
+    }
+    
   }
 
   void DrawToScreen()
@@ -119,6 +142,8 @@ class TitleScreen implements Drawable, Interactable
   boolean isTut = false;
   boolean isSim = false;
   boolean isWind = false;
+  boolean isCredits = false;
+  
   PImage titleImage;
 
   ArrayList<Button> buttons;

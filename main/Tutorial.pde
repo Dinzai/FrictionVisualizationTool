@@ -1,7 +1,8 @@
 import java.util.ArrayDeque; //used for tracking states for reversal
 
 //this section helps hold the useable information for a rewind
-
+//Chat GPT helped with Rubber ducking this
+//object for storeing the rewind data
 class TutorialState
 {
   TutorialState(Box b, float v, float t, boolean m, boolean s,
@@ -193,7 +194,7 @@ class Tutorial implements Drawable, Interactable
       direction
       ));
   }
-
+//Here is another area I used Chat GPT to rubber duck a solution to this rewind feature
   void ReverseStep()
   {
     if (history.isEmpty()) return;

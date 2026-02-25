@@ -28,6 +28,9 @@ class Loop
     menu = new DropDownMenu();    
     back = new BackGround();
     
+    credits = new Scene();
+    creditPage = new Credits();
+    
   }
 
   void Add()
@@ -53,6 +56,10 @@ class Loop
     //wind
     wind.AddTolayer(Layers.UI, windScreen);
     input.Grab(windScreen);
+    
+    credits.AddTolayer(Layers.UI, creditPage);
+    input.Grab(creditPage);
+    
   }
   
   void Reset()
@@ -86,6 +93,8 @@ class Loop
       windScreen.Update();
     }
     
+    
+    
   }
 
   void Draw()
@@ -110,6 +119,10 @@ class Loop
       background(95, 80, 200);
       wind.DrawOrder();
     }
+    if(tScreen.isCredits)
+    {
+      credits.DrawOrder();
+    }
   }
 
   Scene title;
@@ -124,5 +137,8 @@ class Loop
   Scene simulator;
   DropDownMenu menu;
   BackGround back;
+  
+  Scene credits;
+  Credits creditPage;
   
 }
