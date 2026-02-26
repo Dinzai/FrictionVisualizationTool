@@ -1,4 +1,7 @@
 //this uses custom box to help define the shape of a button, text can also be a button
+//Similar to the Box class, button is not intended for, or to be instantiated on its own and drawn to the screen
+//This class is intended to be a member, of a larger container class that implments both Interactable for button presses,
+//and, Drawable to allow the buttons to be seen.
 
 class Button
 {
@@ -191,7 +194,7 @@ class Button
     }
   }
 
-
+//This Draw defines How it is drawn, not intdended to Draw directly to the screen
   void Draw()
   {
     CheckMousePos();

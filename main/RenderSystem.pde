@@ -12,7 +12,8 @@ enum Layers
 
 
 // Only complex containers that hold many objects to be drawn define the DrawToScreen function
-// So objects like boxes, buttons, and the materials pannel do not use these, but the DropDownMenu as a whole does, that holds the aformentioned Objects
+// So objects like boxes, buttons, and the material or material pannel do not implement Drawable, 
+//but the DropDownMenu as a whole does, that holds the aformentioned Objects
 
 
 interface Drawable

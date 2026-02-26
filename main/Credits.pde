@@ -66,7 +66,7 @@ class Credits implements Drawable, Interactable
     textSize(40);
     text("Programmer: Brett Rogers", 140, 200);
     textSize(20);
-    text("Used Chat-GPT Ruber Ducking: Rewind Features, Collision Resolution", 80, 400);
+    text("I used Chat-GPT Ruber Ducking: Rewind Features, Collision Resolution", 80, 400);
     popMatrix();
   }
 

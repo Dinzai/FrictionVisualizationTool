@@ -1,6 +1,7 @@
-//Spawnable is used cohesivly with the DropDown menu, Both are seperate Objects, working in tandem to produce the Simulator system
+//Spawnable is used cohesivly with the DropDown menu and Background, All are seperate Objects, working in tandem to produce the Simulator system
 //Spawnable controls the draw, update, collision of any and all boxes that are created during runtime
 //DropDownMenu is simply the UI that communicates with Spawnable
+//Background is simply the fake window for the user's simulation
 
 //Spawnable is a singleton
 

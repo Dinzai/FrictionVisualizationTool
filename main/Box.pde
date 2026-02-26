@@ -448,6 +448,7 @@ class Box
 
     } else
     {
+      stroke(1);
       fill(c.r, c.g, c.b);
       strokeWeight(3);
       for (Point p : shape)

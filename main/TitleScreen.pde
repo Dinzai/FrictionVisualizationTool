@@ -1,5 +1,8 @@
 
 //This is it's own container/scene that covers the title screen
+//In a lot of ways, Title screen is what is in charge of the 'states' 
+//I chose a combination of Interactable reset driven/boolean data to handle 'game states'
+
 class TitleScreen implements Drawable, Interactable
 {
 
@@ -117,7 +120,7 @@ class TitleScreen implements Drawable, Interactable
     }
     
   }
-
+//this is the Drawable system defined in RenderSystem
   void DrawToScreen()
   {
     Button tempTut = buttons.get(0);

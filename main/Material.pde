@@ -8,7 +8,7 @@ enum M_TYPE
     ICE,
     FAN,
 }
-//simeple container class defining what, and how a material behaves, notice the material does not implement my interfaces
+//simple container class defining what, and how a material behaves, notice the material does not implement my interfaces
 class Material
 {
 

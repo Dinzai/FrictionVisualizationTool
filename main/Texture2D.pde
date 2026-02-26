@@ -37,7 +37,6 @@ class CacheTextures
     allTextures.add(SetImage("windMillIcon"));//10
     allTextures.add(SetImage("me"));//11
     allTextures.add(SetImage("openAISymbol"));//12
-    allTextures.add(SetImage("bulldog"));//13
   }
   
   PImage GetTexture(int num)

@@ -1,4 +1,4 @@
-//a promise that he whom implments this, will define the behavior
+//a promise that 'that' whom implments this, will define the behavior
 interface Interactable
 {
   void Click();
@@ -13,7 +13,7 @@ class InputManager
   {
     interactables = new ArrayList<Interactable>();
   }
-  
+  //notice that though I have never defined what Interactables functions do, that I can use it as a Parameter value
   void Grab(Interactable ie)
   {
     interactables.add(ie);
@@ -45,7 +45,7 @@ class InputManager
 }
 
 InputManager input = new InputManager();
-
+//Yes, this is the only thing looking for input.
 
 void mousePressed()
 {

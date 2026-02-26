@@ -1,6 +1,6 @@
 //this is a sound manager system used to hold, control, and load sounds for the program
 import processing.sound.*;
-
+//this is for different button pressing sounds, since it is a repeated sound
 enum UI_SOUND
 {
   BUTTON_ONE,
@@ -27,7 +27,7 @@ enum BACKGROUND_MUSIC
 
 class SoundManager
 {
-  SoundManager(PApplet p)
+  SoundManager(PApplet p)//for the sound system to work, it takes in a PApplet, basically, it needs the current programs start to link to
   {
     parrent = p;
     uiSounds = new ArrayList<SoundFile>();

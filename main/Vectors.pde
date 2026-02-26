@@ -20,6 +20,8 @@ class Colour
   float b;
 }
 //This point system has UV's, that are connected with the Position of each point
+
+//Box uses an Array of points
 class Point
 {
   Point()

@@ -28,6 +28,7 @@ class Loop
     menu = new DropDownMenu();    
     back = new BackGround();
     
+    //The credits 
     credits = new Scene();
     creditPage = new Credits();
     

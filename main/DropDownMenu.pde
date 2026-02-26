@@ -6,7 +6,9 @@
 //Drop down menu is a Drawable, Interactable entity, so things defined in DrawToScreen are drawn on the layer, and things defined in
 // click, and reset are reachable by the mouseButtonDown and mouseButtonUp functions
 
-//this containter holds many buttons, and boxes, and a Background,(class BackGround) and a pannel(from materials)
+//this containter holds many buttons, and boxes, and a pannel(from materials). 
+//Background, and Spawnable are added as their own containers, to different layers of the same scene tht this lives in ie, simulation defined in Loop. 
+
 class DropDownMenu implements Drawable, Interactable
 {
   DropDownMenu()
